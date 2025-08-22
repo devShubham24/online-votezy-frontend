@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votezy Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f7fafd;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header */
+        .admin-header {
+            background: linear-gradient(90deg, #3498db 80%, #5dade2 100%);
+            color: #fff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 12px rgba(52,152,219,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-section h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .admin-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            background: #fff;
+            border-bottom: 1px solid #e3eaf7;
+            padding: 0 2rem;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+
+        .nav-tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tab:hover {
+            background: #f8fafc;
+            color: #3498db;
+        }
+
+        .nav-tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+            background: #f8fafc;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.08);
+            margin-bottom: 2rem;
+            border: 1px solid #e3eaf7;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #eaf6ff 60%, #f7fafd 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e3eaf7;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #3498db;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e3eaf7;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-input {
+            padding: 0.8rem 1rem;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: #fff;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #3498db 80%, #5dade2 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(52,152,219,0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52,152,219,0.3);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #3498db;
+            border: 1px solid #3498db;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #3498db;
+            color: #fff;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.08);
+            border: 1px solid #e3eaf7;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Election Settings */
+        .election-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                padding: 0 1rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                padding: 0.8rem 1rem;
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .nav-tab.active {
+                border-left-color: #3498db;
+                border-bottom-color: transparent;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .card-content {
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Flag Icon */
+        .flag-icon {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="flag-icon">
+                    <svg width="32" height="20" viewBox="0 0 32 20" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="32" height="6.67" y="0" fill="#FF9933"/>
+                        <rect width="32" height="6.67" y="6.67" fill="#FFFFFF"/>
+                        <rect width="32" height="6.66" y="13.34" fill="#138808"/>
+                        <circle cx="16" cy="10" r="2.2" fill="none" stroke="#000088" stroke-width="0.7"/>
+                        <g stroke="#000088" stroke-width="0.3">
+                            <g>
+                                <line x1="16" y1="7.8" x2="16" y2="12.2"/>
+                                <line x1="13.8" y1="10" x2="18.2" y2="10"/>
+                            </g>
+                            <g transform="rotate(45 16 10)">
+                                <line x1="16" y1="7.8" x2="16" y2="12.2"/>
+                                <line x1="13.8" y1="10" x2="18.2" y2="10"/>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+                <h1>Votezy</h1>
+                <span class="admin-badge">Admin Panel</span>
+            </div>
+            <div class="user-section">
+                <span>Welcome, Admin</span>
+                <button class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <div class="nav-container">
+            <div class="nav-tab active" data-section="voters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Voter Details
+            </div>
+            <div class="nav-tab" data-section="candidates">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="7" r="4"/>
+                    <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                    <path d="M15 11l2 2l4 -4"/>
+                </svg>
+                Candidate Details
+            </div>
+            <div class="nav-tab" data-section="election">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                Election Settings
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Voter Details Section -->
+        <section id="voters" class="content-section active">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    Voter Management
+                </h2>
+                <p class="section-subtitle">View and manage registered voters</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Total Registered Voters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">892</div>
+                    <div class="stat-label">Active Voters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">355</div>
+                    <div class="stat-label">Pending Verification</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Registered Voters
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Voter ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Constituency</th>
+                                    <th>Status</th>
+                                    <th>Registration Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VID001</td>
+                                    <td>Rajesh Kumar</td>
+                                    <td>rajesh@email.com</td>
+                                    <td>+91 98765 43210</td>
+                                    <td>Mumbai North</td>
+                                    <td><span class="election-status status-active">Verified</span></td>
+                                    <td>2024-01-15</td>
+                                </tr>
+                                <tr>
+                                    <td>VID002</td>
+                                    <td>Priya Sharma</td>
+                                    <td>priya@email.com</td>
+                                    <td>+91 98765 43211</td>
+                                    <td>Delhi Central</td>
+                                    <td><span class="election-status status-active">Verified</span></td>
+                                    <td>2024-01-16</td>
+                                </tr>
+                                <tr>
+                                    <td>VID003</td>
+                                    <td>Amit Patel</td>
+                                    <td>amit@email.com</td>
+                                    <td>+91 98765 43212</td>
+                                    <td>Bangalore South</td>
+                                    <td><span class="election-status status-inactive">Pending</span></td>
+                                    <td>2024-01-17</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Candidate Details Section -->
+        <section id="candidates" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <circle cx="12" cy="7" r="4"/>
+                        <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                        <path d="M15 11l2 2l4 -4"/>
+                    </svg>
+                    Candidate Management
+                </h2>
+                <p class="section-subtitle">View and manage election candidates</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">45</div>
+                    <div class="stat-label">Total Candidates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">38</div>
+                    <div class="stat-label">Approved Candidates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Pending Approval</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="7" r="4"/>
+                            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                        </svg>
+                        Registered Candidates
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Candidate ID</th>
+                                    <th>Name</th>
+                                    <th>Party</th>
+                                    <th>Constituency</th>
+                                    <th>Symbol</th>
+                                    <th>Status</th>
+                                    <th>Registration Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CID001</td>
+                                    <td>Dr. Suresh Mehta</td>
+                                    <td>Progressive Party</td>
+                                    <td>Mumbai North</td>
+                                    <td>🌅 Lotus</td>
+                                    <td><span class="election-status status-active">Approved</span></td>
+                                    <td>2024-02-01</td>
+                                </tr>
+                                <tr>
+                                    <td>CID002</td>
+                                    <td>Ms. Kavita Singh</td>
+                                    <td>Unity Alliance</td>
+                                    <td>Delhi Central</td>
+                                    <td>🤝 Hand</td>
+                                    <td><span class="election-status status-active">Approved</span></td>
+                                    <td>2024-02-02</td>
+                                </tr>
+                                <tr>
+                                    <td>CID003</td>
+                                    <td>Ravi Nair</td>
+                                    <td>Independent</td>
+                                    <td>Bangalore South</td>
+                                    <td>🌟 Star</td>
+                                    <td><span class="election-status status-inactive">Pending</span></td>
+                                    <td>2024-02-03</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Election Settings Section -->
+        <section id="election" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    Election Configuration
+                </h2>
+                <p class="section-subtitle">Configure election settings and schedule</p>
+            </div>
+
+            <div class="success-message" id="success-message">
+                Election settings have been saved successfully!
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                        </svg>
+                        Election Details
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <form id="election-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="election-name">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                    </svg>
+                                    Election Name
+                                </label>
+                                <input type="text" id="election-name" name="election-name" class="form-input" 
+                                       placeholder="Enter election name (e.g., General Elections 2024)" 
+                                       value="General Elections 2024">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="election-type">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="7" rx="2"/>
+                                        <path d="M8 11V7a4 4 0 1 1 8 0v4"/>
+                                    </svg>
+                                    Election Type
+                                </label>
+                                <select id="election-type" name="election-type" class="form-input">
+                                    <option value="general">General Election</option>
+                                    <option value="local">Local Election</option>
+                                    <option value="by-election">By-Election</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="start-date">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    Start Date
+                                </label>
+                                <input type="date" id="start-date" name="start-date" class="form-input" 
+                                       value="2024-04-15">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="end-date">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    End Date
+                                </label>
+                                <input type="date" id="end-date" name="end-date" class="form-input" 
+                                       value="2024-04-20">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="start-time">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12,6 12,12 16,14"/>
+                                    </svg>
+                                    Start Time
+                                </label>
+                                <input type="time" id="start-time" name="start-time" class="form-input" 
+                                       value="08:00">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="end-time">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12,6 12,12 16,14"/>
+                                    </svg>
+                                    End Time
+                                </label>
+                                <input type="time" id="end-time" name="end-time" class="form-input" 
+                                       value="18:00">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="description">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                                Election Description
+                            </label>
+                            <textarea id="description" name="description" class="form-input" rows="4" 
+                                      placeholder="Enter election description and instructions for voters">This is the General Election 2024 for electing representatives across multiple constituencies. Eligible voters can cast their votes online during the specified time period.</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn-primary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                    <polyline points="17,21 17,13 7,13 7,21"/>
+                                    <polyline points="7,3 7,8 15,8"/>
+                                </svg>
+                                Save Election Settings
+                            </button>
+                            <button type="button" class="btn-secondary">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                    <path d="M3 6h18"/>
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                                </svg>
+                                Reset Form
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="election-status status-active">
+                        Current Election Status: Active
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Election Overview -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="16,12 12,8 8,12"/>
+                            <line x1="12" y1="16" x2="12" y2="8"/>
+                        </svg>
+                        Current Election Overview
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">72%</div>
+                            <div class="stat-label">Voter Turnout</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">896</div>
+                            <div class="stat-label">Votes Cast</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">351</div>
+                            <div class="stat-label">Remaining Voters</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">6h 24m</div>
+                            <div class="stat-label">Time Remaining</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            // Tab switching functionality
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and sections
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    contentSections.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    const sectionId = this.getAttribute('data-section');
+                    const targetSection = document.getElementById(sectionId);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                    }
+                });
+            });
+
+            // Election form handling
+            const electionForm = document.getElementById('election-form');
+            const successMessage = document.getElementById('success-message');
+
+            if (electionForm) {
+                electionForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Show success message
+                    successMessage.style.display = 'block';
+                    
+                    // Scroll to top of form
+                    electionForm.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                    
+                    // Here you would typically send the form data to your backend
+                    console.log('Election settings saved:', {
+                        name: document.getElementById('election-name').value,
+                        type: document.getElementById('election-type').value,
+                        startDate: document.getElementById('start-date').value,
+                        endDate: document.getElementById('end-date').value,
+                        startTime: document.getElementById('start-time').value,
+                        endTime: document.getElementById('end-time').value,
+                        description: document.getElementById('description').value
+                    });
+                });
+            }
+
+            // Reset form functionality
+            const resetBtn = document.querySelector('.btn-secondary');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to reset all form fields?')) {
+                        electionForm.reset();
+                        // Reset to default values
+                        document.getElementById('election-name').value = 'General Elections 2024';
+                        document.getElementById('start-date').value = '2024-04-15';
+                        document.getElementById('end-date').value = '2024-04-20';
+                        document.getElementById('start-time').value = '08:00';
+                        document.getElementById('end-time').value = '18:00';
+                        document.getElementById('description').value = 'This is the General Election 2024 for electing representatives across multiple constituencies. Eligible voters can cast their votes online during the specified time period.';
+                    }
+                });
+            }
+
+            // Logout functionality
+            const logoutBtn = document.querySelector('.logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to logout?')) {
+                        // Here you would typically handle the logout process
+                        // For demo purposes, we'll just redirect to login page
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+
+            // Form validation
+            const startDateInput = document.getElementById('start-date');
+            const endDateInput = document.getElementById('end-date');
+            const startTimeInput = document.getElementById('start-time');
+            const endTimeInput = document.getElementById('end-time');
+
+            function validateDates() {
+                const startDate = new Date(startDateInput.value + 'T' + startTimeInput.value);
+                const endDate = new Date(endDateInput.value + 'T' + endTimeInput.value);
+                
+                if (startDate >= endDate) {
+                    alert('End date and time must be after start date and time');
+                    return false;
+                }
+                return true;
+            }
+
+            if (startDateInput && endDateInput) {
+                startDateInput.addEventListener('change', validateDates);
+                endDateInput.addEventListener('change', validateDates);
+                startTimeInput.addEventListener('change', validateDates);
+                endTimeInput.addEventListener('change', validateDates);
+            }
+
+            // Auto-refresh statistics every 30 seconds (for demo purposes)
+            setInterval(function() {
+                // This would typically fetch real data from your backend
+                updateStatistics();
+            }, 30000);
+
+            function updateStatistics() {
+                // Demo function to simulate real-time updates
+                const statValues = document.querySelectorAll('.stat-value');
+                statValues.forEach(stat => {
+                    if (stat.textContent.includes('%')) {
+                        // Update percentage values
+                        const currentValue = parseInt(stat.textContent);
+                        if (currentValue < 100) {
+                            stat.textContent = (currentValue + Math.floor(Math.random() * 2)) + '%';
+                        }
+                    } else if (stat.textContent.includes('h') || stat.textContent.includes('m')) {
+                        // Update time remaining (demo)
+                        const timeRemaining = stat.textContent;
+                        if (timeRemaining !== '0h 0m') {
+                            // This would be calculated from actual end time
+                            stat.textContent = '6h 23m'; // Demo value
+                        }
+                    }
+                });
+            }
+
+            // Table row click handlers for future functionality
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    // Remove previous selections
+                    tableRows.forEach(r => r.classList.remove('selected'));
+                    // Add selection to current row
+                    this.classList.add('selected');
+                    // Here you could show details panel or edit form
+                });
+            });
+
+            // Responsive navigation for mobile
+            function handleMobileNavigation() {
+                if (window.innerWidth <= 768) {
+                    navTabs.forEach(tab => {
+                        tab.addEventListener('click', function() {
+                            // Close any open mobile menus
+                            document.body.classList.remove('nav-open');
+                        });
+                    });
+                }
+            }
+
+            // Call on load and resize
+            handleMobileNavigation();
+            window.addEventListener('resize', handleMobileNavigation);
+
+            // Set current date as minimum for date inputs
+            const today = new Date().toISOString().split('T')[0];
+            if (startDateInput) startDateInput.setAttribute('min', today);
+            if (endDateInput) endDateInput.setAttribute('min', today);
+
+            // Initialize tooltips for form fields
+            const formInputs = document.querySelectorAll('.form-input');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = '#3498db';
+                    this.style.boxShadow = '0 0 0 3px rgba(52,152,219,0.1)';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = '#d0d7de';
+                    this.style.boxShadow = 'none';
+                });
+            });
+
+            console.log('Votezy Admin Panel initialized successfully');
+        });
+
+        // Additional utility functions
+        function exportVoterData() {
+            // Function to export voter data as CSV
+            alert('Export functionality would be implemented here');
+        }
+
+        function exportCandidateData() {
+            // Function to export candidate data as CSV
+            alert('Export functionality would be implemented here');
+        }
+
+        function sendNotification() {
+            // Function to send notifications to voters
+            alert('Notification functionality would be implemented here');
+        }
+
+        // Error handling for missing elements
+        window.addEventListener('error', function(e) {
+            console.error('Admin Panel Error:', e.error);
+        });
+    </script>
+</body>
+</html>

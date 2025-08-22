@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login/Register - Votezy</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(
+          1deg,
+          #d1ecf7 0%,
+          #5abbe3 80%,
+          #092a37 100%
+          
+        );
+        font-family: "Segoe UI", Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .center-content {
+        width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .main-title {
+        color: #fff;
+        font-size: 2.25rem;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 0.2rem;
+        line-height: 1.2;
+        text-shadow: 0 3px 16px #0002;
+        border-bottom: 4px solid #fff;
+        padding-bottom: 0.13em;
+        width: max-content;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .dynamic-role-title {
+        color: #fff;
+        text-align: center;
+        font-size: 1.18rem;
+        font-weight: 500;
+        margin-bottom: 2.2rem;
+        text-shadow: 0 2px 10px #0001;
+        letter-spacing: 0.01em;
+        min-height: 1.7em;
+      }
+      .login-card {
+        background: rgba(24, 25, 34, 0.93);
+        border-radius: 13px;
+        box-shadow: 0 8px 32px #45040421;
+        width: 362px;
+        max-width: 97vw;
+        padding: 2.2rem 2.4rem 1.8rem 2.4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+      }
+      .auth-tabs {
+        display: flex;
+        margin-bottom: 1.35rem;
+        gap: 1.6rem;
+        justify-content: center;
+      }
+      .auth-tab {
+        background: none;
+        border: none;
+        font-size: 1.13rem;
+        font-weight: 600;
+        color: #d6d6fa;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        padding: 0.55rem 0.9rem;
+        transition: color 0.16s, border 0.16s;
+        margin-bottom: 0.13rem;
+        outline: none;
+      }
+      .auth-tab.active {
+        color: #ffe478;
+        border-bottom: 2px solid #ffe478;
+      }
+      .auth-form {
+        display: none;
+        flex-direction: column;
+        gap: 1.05rem;
+      }
+      .auth-form.active {
+        display: flex;
+      }
+      .auth-input {
+        width: 100%;
+        background: #f9fafd;
+        border: 1.4px solid #9048b1;
+        border-radius: 7px;
+        padding: 0.89rem 1rem;
+        font-size: 1.11rem;
+        color: #191937;
+        outline: none;
+        margin-bottom: 0.07rem;
+        box-sizing: border-box;
+        transition: border 0.17s;
+      }
+      .auth-input:focus {
+        background: #e7ecfa;
+        border-color: #ee932a;
+      }
+      .form-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.98rem;
+        color: #efefef;
+        user-select: none;
+        margin-top: -3px;
+      }
+      .form-row label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .form-row input[type="checkbox"] {
+        accent-color: #b65fff;
+        width: 16px;
+        height: 16px;
+        margin: 0;
+      }
+      .forgot,
+      .register-link {
+        color: #ffe478;
+        text-decoration: underline;
+        cursor: pointer;
+        opacity: 0.92;
+        font-weight: 500;
+      }
+      .forgot:hover,
+      .register-link:hover {
+        color: #fabe3a;
+        opacity: 1;
+      }
+      .auth-btn {
+        margin-top: 0.38rem;
+        padding: 0.86rem 0;
+        border: none;
+        border-radius: 7px;
+        width: 100%;
+        font-size: 1.09rem;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(90deg, #3560f6 0%, #9543b2 100%);
+        box-shadow: 0 1px 8px #b69afd31;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .auth-btn:hover {
+        background: linear-gradient(90deg, #2c4dcc, #ce4117 80%);
+      }
+      .message {
+        padding: 0.78rem 1rem;
+        text-align: left;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 0.97rem;
+        margin-bottom: 0.82rem;
+        display: none;
+      }
+      .message.success {
+        background: #d1fdd7;
+        color: #249910;
+        border-left: 5px solid #2bb240;
+        display: block;
+      }
+      .message.error {
+        background: #fdd9db;
+        color: #c11a2c;
+        border-left: 5px solid #d5210e;
+        display: block;
+      }
+
+      /* Style for both "Don't have an account?" and "Already have an account?" texts */
+      .no-account-text {
+        color: #ff6347; /* Customize color as you wish */
+        font-weight: 500;
+      }
+
+      @media (max-width: 480px) {
+        .login-card {
+          min-width: 93vw;
+          padding: 1.7rem 0.8rem;
+        }
+        .main-title {
+          font-size: 1.29rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center-content">
+      <div class="main-title">VOTEZY</div>
+      <div class="dynamic-role-title" id="roleTitle">Student Login</div>
+      <div class="login-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="loginTab">Login</button>
+          <button class="auth-tab" id="registerTab">Register</button>
+        </div>
+        <form
+          id="loginForm"
+          class="auth-form active"
+          autocomplete="on"
+          novalidate
+        >
+          <input
+            type="text"
+            class="auth-input"
+            id="loginUsername"
+            name="username"
+            placeholder="Username"
+            required
+          />
+          <input
+            type="password"
+            class="auth-input"
+            id="loginPassword"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <div class="form-row">
+            <label><input type="checkbox" id="rememberMe" /> Remember me</label>
+            <span class="forgot" id="forgotPwdLink">Forgot?</span>
+          </div>
+          <div id="loginMessage" class="message" role="alert"></div>
+          <button type="submit" class="auth-btn">Login</button>
+          <div style="text-align: center; font-size: 1rem; margin-top: 0.2rem">
+            <span class="no-account-text">Don't have an account?</span>
+            <span class="register-link" onclick="showRegister()">Register</span>
+          </div>
+        </form>
+        <form id="registerForm" class="auth-form" autocomplete="on" novalidate>
+          <input
+            type="text"
+            class="auth-input"
+            id="registerFullName"
+            name="fullName"
+            placeholder="Full Name"
+            required
+          />
+          <input
+            type="email"
+            class="auth-input"
+            id="registerEmail"
+            name="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            type="password"
+            class="auth-input"
+            id="registerPassword"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <div id="registerMessage" class="message" role="alert"></div>
+          <button type="submit" class="auth-btn">Register</button>
+          <div style="text-align: center; font-size: 1rem; margin-top: 0.2rem">
+            <span class="no-account-text">Already have an account?</span>
+            <span class="register-link" onclick="showLogin()">Login</span>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      // Set role title dynamically as “[Role] Role”
+      const rolesMap = {
+        ADMIN: "Admin",
+        VOTER: "Voter",
+        CANDIDATE: "Candidate",
+      };
+      const roleTitle = document.getElementById("roleTitle");
+      const selectedRole = sessionStorage.getItem("selectedRole") || "VOTER";
+      roleTitle.textContent = rolesMap[selectedRole]
+        ? rolesMap[selectedRole] + " Role"
+        : "Student Login";
+
+      // Tab switching
+      const loginTab = document.getElementById("loginTab");
+      const registerTab = document.getElementById("registerTab");
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+      const loginMessage = document.getElementById("loginMessage");
+      const registerMessage = document.getElementById("registerMessage");
+
+      loginTab.onclick = showLogin;
+      registerTab.onclick = showRegister;
+
+      function showLogin() {
+        loginTab.classList.add("active");
+        registerTab.classList.remove("active");
+        loginForm.classList.add("active");
+        registerForm.classList.remove("active");
+        loginMessage.style.display = "none";
+        registerMessage.style.display = "none";
+      }
+      function showRegister() {
+        registerTab.classList.add("active");
+        loginTab.classList.remove("active");
+        registerForm.classList.add("active");
+        loginForm.classList.remove("active");
+        loginMessage.style.display = "none";
+        registerMessage.style.display = "none";
+      }
+
+      // Password recovery
+      document
+        .getElementById("forgotPwdLink")
+        .addEventListener("click", function () {
+          loginMessage.textContent = "Password recovery not available.";
+          loginMessage.className = "message error";
+          loginMessage.style.display = "block";
+          setTimeout(() => (loginMessage.style.display = "none"), 3400);
+        });
+
+      // Login form submit handler unchanged
+      loginForm.onsubmit = async (e) => {
+        e.preventDefault();
+        loginMessage.style.display = "none";
+        const payload = {
+          username: loginForm.username.value.trim(),
+          password: loginForm.password.value,
+          role: selectedRole,
+        };
+        if (!payload.username || !payload.password) {
+          showLoginError("All fields are required.");
+          return;
+        }
+        try {
+          let res = await fetch("http://localhost:8080/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          console.log(res);
+          if (!res.ok) {
+            const text = await res.text();
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch {
+              data = { message: text || "Login failed" };
+            }
+            throw new Error(data.message);
+          }
+
+          if (selectedRole === "ADMIN")
+            window.location.href = "admin-panel.html";
+          else if (selectedRole === "CANDIDATE")
+            window.location.href = "candidate-dashboard.html";
+          else window.location.href = "voter.html";
+        } catch (err) {
+          showLoginError(err.message);
+        }
+      };
+
+      // Register form submit handler unchanged
+      registerForm.onsubmit = async (e) => {
+        e.preventDefault();
+        registerMessage.style.display = "none";
+        const payload = {
+          fullName: registerForm.fullName.value.trim(),
+          email: registerForm.email.value.trim(),
+          password: registerForm.password.value,
+          role: selectedRole,
+        };
+        if (!payload.fullName || !payload.email || !payload.password) {
+          showRegisterError("All fields are required.");
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+          showRegisterError("Please enter a valid email address.");
+          return;
+        }
+        if (payload.password.length < 6) {
+          showRegisterError("Password must be at least 6 characters.");
+          return;
+        }
+        try {
+          let res = await fetch("http://localhost:8080/api/auth/register", {           
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          console.log(res);
+          if (!res.ok) {
+            let text = await res.text();
+            let data;
+            try {
+              data = JSON.parse(text);
+            } catch {
+              data = { message: text || "Registration failed" };
+            }
+            throw new Error(data.message);
+          }
+          showRegisterSuccess("Registration successful! Please log in.");
+          setTimeout(() => {
+            showLogin();
+            registerForm.reset();
+          }, 1900);
+        } catch (err) {
+          showRegisterError(err.message);
+        }
+      };
+
+      function showLoginError(msg) {
+        loginMessage.textContent = msg;
+        loginMessage.className = "message error";
+        loginMessage.style.display = "block";
+      }
+
+      function showRegisterError(msg) {
+        registerMessage.textContent = msg;
+        registerMessage.className = "message error";
+        registerMessage.style.display = "block";
+      }
+
+      function showRegisterSuccess(msg) {
+        registerMessage.textContent = msg;
+        registerMessage.className = "message success";
+        registerMessage.style.display = "block";
+      }
+    </script>
+  </body>
+</html>
