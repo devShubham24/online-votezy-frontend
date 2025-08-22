@@ -1,337 +1,992 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Voter Panell</title>
-  <!-- Google Fonts: Inter and Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-  <style>
-    html, body {
-      height: 100%; margin: 0; padding: 0; box-sizing: border-box;
-      font-family: 'Inter', Arial, sans-serif;
-      background: #e1e9f2;
-      color: #23235b;
-      min-height: 100vh;
-      width: 100vw;
-      overflow-x: hidden;
-      transition: background-color 0.3s ease;
-    }
-    /* Header */
-    .header {
-      position: fixed; top: 0; left: 0;
-      width: 100vw; height: 64px;
-      background: #0d306c;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 1rem 0 3.5rem;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.27);
-      z-index: 110; position: relative;
-    }
-    .header .title {
-      position: absolute;
-      left: 50%; transform: translateX(-50%);
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1.7rem;
-      color: #fff;
-      background: #0d306c;
-      padding: 8px 18px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(74,44,153,0.25);
-      user-select: none;
-      pointer-events: none;
-      text-shadow: 0 0 12px rgba(255,255,255,0.28);
-    }
-    /* Hamburger */
-    .hamburger {
-      position: fixed; top: 15px; left: 15px; width: 34px; height: 34px;
-      background: linear-gradient(135deg, #3e52a1 0%, #5f6cff 100%);
-      border-radius: 6px; cursor: pointer; z-index: 120;
-      display: flex; flex-direction: column; justify-content: space-around;
-      padding: 8px 6px;
-      box-shadow: 0 4px 14px rgba(58,76,147,0.13);
-      user-select: none; transition: background 0.3s ease;
-    }
-    .hamburger:hover { background: linear-gradient(135deg, #5f6cff 0%, #3e52a1 100%);}
-    .hamburger div { width: 22px; height: 3px; background: #23235b; border-radius: 2px; transition: all 0.3s;}
-    .hamburger.active div:nth-child(1) { transform: rotate(45deg) translate(5px,5px);}
-    .hamburger.active div:nth-child(2) { opacity: 0;}
-    .hamburger.active div:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px);}
-    
-    /* Sidebar */
-    .sidebar {
-      position: fixed; top: 64px; left: 0; height: calc(100vh - 64px); width: 240px;
-      background: linear-gradient(135deg, #e7ecfa 0%, #c6dafc 100%);
-      box-shadow: 2px 0 20px rgba(18,24,83, .13);
-      padding-top: 2rem;
-      display: flex; flex-direction: column; align-items: center; gap: 1.65rem;
-      transform: translateX(-260px);
-      transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-      z-index: 105; user-select: none;
-    }
-    .sidebar.open { transform: translateX(0);}
-    
-    /* User name section in sidebar */
-    .sidebar-user {
-      width: 80%;
-      margin-bottom: 1.2rem;
-      text-align: center;
-      color: #23235b;
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.11rem;
-      font-weight: 600;
-      border-radius: 8px;
-      background: #f0f2fd;
-      padding: 0.65rem 0.4rem;
-      box-shadow: 0 1px 6px #a8b6ff15;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    
-    .sidebar .nav-btn {
-      background: none; border: none; color: #23235b;
-      font-size: 1.08rem; font-weight: 600; cursor: pointer; outline: none;
-      transition: color 0.22s, background 0.18s; display: flex; align-items: center;
-      gap: 1rem; width: 80%; padding: 0.65rem 1rem;
-      border-radius: 10px; user-select: none;
-    }
-    .sidebar .nav-btn:hover, .sidebar .nav-btn.active {
-      color: #4a2c99; background: #f8faff; box-shadow: 0 0 10px #ececec22;
-    }
-    .sidebar .nav-btn svg {
-      width: 22px; height: 22px; fill: #4a2c99; stroke: #4a2c99; transition: fill 0.2s;
-    }
-    .sidebar .nav-btn:hover svg, .sidebar .nav-btn.active svg { fill: #3e52a1; stroke: #3e52a1;}
-    
-    /* Overlay */
-    .overlay {
-      position: fixed; top: 64px; left: 0; width: 100vw;
-      height: calc(100vh - 64px);
-      background: rgba(0,0,0,.13); opacity: 0;
-      pointer-events: none; transition: opacity 0.22s; z-index: 100;
-    }
-    .overlay.active { opacity: 1; pointer-events: auto;}
-    
-    /* Main */
-    main {
-      margin-top: 64px;
-      padding: 2rem 1.5rem 3rem;
-      max-width: 900px;
-      margin-left: auto; margin-right: auto;
-      color: #23235b;
-      user-select: text;
-      z-index: 10;
-    }
-    .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 640px; margin: 0 auto; padding: 0 1rem;}
-    .hero h1 { font-size: 2.7rem; font-weight: 700; margin-bottom: 1rem; text-align: center; text-shadow: 0 3px 10px #c6dafc30; color: #23235b;}
-    .hero p { font-size: 1.22rem; max-width: 520px; margin-bottom: 2.3rem; line-height: 1.58; text-align: center; color: #23235b;}
-    .live-btn {
-      display: inline-flex; margin: 0 auto; align-items: center; gap: 1rem;
-      background: linear-gradient(90deg, #4a2c99 0%, #5f6cff 100%);
-      color: #fff; font-weight: 600; font-size: 1.45rem; border: none;
-      border-radius: 20px; padding: 1.18rem 4.5rem;
-      box-shadow: 0 6px 19px rgba(107,123,168,0.22);
-      cursor: pointer; letter-spacing: 0.07em;
-      transition: background 0.25s, box-shadow 0.32s;
-      user-select: none;
-    }
-    .live-btn svg { filter: drop-shadow(0 0 1px #1b356b7a);}
-    .live-btn:hover {
-      background: linear-gradient(90deg,#3e52a1 0%,#5f6cff 90%);
-      box-shadow: 0 10px 28px rgba(94,91,220,0.14);
-    }
-    
-    /* Modal Styles */
-    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.23); align-items: center; justify-content: center;}
-    .modal.show { display: flex; animation: fadeIn 0.12s;}
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; }}
-    .modal-content { background: #fff; color: #23235b; padding: 2rem 2.5rem; border-radius: 16px; box-shadow: 0 8px 27px rgba(0,0,0,0.13); text-align: center; min-width: 250px; max-width: 91vw; animation: popIn 0.14s;}
-    @keyframes popIn { from {transform: scale(.95); opacity:0;} to {transform:scale(1);opacity:1;}}
-    .modal-content h2 { margin-top: 0; font-size: 1.35rem; margin-bottom: 0.7rem; color: #23235b;}
-    .modal-content p { margin-bottom: 1.2rem; font-size: 1.1rem; color: #23235b;}
-    .modal-actions { display: flex; justify-content: center; gap: 1.2rem;}
-    .modal-btn { padding: 0.55rem 1.45rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.12s;}
-    .modal-btn.cancel { background: #e2e8ff; color: #23235b;}
-    .modal-btn.cancel:hover { background: #bfc8e6;}
-    .modal-btn.confirm { background: #ff4b5c; color: #fff;}
-    .modal-btn.confirm:hover { background: #d7263d;}
-    
-    /* Responsive */
-    @media (max-width: 760px) {
-      main { max-width: 96vw; padding: 2rem 0.5rem 2.7rem; }
-      .hero h1 { font-size: 2rem;}
-      .hero p { font-size: 1.04rem;}
-      .live-btn { font-size: 1.1rem; padding: 0.9rem 1.5rem;}
-      .sidebar { width: 66vw; min-width: 190px;}
-    }
-    @media (max-width: 480px) {
-      .sidebar { width: 95vw; min-width: 120px;}
-      .header .title { font-size: 1.13rem; padding: 6px 10px; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votezy Voter Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f7fafd;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header - Same as Admin Panel */
+        .voter-header {
+            background: linear-gradient(90deg, #3498db 80%, #5dade2 100%);
+            color: #fff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 12px rgba(52,152,219,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-section h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .voter-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            background: #fff;
+            border-bottom: 1px solid #e3eaf7;
+            padding: 0 2rem;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.05);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+        }
+
+        .nav-tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tab:hover {
+            background: #f8fafc;
+            color: #3498db;
+        }
+
+        .nav-tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+            background: #f8fafc;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.08);
+            margin-bottom: 2rem;
+            border: 1px solid #e3eaf7;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #eaf6ff 60%, #f7fafd 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e3eaf7;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #3498db;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        /* Election Cards */
+        .elections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .election-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.08);
+            border: 1px solid #e3eaf7;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .election-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(52,152,219,0.15);
+        }
+
+        .election-card-header {
+            background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .election-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .election-type {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .election-card-body {
+            padding: 2rem;
+        }
+
+        .election-info {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .election-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-live {
+            background: #d4edda;
+            color: #155724;
+            animation: pulse 2s infinite;
+        }
+
+        .status-upcoming {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .vote-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #3498db 80%, #5dade2 100%);
+            color: #fff;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(52,152,219,0.2);
+        }
+
+        .vote-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52,152,219,0.3);
+        }
+
+        .vote-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Voting Modal */
+        .voting-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .voting-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+            color: #fff;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .close-modal:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .candidates-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .candidate-option {
+            border: 2px solid #e3eaf7;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .candidate-option:hover {
+            border-color: #3498db;
+            background: #f8fafc;
+        }
+
+        .candidate-option.selected {
+            border-color: #3498db;
+            background: #eaf6ff;
+            box-shadow: 0 4px 16px rgba(52,152,219,0.1);
+        }
+
+        .candidate-radio {
+            width: 20px;
+            height: 20px;
+            accent-color: #3498db;
+        }
+
+        .candidate-info {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 0.3rem;
+        }
+
+        .candidate-party {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .candidate-symbol {
+            font-size: 2rem;
+            margin-left: auto;
+        }
+
+        .vote-submit-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+            color: #fff;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(39,174,96,0.2);
+            margin-top: 1rem;
+        }
+
+        .vote-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39,174,96,0.3);
+        }
+
+        .vote-submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #c3e6cb;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.08);
+            border: 1px solid #e3eaf7;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .voter-header {
+                padding: 1rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs {
+                padding: 0 1rem;
+            }
+
+            .nav-container {
+                flex-wrap: wrap;
+            }
+
+            .nav-tab {
+                padding: 0.8rem 1rem;
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .elections-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .election-card-body {
+                padding: 1rem;
+            }
+
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .modal-header, .modal-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Flag Icon */
+        .flag-icon {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
-  <!-- Header -->
-  <div class="header">
-    <div class="title">VOTEZY</div>
-  </div>
-  
-  <!-- Hamburger Menu -->
-  <div class="hamburger" id="hamburger" aria-label="Toggle sidebar menu" role="button" tabindex="0">
-    <div></div><div></div><div></div>
-  </div>
-  
-  <!-- Sidebar -->
-  <nav class="sidebar" id="sidebar" aria-label="Primary Navigation">
-    <!-- User Name Display -->
-    <div class="sidebar-user" id="sidebarUserName">Loading...</div>
-    
-    <button class="nav-btn active" title="Home" aria-current="page" onclick="window.location.href='home.html'">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      <span>Home</span>
-    </button>
-    <button class="nav-btn" title="Edit Profile" onclick="window.location.href='edit.html'">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.71 6.04a1.003 1.003 0 0 0 0-1.41l-2.34-2.34a1.003 1.003 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-      <span>Edit</span>
-    </button>
-    <button class="nav-btn" title="History" onclick="window.location.href='history.html'">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm0 2a6 6 0 0 0-6 6v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1a6 6 0 0 0-6-6Z"/></svg>
-      <span>History</span>
-    </button>
-    <button class="nav-btn" title="Notifications" onclick="window.location.href='notifications.html'">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 17v-5a6 6 0 1 0-12 0v5l-2 2h16l-2-2Zm-6 5c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2Z"/></svg>
-      <span>Notifications</span>
-    </button>
-    <button class="nav-btn" title="Upcoming Elections" onclick="window.location.href='upcoming-elections.html'">
-      <svg width="22" height="22" fill="none" stroke="#a8b6ffcc" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20" /></svg>
-      <span>Upcoming Elections</span>
-    </button>
-    <button class="nav-btn" title="Next Voting Deadline" onclick="window.location.href='voting-deadline.html'">
-      <svg width="22" height="22" fill="none" stroke="#a8b6ffcc" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <span>Next Voting Deadline</span>
-    </button>
-    <button class="nav-btn" title="Profile Status" onclick="window.location.href='profile-status.html'">
-      <svg width="22" height="22" fill="none" stroke="#a8b6ffcc" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-8 0v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span>Profile Status</span>
-    </button>
-    <button class="nav-btn" title="Log Out" onclick="confirmLogout()">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 13v-2H7V8l-5 4 5 4v-3h9z"/><path d="M17 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4"/></svg>
-      <span>Log Out</span>
-    </button>
-  </nav>
-  
-  <!-- Overlay -->
-  <div id="overlay" class="overlay"></div>
-  
-  <!-- Main Content -->
-  <main>
-    <section class="hero">
-      <h1>Welcome to the Voter Panel</h1>
-      <p>
-        Easily participate in elections, view your history, and explore updates.<br />
-        Click the button below to access the current live election.
-      </p>
-      <button class="live-btn" onclick="window.location.href='live-election.html'">
-        <svg width="26" height="26" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
-          <circle cx="14" cy="14" r="7" fill="#fff" opacity="0.12" />
-          <circle cx="14" cy="14" r="5.6" fill="none" stroke="#fff" stroke-width="1.5" />
-          <circle cx="14" cy="14" r="2.2" fill="#fff" />
-          <circle cx="14" cy="14" r="1.1" fill="#23b6e0" />
-        </svg>
-        Live Election
-      </button>
-    </section>
-  </main>
-  
-  <!-- Logout Confirmation Modal -->
-  <div id="logoutModal" class="modal">
-    <div class="modal-content">
-      <h2>Log Out</h2>
-      <p>Are you sure you want to log out?</p>
-      <div class="modal-actions">
-        <button id="logoutCancel" class="modal-btn cancel">Cancel</button>
-        <button id="logoutConfirm" class="modal-btn confirm">Log Out</button>
-      </div>
+    <!-- Header -->
+    <header class="voter-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="flag-icon">
+                    <svg width="32" height="20" viewBox="0 0 32 20" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="32" height="6.67" y="0" fill="#FF9933"/>
+                        <rect width="32" height="6.67" y="6.67" fill="#FFFFFF"/>
+                        <rect width="32" height="6.66" y="13.34" fill="#138808"/>
+                        <circle cx="16" cy="10" r="2.2" fill="none" stroke="#000088" stroke-width="0.7"/>
+                        <g stroke="#000088" stroke-width="0.3">
+                            <g>
+                                <line x1="16" y1="7.8" x2="16" y2="12.2"/>
+                                <line x1="13.8" y1="10" x2="18.2" y2="10"/>
+                            </g>
+                            <g transform="rotate(45 16 10)">
+                                <line x1="16" y1="7.8" x2="16" y2="12.2"/>
+                                <line x1="13.8" y1="10" x2="18.2" y2="10"/>
+                            </g>
+                        </g>
+                    </svg>
+                </span>
+                <h1>Votezy</h1>
+                <span class="voter-badge">Voter Dashboard</span>
+            </div>
+            <div class="user-section">
+                <span>Welcome, Voter</span>
+                <button class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <div class="nav-container">
+            <div class="nav-tab active" data-section="elections">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
+                    <path d="M12 12l8 -4.5" />
+                    <path d="M12 12l0 9" />
+                    <path d="M12 12l-8 -4.5" />
+                </svg>
+                Live Elections
+            </div>
+            <div class="nav-tab" data-section="history">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12,6 12,12 16,14"/>
+                </svg>
+                Vote History
+            </div>
+            <div class="nav-tab" data-section="profile">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                My Profile
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Live Elections Section -->
+        <section id="elections" class="content-section active">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
+                        <path d="M12 12l8 -4.5" />
+                        <path d="M12 12l0 9" />
+                        <path d="M12 12l-8 -4.5" />
+                    </svg>
+                    Live Elections
+                </h2>
+                <p class="section-subtitle">Cast your vote in active elections</p>
+            </div>
+
+            <div class="success-message" id="vote-success-message">
+                Your vote has been successfully recorded! Thank you for participating in democracy.
+            </div>
+
+            <div class="elections-grid">
+                <!-- Live Election 1 -->
+                <div class="election-card">
+                    <div class="election-card-header">
+                        <h3 class="election-title">General Elections 2024</h3>
+                        <p class="election-type">National Level</p>
+                    </div>
+                    <div class="election-card-body">
+                        <div class="election-status status-live">🔴 LIVE</div>
+                        <div class="election-info">
+                            <div class="info-row">
+                                <span class="info-label">Constituency:</span>
+                                <span class="info-value">Mumbai North</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">End Date:</span>
+                                <span class="info-value">Apr 20, 2024</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">End Time:</span>
+                                <span class="info-value">6:00 PM</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Candidates:</span>
+                                <span class="info-value">5 Registered</span>
+                            </div>
+                        </div>
+                        <button class="vote-btn" onclick="openVotingModal('general2024')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <path d="M9 11l3 3L22 4"/>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                            </svg>
+                            Cast Your Vote
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Election 2 -->
+                <div class="election-card">
+                    <div class="election-card-header">
+                        <h3 class="election-title">Local Council Elections</h3>
+                        <p class="election-type">Municipal Level</p>
+                    </div>
+                    <div class="election-card-body">
+                        <div class="election-status status-live">🔴 LIVE</div>
+                        <div class="election-info">
+                            <div class="info-row">
+                                <span class="info-label">Constituency:</span>
+                                <span class="info-value">Ward 42</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">End Date:</span>
+                                <span class="info-value">Apr 18, 2024</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">End Time:</span>
+                                <span class="info-value">5:00 PM</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Candidates:</span>
+                                <span class="info-value">3 Registered</span>
+                            </div>
+                        </div>
+                        <button class="vote-btn" onclick="openVotingModal('local2024')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <path d="M9 11l3 3L22 4"/>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                            </svg>
+                            Cast Your Vote
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Election -->
+                <div class="election-card">
+                    <div class="election-card-header">
+                        <h3 class="election-title">Student Council Elections</h3>
+                        <p class="election-type">University Level</p>
+                    </div>
+                    <div class="election-card-body">
+                        <div class="election-status status-upcoming">📅 UPCOMING</div>
+                        <div class="election-info">
+                            <div class="info-row">
+                                <span class="info-label">Constituency:</span>
+                                <span class="info-value">Engineering Dept</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Start Date:</span>
+                                <span class="info-value">May 1, 2024</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">End Date:</span>
+                                <span class="info-value">May 3, 2024</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Candidates:</span>
+                                <span class="info-value">4 Registered</span>
+                            </div>
+                        </div>
+                        <button class="vote-btn" disabled>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            Voting Starts May 1st
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vote History Section -->
+        <section id="history" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    Vote History
+                </h2>
+                <p class="section-subtitle">View your past voting records</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14,2 14,8 20,8"/>
+                        </svg>
+                        Your Voting Record
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Total Votes Cast</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Active Elections</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Participation Rate</div>
+                        </div>
+                    </div>
+
+                    <div class="elections-grid">
+                        <div class="election-card">
+                            <div class="election-card-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                                <h3 class="election-title">Previous General Elections</h3>
+                                <p class="election-type">Completed - March 2024</p>
+                            </div>
+                            <div class="election-card-body">
+                                <div class="election-status status-completed">✅ VOTED</div>
+                                <div class="election-info">
+                                    <div class="info-row">
+                                        <span class="info-label">Vote Date:</span>
+                                        <span class="info-value">Mar 15, 2024</span>
+                                    </div>
+                                    <div class="info-row">
+                                        <span class="info-label">Constituency:</span>
+                                        <span class="info-value">Mumbai North</span>
+                                    </div>
+                                    <div class="info-row">
+                                        <span class="info-label">Status:</span>
+                                        <span class="info-value">Verified ✓</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    My Profile
+                </h2>
+                <p class="section-subtitle">View and manage your voter profile</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Profile Information
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="info-row" style="margin-bottom: 1rem;">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">John Doe</span>
+                    </div>
+                    <div class="info-row" style="margin-bottom: 1rem;">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">john.doe@example.com</span>
+                    </div>
+                    <div class="info-row" style="margin-bottom: 1rem;">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">+1 234 567 890</span>
+                    </div>
+                    <div class="info-row" style="margin-bottom: 1rem;">
+                        <span class="info-label">Constituency:</span>
+                        <span class="info-value">Mumbai North</span>
+                    </div>
+                    <button class="vote-btn" style="width: auto; margin-top: 1rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        Edit Profile
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Voting Modal -->
+    <div class="voting-modal" id="voting-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-election-title"></span>
+                <span class="modal-subtitle" id="modal-election-type"></span>
+                <button class="close-modal" onclick="closeVotingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vote-form">
+                    <div class="candidates-list" id="candidates-list">
+                        <!-- Candidates will be injected here -->
+                    </div>
+                    <button type="submit" class="vote-submit-btn" id="vote-submit-btn" disabled>Submit Vote</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-  
-  <script>
-    // Sidebar/hamburger logic
-    const hamburger = document.getElementById('hamburger');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    
-    function toggleSidebar() {
-      hamburger.classList.toggle('active'); 
-      sidebar.classList.toggle('open'); 
-      overlay.classList.toggle('active');
+
+    <script>
+// Tab navigation
+document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(this.dataset.section).classList.add('active');
+    });
+});
+
+// Dummy election/candidate data
+const elections = {
+    general2024: {
+        title: "General Elections 2024",
+        type: "National Level",
+        candidates: [
+            { name: "Amit Sharma", party: "People's Party", symbol: "🦁" },
+            { name: "Priya Singh", party: "Unity Front", symbol: "🌳" },
+            { name: "Rahul Mehra", party: "Progressive Alliance", symbol: "🦅" },
+            { name: "Sunita Rao", party: "Justice League", symbol: "⚖️" },
+            { name: "Vikas Patel", party: "Development Party", symbol: "🚀" }
+        ]
+    },
+    local2024: {
+        title: "Local Council Elections",
+        type: "Municipal Level",
+        candidates: [
+            { name: "Neha Desai", party: "Citizen's Voice", symbol: "🏡" },
+            { name: "Rohan Gupta", party: "Green Ward", symbol: "🌱" },
+            { name: "Suresh Kumar", party: "People's Choice", symbol: "🕊️" }
+        ]
     }
-    
-    hamburger.addEventListener('click', toggleSidebar);
-    hamburger.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { 
-        e.preventDefault(); 
-        toggleSidebar(); 
-      }
+};
+
+let selectedElection = null;
+let selectedCandidateIndex = null;
+
+// Open voting modal
+window.openVotingModal = function(electionKey) {
+    selectedElection = elections[electionKey];
+    selectedCandidateIndex = null;
+    document.getElementById('modal-election-title').textContent = selectedElection.title;
+    document.getElementById('modal-election-type').textContent = selectedElection.type;
+    const candidatesList = document.getElementById('candidates-list');
+    candidatesList.innerHTML = '';
+    selectedElection.candidates.forEach((c, idx) => {
+        const div = document.createElement('div');
+        div.className = 'candidate-option';
+        div.innerHTML = `
+            <input type="radio" name="candidate" class="candidate-radio" id="candidate${idx}" value="${idx}">
+            <div class="candidate-info">
+                <div class="candidate-name">${c.name}</div>
+                <div class="candidate-party">${c.party}</div>
+            </div>
+            <span class="candidate-symbol">${c.symbol}</span>
+        `;
+        div.onclick = () => {
+            document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
+            div.classList.add('selected');
+            div.querySelector('input[type=radio]').checked = true;
+            selectedCandidateIndex = idx;
+            document.getElementById('vote-submit-btn').disabled = false;
+        };
+        candidatesList.appendChild(div);
     });
-    overlay.addEventListener('click', toggleSidebar);
-    
-    // Modal logic
-    function confirmLogout() {
-      document.getElementById('logoutModal').classList.add('show');
-    }
-    document.getElementById('logoutCancel').onclick = function() {
-      document.getElementById('logoutModal').classList.remove('show');
-    };
-    document.getElementById('logoutConfirm').onclick = function() {
-      // Clear any stored tokens/session data
-      localStorage.removeItem('authToken');
-      sessionStorage.clear();
-      window.location.href = 'login.html';
-    };
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.getElementById('logoutModal').classList.remove('show');
-      }
-    });
-    
-    // Fetch user name from backend and display in sidebar
-    window.addEventListener("DOMContentLoaded", async function() {
-      try {
-        // Option 1: If using JWT token stored in localStorage
-        const token = localStorage.getItem('authToken'); 
-        
-        // Option 2: If using session cookies, use credentials: 'include' instead
-        const res = await fetch("http://localhost:8080/api/user/me", {
-          headers: { 
-            "Authorization": token ? "Bearer " + token : undefined,
-            "Content-Type": "application/json"
-          },
-          // credentials: "include" // Uncomment if using cookies instead of JWT
-        }); 
-        
-        if (!res.ok) {
-          throw new Error("Unauthorized or failed to fetch user data");
-        }
-        
-        const user = await res.json();
-        
-        // Display user name in sidebar
-        const userName = user.name || user.fullName || "User";
-        document.getElementById("sidebarUserName").textContent = "👋 " + userName;
-        
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-        document.getElementById("sidebarUserName").textContent = "👋 Welcome!";
-        
-        // Optional: Redirect to login if user is not authenticated
-        // if (error.message.includes("Unauthorized")) {
-        //   window.location.href = 'login.html';
-        // }
-      }
-    });
-  </script>
+    document.getElementById('vote-submit-btn').disabled = true;
+    document.getElementById('voting-modal').classList.add('active');
+};
+
+// Close voting modal
+window.closeVotingModal = function() {
+    document.getElementById('voting-modal').classList.remove('active');
+};
+
+// Vote submission
+document.getElementById('vote-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (selectedCandidateIndex === null) return;
+    closeVotingModal();
+    // Show success message
+    const msg = document.getElementById('vote-success-message');
+    msg.style.display = 'block';
+    setTimeout(() => { msg.style.display = 'none'; }, 4000);
+    // Optionally, update vote history or disable vote button (not persistent)
+});
+
+// Logout button
+document.querySelector('.logout-btn').addEventListener('click', function() {
+    alert('You have been logged out.');
+    // window.location.href = 'login.html'; // Uncomment and set your login page if needed
+});
+
+// Optional: Close modal on background click
+document.getElementById('voting-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeVotingModal();
+});
+</script>
 </body>
 </html>
