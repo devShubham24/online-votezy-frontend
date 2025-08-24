@@ -391,8 +391,8 @@
           showRegisterError("Please enter a valid email address.");
           return;
         }
-        if (payload.password.length < 6) {
-          showRegisterError("Password must be at least 6 characters.");
+        if (payload.password.length < 8) {
+          showRegisterError("Password must be at least 8 characters.");
           return;
         }
         try {

@@ -66,7 +66,7 @@
             gap: 1rem;
         }
 
-        .logout-btn {
+        .header-btn {
             background: rgba(255,255,255,0.2);
             color: #fff;
             border: none;
@@ -75,10 +75,27 @@
             cursor: pointer;
             font-weight: 500;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .home-btn {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .logout-btn {
+            background: rgba(231, 76, 60, 0.8);
         }
 
         .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(231, 76, 60, 0.9);
         }
 
         /* Navigation */
@@ -106,6 +123,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex: 1;
+            justify-content: center;
         }
 
         .nav-tab:hover {
@@ -456,6 +475,359 @@
             box-shadow: none;
         }
 
+        /* Password Update Modal */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-modal-content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .password-modal-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .password-modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .password-modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .close-password-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .close-password-modal:hover {
+            opacity: 1;
+        }
+
+        .password-modal-body {
+            padding: 2rem;
+        }
+
+        .password-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .password-form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .password-input-container {
+            position: relative;
+        }
+
+        .password-form-input {
+            width: 100%;
+            padding: 0.8rem 3rem 0.8rem 1rem;
+            border: 2px solid #e3eaf7;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .password-form-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 0.2rem;
+        }
+
+        .password-toggle:hover {
+            color: #3498db;
+        }
+
+        .password-form-error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .password-form-success {
+            color: #27ae60;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .password-update-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .password-update-btn {
+            background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .password-update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52,152,219,0.3);
+        }
+
+        .password-update-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .password-cancel-btn {
+            background: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .password-cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        /* Profile field styles */
+        .profile-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e3eaf7;
+        }
+
+        .profile-field-info {
+            flex: 1;
+        }
+
+        .profile-field-label {
+            color: #666;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-field-value {
+            color: #333;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .password-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .password-text {
+            font-family: monospace;
+            letter-spacing: 0.1em;
+        }
+
+        .show-password-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 0.3rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .show-password-btn:hover {
+            color: #3498db;
+            background: #f0f8ff;
+        }
+
+        .update-password-btn {
+            background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .update-password-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(243,156,18,0.3);
+        }
+        .logout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .logout-modal.active {
+            display: flex;
+        }
+
+        .logout-modal-content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .logout-modal-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .logout-modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logout-modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .logout-modal-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logout-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .logout-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .confirm-logout-btn {
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .confirm-logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231,76,60,0.3);
+        }
+
+        .cancel-logout-btn {
+            background: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cancel-logout-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
         /* Success Message */
         .success-message {
             background: #d4edda;
@@ -469,33 +841,106 @@
             font-weight: 600;
         }
 
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        /* No Records Found Styling */
+        .no-records {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #666;
         }
 
-        .stat-card {
+        .no-records-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-records-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .no-records-message {
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Vote Record Styling */
+        .vote-record-card {
             background: #fff;
-            padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(52,152,219,0.08);
             border: 1px solid #e3eaf7;
-            text-align: center;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .stat-value {
-            font-size: 2rem;
+        .vote-record-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(52,152,219,0.12);
+        }
+
+        .vote-record-header {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vote-record-title {
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #3498db;
-            margin-bottom: 0.5rem;
+            margin: 0;
         }
 
-        .stat-label {
+        .vote-record-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .vote-record-body {
+            padding: 1.5rem;
+        }
+
+        .vote-record-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .vote-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .vote-info-label {
             color: #666;
             font-weight: 500;
+        }
+
+        .vote-info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .vote-status {
+            display: inline-block;
+            background: #d4edda;
+            color: #155724;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
         }
 
         /* Responsive Design */
@@ -507,6 +952,11 @@
             .header-content {
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .user-section {
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
             .nav-tabs {
@@ -540,13 +990,21 @@
                 padding: 1rem;
             }
 
-            .modal-content {
+            .modal-content, .logout-modal-content {
                 margin: 1rem;
                 max-width: calc(100% - 2rem);
             }
 
-            .modal-header, .modal-body {
+            .modal-header, .modal-body, .logout-modal-body {
                 padding: 1rem;
+            }
+
+            .logout-buttons {
+                flex-direction: column;
+            }
+
+            .vote-record-info {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -584,8 +1042,22 @@
                 <span class="voter-badge">Voter Dashboard</span>
             </div>
             <div class="user-section">
-                <span>Welcome, Voter</span>
-                <button class="logout-btn">Logout</button>
+                <span>Welcome, <span id="user-name">John Doe</span></span>
+                <a href="index.html" class="header-btn home-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    Home
+                </a>
+                <button class="header-btn logout-btn" onclick="showLogoutConfirmation()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Logout
+                </button>
             </div>
         </div>
     </header>
@@ -593,7 +1065,14 @@
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
         <div class="nav-container">
-            <div class="nav-tab active" data-section="elections">
+            <div class="nav-tab active" data-section="profile">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+                My Profile
+            </div>
+            <div class="nav-tab" data-section="elections">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
                     <path d="M12 12l8 -4.5" />
@@ -602,27 +1081,86 @@
                 </svg>
                 Live Elections
             </div>
-            <div class="nav-tab" data-section="history">
+            <div class="nav-tab" data-section="vote-record">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12,6 12,12 16,14"/>
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14,2 14,8 20,8"/>
                 </svg>
-                Vote History
-            </div>
-            <div class="nav-tab" data-section="profile">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                </svg>
-                My Profile
+                Vote Record
             </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Live Elections Section -->
-        <section id="elections" class="content-section active">
+        <!-- Profile Section (Now First) -->
+        <section id="profile" class="content-section active">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    My Profile
+                </h2>
+                <p class="section-subtitle">View and manage your voter profile</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Profile Information
+                    </h3>
+                </div>
+                <div class="card-content">
+                    <div class="profile-field">
+                        <div class="profile-field-info">
+                            <div class="profile-field-label">Name</div>
+                            <div class="profile-field-value" id="profile-name">John Doe</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-field">
+                        <div class="profile-field-info">
+                            <div class="profile-field-label">Username/Email</div>
+                            <div class="profile-field-value" id="profile-email">john.doe@example.com</div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-field">
+                        <div class="profile-field-info">
+                            <div class="profile-field-label">Password</div>
+                            <div class="profile-field-value">
+                                <div class="password-display">
+                                    <span class="password-text" id="password-display">••••••••••</span>
+                                    <button class="show-password-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="update-password-btn" onclick="showPasswordUpdateModal()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.3rem;">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <circle cx="12" cy="16" r="1"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                            Update Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Elections Section (Now Second) -->
+        <section id="elections" class="content-section">
             <div class="section-header">
                 <h2 class="section-title">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
@@ -751,17 +1289,17 @@
             </div>
         </section>
 
-        <!-- Vote History Section -->
-        <section id="history" class="content-section">
+        <!-- Vote Record Section (Now Third) -->
+        <section id="vote-record" class="content-section">
             <div class="section-header">
                 <h2 class="section-title">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12,6 12,12 16,14"/>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
                     </svg>
-                    Vote History
+                    Vote Record
                 </h2>
-                <p class="section-subtitle">View your past voting records</p>
+                <p class="section-subtitle">View your voting history and records</p>
             </div>
 
             <div class="card">
@@ -771,101 +1309,23 @@
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                             <polyline points="14,2 14,8 20,8"/>
                         </svg>
-                        Your Voting Record
+                        Your Vote Records
                     </h3>
                 </div>
-                <div class="card-content">
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-value">7</div>
-                            <div class="stat-label">Total Votes Cast</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">2</div>
-                            <div class="stat-label">Active Elections</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-value">100%</div>
-                            <div class="stat-label">Participation Rate</div>
+                <div class="card-content" id="vote-records-container">
+                    <!-- This will be populated from backend or show no records message -->
+                    <div class="no-records" id="no-records-message">
+                        <div class="no-records-icon">📋</div>
+                        <div class="no-records-title">No Vote Records Found</div>
+                        <div class="no-records-message">
+                            You haven't cast any votes yet. Once you participate in elections, your vote records will appear here.
                         </div>
                     </div>
-
-                    <div class="elections-grid">
-                        <div class="election-card">
-                            <div class="election-card-header" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
-                                <h3 class="election-title">Previous General Elections</h3>
-                                <p class="election-type">Completed - March 2024</p>
-                            </div>
-                            <div class="election-card-body">
-                                <div class="election-status status-completed">✅ VOTED</div>
-                                <div class="election-info">
-                                    <div class="info-row">
-                                        <span class="info-label">Vote Date:</span>
-                                        <span class="info-value">Mar 15, 2024</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span class="info-label">Constituency:</span>
-                                        <span class="info-value">Mumbai North</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span class="info-label">Status:</span>
-                                        <span class="info-value">Verified ✓</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    
+                    <!-- Example of how vote records will look (hidden by default) -->
+                    <div class="vote-records-list" id="vote-records-list" style="display: none;">
+                        <!-- Vote records will be dynamically added here from backend -->
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Profile Section -->
-        <section id="profile" class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    My Profile
-                </h2>
-                <p class="section-subtitle">View and manage your voter profile</p>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                        Profile Information
-                    </h3>
-                </div>
-                <div class="card-content">
-                    <div class="info-row" style="margin-bottom: 1rem;">
-                        <span class="info-label">Name:</span>
-                        <span class="info-value">John Doe</span>
-                    </div>
-                    <div class="info-row" style="margin-bottom: 1rem;">
-                        <span class="info-label">Email:</span>
-                        <span class="info-value">john.doe@example.com</span>
-                    </div>
-                    <div class="info-row" style="margin-bottom: 1rem;">
-                        <span class="info-label">Phone:</span>
-                        <span class="info-value">+1 234 567 890</span>
-                    </div>
-                    <div class="info-row" style="margin-bottom: 1rem;">
-                        <span class="info-label">Constituency:</span>
-                        <span class="info-value">Mumbai North</span>
-                    </div>
-                    <button class="vote-btn" style="width: auto; margin-top: 1rem;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                            <path d="M9 11l3 3L22 4"/>
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                        </svg>
-                        Edit Profile
-                    </button>
                 </div>
             </div>
         </section>
@@ -890,103 +1350,558 @@
         </div>
     </div>
 
-    <script>
-// Tab navigation
-document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.addEventListener('click', function() {
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-        document.getElementById(this.dataset.section).classList.add('active');
-    });
-});
-
-// Dummy election/candidate data
-const elections = {
-    general2024: {
-        title: "General Elections 2024",
-        type: "National Level",
-        candidates: [
-            { name: "Amit Sharma", party: "People's Party", symbol: "🦁" },
-            { name: "Priya Singh", party: "Unity Front", symbol: "🌳" },
-            { name: "Rahul Mehra", party: "Progressive Alliance", symbol: "🦅" },
-            { name: "Sunita Rao", party: "Justice League", symbol: "⚖️" },
-            { name: "Vikas Patel", party: "Development Party", symbol: "🚀" }
-        ]
-    },
-    local2024: {
-        title: "Local Council Elections",
-        type: "Municipal Level",
-        candidates: [
-            { name: "Neha Desai", party: "Citizen's Voice", symbol: "🏡" },
-            { name: "Rohan Gupta", party: "Green Ward", symbol: "🌱" },
-            { name: "Suresh Kumar", party: "People's Choice", symbol: "🕊️" }
-        ]
-    }
-};
-
-let selectedElection = null;
-let selectedCandidateIndex = null;
-
-// Open voting modal
-window.openVotingModal = function(electionKey) {
-    selectedElection = elections[electionKey];
-    selectedCandidateIndex = null;
-    document.getElementById('modal-election-title').textContent = selectedElection.title;
-    document.getElementById('modal-election-type').textContent = selectedElection.type;
-    const candidatesList = document.getElementById('candidates-list');
-    candidatesList.innerHTML = '';
-    selectedElection.candidates.forEach((c, idx) => {
-        const div = document.createElement('div');
-        div.className = 'candidate-option';
-        div.innerHTML = `
-            <input type="radio" name="candidate" class="candidate-radio" id="candidate${idx}" value="${idx}">
-            <div class="candidate-info">
-                <div class="candidate-name">${c.name}</div>
-                <div class="candidate-party">${c.party}</div>
+    <!-- Logout Confirmation Modal -->
+    <div class="logout-modal" id="logout-modal">
+        <div class="logout-modal-content">
+            <div class="logout-modal-header">
+                <h3 class="logout-modal-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                    </svg>
+                    Confirm Logout
+                </h3>
+                <p class="logout-modal-subtitle">You are about to leave the Voter Dashboard</p>
             </div>
-            <span class="candidate-symbol">${c.symbol}</span>
-        `;
-        div.onclick = () => {
-            document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
-            div.classList.add('selected');
-            div.querySelector('input[type=radio]').checked = true;
-            selectedCandidateIndex = idx;
-            document.getElementById('vote-submit-btn').disabled = false;
+            <div class="logout-modal-body">
+                <p class="logout-message">
+                    Are you sure you want to logout? You will need to enter your credentials again to access your dashboard.
+                </p>
+                <div class="logout-buttons">
+                    <button class="confirm-logout-btn" onclick="confirmLogout()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16,17 21,12 16,7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Yes, Logout
+                    </button>
+                    <button class="cancel-logout-btn" onclick="cancelLogout()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Update Modal -->
+    <div class="password-modal" id="password-modal">
+        <div class="password-modal-content">
+            <div class="password-modal-header">
+                <h3 class="password-modal-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <circle cx="12" cy="16" r="1"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Update Password
+                </h3>
+                <p class="password-modal-subtitle">Change your account password</p>
+                <button class="close-password-modal" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <div class="password-modal-body">
+                <form id="password-update-form">
+                    <div class="password-form-group">
+                        <label for="current-password" class="password-form-label">Current Password</label>
+                        <div class="password-input-container">
+                            <input type="password" id="current-password" class="password-form-input" placeholder="Enter your current password" required>
+                            <button type="button" class="password-toggle" onclick="togglePasswordField('current-password')">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="password-form-error" id="current-password-error">Incorrect current password</div>
+                    </div>
+
+                    <div class="password-form-group">
+                        <label for="new-password" class="password-form-label">New Password</label>
+                        <div class="password-input-container">
+                            <input type="password" id="new-password" class="password-form-input" placeholder="Enter new password" required>
+                            <button type="button" class="password-toggle" onclick="togglePasswordField('new-password')">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="password-form-group">
+                        <label for="confirm-password" class="password-form-label">Confirm New Password</label>
+                        <div class="password-input-container">
+                            <input type="password" id="confirm-password" class="password-form-input" placeholder="Confirm new password" required>
+                            <button type="button" class="password-toggle" onclick="togglePasswordField('confirm-password')">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="password-form-error" id="confirm-password-error">Passwords do not match</div>
+                    </div>
+
+                    <div class="password-form-success" id="password-update-success">
+                        Password updated successfully!
+                    </div>
+
+                    <div class="password-update-buttons">
+                        <button type="button" class="password-cancel-btn" onclick="closePasswordModal()">Cancel</button>
+                        <button type="submit" class="password-update-btn" id="submit-password-btn">Update Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User data (in real app, this would come from backend API)
+        let userData = {
+            name: "John Doe",
+            email: "john.doe@example.com",
+            password: "mySecurePassword123" // This would never be stored like this in real app
         };
-        candidatesList.appendChild(div);
-    });
-    document.getElementById('vote-submit-btn').disabled = true;
-    document.getElementById('voting-modal').classList.add('active');
-};
 
-// Close voting modal
-window.closeVotingModal = function() {
-    document.getElementById('voting-modal').classList.remove('active');
-};
+        // Vote records data (will come from backend)
+        let voteRecords = [
+            // Example structure - this will be empty initially and populated from backend after votes are cast
+            // {
+            //     id: 1,
+            //     electionTitle: "General Elections 2024",
+            //     electionType: "National Level",
+            //     constituency: "Mumbai North",
+            //     voteDate: "2024-04-15",
+            //     voteTime: "14:30",
+            //     candidateName: "Amit Sharma",
+            //     candidateParty: "People's Party",
+            //     status: "Verified"
+            // }
+        ];
 
-// Vote submission
-document.getElementById('vote-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (selectedCandidateIndex === null) return;
-    closeVotingModal();
-    // Show success message
-    const msg = document.getElementById('vote-success-message');
-    msg.style.display = 'block';
-    setTimeout(() => { msg.style.display = 'none'; }, 4000);
-    // Optionally, update vote history or disable vote button (not persistent)
-});
+        let isPasswordVisible = false;
 
-// Logout button
-document.querySelector('.logout-btn').addEventListener('click', function() {
-    alert('You have been logged out.');
-    // window.location.href = 'login.html'; // Uncomment and set your login page if needed
-});
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadVoteRecords();
+        });
 
-// Optional: Close modal on background click
-document.getElementById('voting-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeVotingModal();
-});
-</script>
+        // Load user data into the interface
+        function loadUserData() {
+            document.getElementById('user-name').textContent = userData.name;
+            document.getElementById('profile-name').textContent = userData.name;
+            document.getElementById('profile-email').textContent = userData.email;
+        }
+
+        // Load vote records
+        function loadVoteRecords() {
+            const container = document.getElementById('vote-records-container');
+            const noRecordsMessage = document.getElementById('no-records-message');
+            const recordsList = document.getElementById('vote-records-list');
+
+            if (voteRecords.length === 0) {
+                // Show no records message
+                noRecordsMessage.style.display = 'block';
+                recordsList.style.display = 'none';
+            } else {
+                // Show records
+                noRecordsMessage.style.display = 'none';
+                recordsList.style.display = 'block';
+                
+                // Clear existing records
+                recordsList.innerHTML = '';
+                
+                // Add each vote record
+                voteRecords.forEach(record => {
+                    const recordElement = createVoteRecordElement(record);
+                    recordsList.appendChild(recordElement);
+                });
+            }
+        }
+
+        // Create vote record element
+        function createVoteRecordElement(record) {
+            const recordDiv = document.createElement('div');
+            recordDiv.className = 'vote-record-card';
+            
+            recordDiv.innerHTML = `
+                <div class="vote-record-header">
+                    <h4 class="vote-record-title">${record.electionTitle}</h4>
+                    <span class="vote-record-date">${formatDate(record.voteDate)} at ${record.voteTime}</span>
+                </div>
+                <div class="vote-record-body">
+                    <div class="vote-record-info">
+                        <div class="vote-info-item">
+                            <span class="vote-info-label">Election Type:</span>
+                            <span class="vote-info-value">${record.electionType}</span>
+                        </div>
+                        <div class="vote-info-item">
+                            <span class="vote-info-label">Constituency:</span>
+                            <span class="vote-info-value">${record.constituency}</span>
+                        </div>
+                        <div class="vote-info-item">
+                            <span class="vote-info-label">Candidate:</span>
+                            <span class="vote-info-value">${record.candidateName}</span>
+                        </div>
+                        <div class="vote-info-item">
+                            <span class="vote-info-label">Party:</span>
+                            <span class="vote-info-value">${record.candidateParty}</span>
+                        </div>
+                    </div>
+                    <div class="vote-status">✅ ${record.status}</div>
+                </div>
+            `;
+            
+            return recordDiv;
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Add vote record (called when user casts a vote)
+        function addVoteRecord(electionKey, candidateIndex) {
+            const election = elections[electionKey];
+            const candidate = election.candidates[candidateIndex];
+            const now = new Date();
+            
+            const newRecord = {
+                id: voteRecords.length + 1,
+                electionTitle: election.title,
+                electionType: election.type,
+                constituency: electionKey === 'general2024' ? 'Mumbai North' : 'Ward 42',
+                voteDate: now.toISOString().split('T')[0],
+                voteTime: now.toTimeString().split(' ')[0].substring(0, 5),
+                candidateName: candidate.name,
+                candidateParty: candidate.party,
+                status: 'Verified'
+            };
+            
+            voteRecords.push(newRecord);
+            loadVoteRecords(); // Refresh the display
+        }
+
+        // Toggle password visibility in profile
+        function togglePasswordVisibility() {
+            const passwordDisplay = document.getElementById('password-display');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (isPasswordVisible) {
+                passwordDisplay.textContent = '••••••••••';
+                eyeIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                `;
+                isPasswordVisible = false;
+            } else {
+                passwordDisplay.textContent = userData.password;
+                eyeIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                `;
+                isPasswordVisible = true;
+            }
+        }
+
+        // Toggle password field visibility in modal
+        function togglePasswordField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const button = field.nextElementSibling;
+            const icon = button.querySelector('svg');
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                `;
+            } else {
+                field.type = 'password';
+                icon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                `;
+            }
+        }
+
+        // Show password update modal
+        function showPasswordUpdateModal() {
+            document.getElementById('password-modal').classList.add('active');
+            // Clear form
+            document.getElementById('password-update-form').reset();
+            // Hide error/success messages
+            document.querySelectorAll('.password-form-error, .password-form-success').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+
+        // Close password update modal
+        function closePasswordModal() {
+            document.getElementById('password-modal').classList.remove('active');
+        }
+
+        // Password update form submission
+        document.getElementById('password-update-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Hide previous errors
+            document.querySelectorAll('.password-form-error').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Validate current password
+            if (currentPassword !== userData.password) {
+                document.getElementById('current-password-error').style.display = 'block';
+                return;
+            }
+            
+            // Validate new password confirmation
+            if (newPassword !== confirmPassword) {
+                document.getElementById('confirm-password-error').style.display = 'block';
+                return;
+            }
+            
+            // Validate password strength (basic)
+            if (newPassword.length < 8) {
+                document.getElementById('confirm-password-error').textContent = 'Password must be at least 8 characters long';
+                document.getElementById('confirm-password-error').style.display = 'block';
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = document.getElementById('submit-password-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Updating...';
+            
+            try {
+                // In real app, make API call to update password
+                await simulatePasswordUpdate(currentPassword, newPassword);
+                
+                // Update local data (in real app, this would be handled by backend)
+                userData.password = newPassword;
+                
+                // Show success message
+                document.getElementById('password-update-success').style.display = 'block';
+                
+                // Close modal after 2 seconds
+                setTimeout(() => {
+                    closePasswordModal();
+                    // Reset password visibility if it was showing
+                    if (isPasswordVisible) {
+                        togglePasswordVisibility();
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                // Handle error
+                document.getElementById('current-password-error').textContent = 'Failed to update password. Please try again.';
+                document.getElementById('current-password-error').style.display = 'block';
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Update Password';
+            }
+        });
+
+        // Simulate password update API call
+        async function simulatePasswordUpdate(currentPassword, newPassword) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    // Simulate success
+                    resolve({ success: true });
+                }, 1500);
+            });
+        }
+
+        // Tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(this.dataset.section).classList.add('active');
+            });
+        });
+
+        // Dummy election/candidate data
+        const elections = {
+            general2024: {
+                title: "General Elections 2024",
+                type: "National Level",
+                candidates: [
+                    { name: "Amit Sharma", party: "People's Party", symbol: "🦁" },
+                    { name: "Priya Singh", party: "Unity Front", symbol: "🌳" },
+                    { name: "Rahul Mehra", party: "Progressive Alliance", symbol: "🦅" },
+                    { name: "Sunita Rao", party: "Justice League", symbol: "⚖️" },
+                    { name: "Vikas Patel", party: "Development Party", symbol: "🚀" }
+                ]
+            },
+            local2024: {
+                title: "Local Council Elections",
+                type: "Municipal Level",
+                candidates: [
+                    { name: "Neha Desai", party: "Citizen's Voice", symbol: "🏡" },
+                    { name: "Rohan Gupta", party: "Green Ward", symbol: "🌱" },
+                    { name: "Suresh Kumar", party: "People's Choice", symbol: "🕊️" }
+                ]
+            }
+        };
+
+        let selectedElection = null;
+        let selectedCandidateIndex = null;
+
+        // Open voting modal
+        window.openVotingModal = function(electionKey) {
+            selectedElection = elections[electionKey];
+            selectedCandidateIndex = null;
+            document.getElementById('modal-election-title').textContent = selectedElection.title;
+            document.getElementById('modal-election-type').textContent = selectedElection.type;
+            const candidatesList = document.getElementById('candidates-list');
+            candidatesList.innerHTML = '';
+            selectedElection.candidates.forEach((c, idx) => {
+                const div = document.createElement('div');
+                div.className = 'candidate-option';
+                div.innerHTML = `
+                    <input type="radio" name="candidate" class="candidate-radio" id="candidate${idx}" value="${idx}">
+                    <div class="candidate-info">
+                        <div class="candidate-name">${c.name}</div>
+                        <div class="candidate-party">${c.party}</div>
+                    </div>
+                    <span class="candidate-symbol">${c.symbol}</span>
+                `;
+                div.onclick = () => {
+                    document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
+                    div.classList.add('selected');
+                    div.querySelector('input[type=radio]').checked = true;
+                    selectedCandidateIndex = idx;
+                    document.getElementById('vote-submit-btn').disabled = false;
+                };
+                candidatesList.appendChild(div);
+            });
+            document.getElementById('vote-submit-btn').disabled = true;
+            document.getElementById('voting-modal').classList.add('active');
+        };
+
+        // Close voting modal
+        window.closeVotingModal = function() {
+            document.getElementById('voting-modal').classList.remove('active');
+        };
+
+        // Vote submission
+        document.getElementById('vote-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (selectedCandidateIndex === null) return;
+            
+            // Get the current election key
+            let currentElectionKey = null;
+            if (selectedElection.title === "General Elections 2024") {
+                currentElectionKey = 'general2024';
+            } else if (selectedElection.title === "Local Council Elections") {
+                currentElectionKey = 'local2024';
+            }
+            
+            // Add vote record
+            if (currentElectionKey) {
+                addVoteRecord(currentElectionKey, selectedCandidateIndex);
+            }
+            
+            closeVotingModal();
+            // Show success message
+            const msg = document.getElementById('vote-success-message');
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 4000);
+        });
+
+        // Logout confirmation functions
+        window.showLogoutConfirmation = function() {
+            document.getElementById('logout-modal').classList.add('active');
+        };
+
+        window.cancelLogout = function() {
+            document.getElementById('logout-modal').classList.remove('active');
+        };
+
+        window.confirmLogout = function() {
+            // Add a smooth transition effect before redirect
+            document.getElementById('logout-modal').classList.remove('active');
+            
+            // Show a brief loading state or message
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(52, 152, 219, 0.9);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                color: white;
+                font-size: 1.2rem;
+                font-weight: 600;
+            `;
+            loadingOverlay.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="margin-bottom: 1rem;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                        </svg>
+                    </div>
+                    <div>Logging you out...</div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+            
+            document.body.appendChild(loadingOverlay);
+            
+            // Redirect after a short delay for better UX
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        };
+
+        // Optional: Close modals on background click
+        document.getElementById('voting-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeVotingModal();
+        });
+
+        document.getElementById('logout-modal').addEventListener('click', function(e) {
+            if (e.target === this) cancelLogout();
+        });
+
+        document.getElementById('password-modal').addEventListener('click', function(e) {
+            if (e.target === this) closePasswordModal();
+        });
+
+        // Optional: Close modals on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('voting-modal').classList.contains('active')) {
+                    closeVotingModal();
+                }
+                if (document.getElementById('logout-modal').classList.contains('active')) {
+                    cancelLogout();
+                }
+                if (document.getElementById('password-modal').classList.contains('active')) {
+                    closePasswordModal();
+                }
+            }
+        });
+    </script>
 </body>
 </html>
