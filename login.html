@@ -188,9 +188,8 @@
         display: block;
       }
 
-      /* Style for both "Don't have an account?" and "Already have an account?" texts */
       .no-account-text {
-        color: #ff6347; /* Customize color as you wish */
+        color: #ff6347;
         font-weight: 500;
       }
 
@@ -282,7 +281,7 @@
       </div>
     </div>
     <script>
-      // Set role title dynamically as “[Role] Role”
+      // Set role title dynamically as "[Role] Role"
       const rolesMap = {
         ADMIN: "Admin",
         VOTER: "Voter",
@@ -332,7 +331,7 @@
           setTimeout(() => (loginMessage.style.display = "none"), 3400);
         });
 
-      // Login form submit handler unchanged
+      // Login form submit handler - UPDATED
       loginForm.onsubmit = async (e) => {
         e.preventDefault();
         loginMessage.style.display = "none";
@@ -351,7 +350,7 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
-          console.log(res);
+          
           if (!res.ok) {
             const text = await res.text();
             let data;
@@ -363,17 +362,27 @@
             throw new Error(data.message);
           }
 
+          const data = await res.json();
+          
+          // Store JWT token and user data
+          localStorage.setItem('jwtToken', data.token);
+          localStorage.setItem('userFullName', data.fullName);
+          localStorage.setItem('userUsername', data.username);
+          localStorage.setItem('userRole', data.role);
+
+          // Redirect based on role
           if (selectedRole === "ADMIN")
             window.location.href = "admin-panel.html";
           else if (selectedRole === "CANDIDATE")
             window.location.href = "candidate-dashboard.html";
-          else window.location.href = "voter.html";
+          else 
+            window.location.href = "voter.html";
         } catch (err) {
           showLoginError(err.message);
         }
       };
 
-      // Register form submit handler unchanged
+      // Register form submit handler - unchanged
       registerForm.onsubmit = async (e) => {
         e.preventDefault();
         registerMessage.style.display = "none";
@@ -401,7 +410,7 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           });
-          console.log(res);
+          
           if (!res.ok) {
             let text = await res.text();
             let data;
