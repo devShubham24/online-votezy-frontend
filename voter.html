@@ -21,6 +21,39 @@
             color: #333;
         }
 
+        /* Loading Spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(52, 152, 219, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Header - Same as Admin Panel */
         .voter-header {
             background: linear-gradient(90deg, #3498db 80%, #5dade2 100%);
@@ -724,6 +757,7 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(243,156,18,0.3);
         }
+
         .logout-modal {
             display: none;
             position: fixed;
@@ -836,6 +870,19 @@
             border-radius: 8px;
             margin-bottom: 1rem;
             border: 1px solid #c3e6cb;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #f5c6cb;
             display: none;
             text-align: center;
             font-weight: 600;
@@ -1016,6 +1063,18 @@
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+            </div>
+            <div>Loading your dashboard...</div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="voter-header">
         <div class="header-content">
@@ -1042,7 +1101,7 @@
                 <span class="voter-badge">Voter Dashboard</span>
             </div>
             <div class="user-section">
-                <span>Welcome, <span id="user-name">John Doe</span></span>
+                <span>Welcome, <span id="user-name">Loading...</span></span>
                 <a href="index.html" class="header-btn home-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -1093,6 +1152,9 @@
 
     <!-- Main Content -->
     <main class="main-content">
+        <!-- Error Message -->
+        <div class="error-message" id="error-message"></div>
+        
         <!-- Profile Section (Now First) -->
         <section id="profile" class="content-section active">
             <div class="section-header">
@@ -1120,14 +1182,14 @@
                     <div class="profile-field">
                         <div class="profile-field-info">
                             <div class="profile-field-label">Name</div>
-                            <div class="profile-field-value" id="profile-name">John Doe</div>
+                            <div class="profile-field-value" id="profile-name">Loading...</div>
                         </div>
                     </div>
                     
                     <div class="profile-field">
                         <div class="profile-field-info">
                             <div class="profile-field-label">Username/Email</div>
-                            <div class="profile-field-value" id="profile-email">john.doe@example.com</div>
+                            <div class="profile-field-value" id="profile-email">Loading...</div>
                         </div>
                     </div>
                     
@@ -1137,7 +1199,7 @@
                             <div class="profile-field-value">
                                 <div class="password-display">
                                     <span class="password-text" id="password-display">••••••••••</span>
-                                    <button class="show-password-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">
+                                    <button class="show-password-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password" style="display: none;">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eye-icon">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                             <circle cx="12" cy="12" r="3"/>
@@ -1322,7 +1384,7 @@
                         </div>
                     </div>
                     
-                    <!-- Example of how vote records will look (hidden by default) -->
+                    <!-- Vote records will be dynamically populated here -->
                     <div class="vote-records-list" id="vote-records-list" style="display: none;">
                         <!-- Vote records will be dynamically added here from backend -->
                     </div>
@@ -1457,63 +1519,116 @@
     </div>
 
     <script>
-        // User data (in real app, this would come from backend API)
-        let userData = {
-            name: "John Doe",
-            email: "john.doe@example.com",
-            password: "mySecurePassword123" // This would never be stored like this in real app
-        };
-
-        // Vote records data (will come from backend)
-        let voteRecords = [
-            // Example structure - this will be empty initially and populated from backend after votes are cast
-            // {
-            //     id: 1,
-            //     electionTitle: "General Elections 2024",
-            //     electionType: "National Level",
-            //     constituency: "Mumbai North",
-            //     voteDate: "2024-04-15",
-            //     voteTime: "14:30",
-            //     candidateName: "Amit Sharma",
-            //     candidateParty: "People's Party",
-            //     status: "Verified"
-            // }
-        ];
-
+        // Global variables
+        let userData = null;
+        let voteRecords = [];
         let isPasswordVisible = false;
+        let jwtToken = null;
 
-        // Load user data on page load
+        // API Base URL - update this to match your backend server
+        const API_BASE_URL = 'http://localhost:8080/api';
+
+        // Authentication check and page initialization
         document.addEventListener('DOMContentLoaded', function() {
-            loadUserData();
-            loadVoteRecords();
+            checkAuthAndLoadData();
         });
 
-        // Load user data into the interface
-        function loadUserData() {
-            document.getElementById('user-name').textContent = userData.name;
-            document.getElementById('profile-name').textContent = userData.name;
-            document.getElementById('profile-email').textContent = userData.email;
+        // Check if user is authenticated and load data
+        async function checkAuthAndLoadData() {
+            try {
+                // Check if JWT token exists
+                jwtToken = localStorage.getItem('jwtToken');
+                
+                if (!jwtToken) {
+                    // No token, redirect to login
+                    redirectToLogin();
+                    return;
+                }
+
+                // Show loading overlay
+                showLoading();
+
+                // Fetch user profile data
+                await loadUserProfile();
+
+                // Hide loading overlay
+                hideLoading();
+
+                // Load vote records (if any)
+                loadVoteRecords();
+
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                hideLoading();
+                
+                // If unauthorized, redirect to login
+                if (error.status === 401 || error.status === 403) {
+                    showError('Session expired. Please login again.');
+                    setTimeout(() => redirectToLogin(), 2000);
+                } else {
+                    showError('Failed to load user data. Please refresh the page.');
+                }
+            }
         }
 
-        // Load vote records
+        // Load user profile from backend
+        async function loadUserProfile() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        throw { status: 401, message: 'Unauthorized' };
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                userData = await response.json();
+                
+                // Update UI with user data
+                updateUserInterface();
+                
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                throw error;
+            }
+        }
+
+        // Update UI with loaded user data
+        function updateUserInterface() {
+            if (!userData) return;
+
+            // Update header
+            document.getElementById('user-name').textContent = userData.name || 'User';
+            
+            // Update profile section
+            document.getElementById('profile-name').textContent = userData.name || 'N/A';
+            document.getElementById('profile-email').textContent = userData.username || userData.email || 'N/A';
+        }
+
+        // Load vote records (placeholder - implement based on your backend)
         function loadVoteRecords() {
+            // This would typically fetch from your backend API
+            // For now, show no records message
             const container = document.getElementById('vote-records-container');
             const noRecordsMessage = document.getElementById('no-records-message');
             const recordsList = document.getElementById('vote-records-list');
 
             if (voteRecords.length === 0) {
-                // Show no records message
                 noRecordsMessage.style.display = 'block';
                 recordsList.style.display = 'none';
             } else {
-                // Show records
                 noRecordsMessage.style.display = 'none';
                 recordsList.style.display = 'block';
                 
-                // Clear existing records
+                // Clear and populate records
                 recordsList.innerHTML = '';
-                
-                // Add each vote record
                 voteRecords.forEach(record => {
                     const recordElement = createVoteRecordElement(record);
                     recordsList.appendChild(recordElement);
@@ -1563,48 +1678,55 @@
             return new Date(dateString).toLocaleDateString('en-US', options);
         }
 
-        // Add vote record (called when user casts a vote)
-        function addVoteRecord(electionKey, candidateIndex) {
-            const election = elections[electionKey];
-            const candidate = election.candidates[candidateIndex];
-            const now = new Date();
-            
-            const newRecord = {
-                id: voteRecords.length + 1,
-                electionTitle: election.title,
-                electionType: election.type,
-                constituency: electionKey === 'general2024' ? 'Mumbai North' : 'Ward 42',
-                voteDate: now.toISOString().split('T')[0],
-                voteTime: now.toTimeString().split(' ')[0].substring(0, 5),
-                candidateName: candidate.name,
-                candidateParty: candidate.party,
-                status: 'Verified'
-            };
-            
-            voteRecords.push(newRecord);
-            loadVoteRecords(); // Refresh the display
+        // Show loading overlay
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
         }
 
-        // Toggle password visibility in profile
-        function togglePasswordVisibility() {
-            const passwordDisplay = document.getElementById('password-display');
-            const eyeIcon = document.getElementById('eye-icon');
+        // Hide loading overlay
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
             
-            if (isPasswordVisible) {
-                passwordDisplay.textContent = '••••••••••';
-                eyeIcon.innerHTML = `
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                `;
-                isPasswordVisible = false;
-            } else {
-                passwordDisplay.textContent = userData.password;
-                eyeIcon.innerHTML = `
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                    <line x1="1" y1="1" x2="23" y2="23"/>
-                `;
-                isPasswordVisible = true;
-            }
+            // Hide after 5 seconds
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successEl = document.getElementById('vote-success-message');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            
+            // Hide after 4 seconds
+            setTimeout(() => {
+                successEl.style.display = 'none';
+            }, 4000);
+        }
+
+        // Redirect to login page
+        function redirectToLogin() {
+            // Clear any stored data
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('userData');
+            
+            // Redirect to login
+            window.location.href = 'login.html';
+        }
+
+        // Toggle password visibility in profile (disabled since we don't store actual passwords)
+        function togglePasswordVisibility() {
+            // This is disabled for security - we don't show actual passwords
+            // Keep the dots display only
+            showError('Password visibility is disabled for security reasons.');
         }
 
         // Toggle password field visibility in modal
@@ -1657,12 +1779,6 @@
                 el.style.display = 'none';
             });
             
-            // Validate current password
-            if (currentPassword !== userData.password) {
-                document.getElementById('current-password-error').style.display = 'block';
-                return;
-            }
-            
             // Validate new password confirmation
             if (newPassword !== confirmPassword) {
                 document.getElementById('confirm-password-error').style.display = 'block';
@@ -1682,11 +1798,8 @@
             submitBtn.textContent = 'Updating...';
             
             try {
-                // In real app, make API call to update password
-                await simulatePasswordUpdate(currentPassword, newPassword);
-                
-                // Update local data (in real app, this would be handled by backend)
-                userData.password = newPassword;
+                // Make API call to update password
+                await updatePassword(currentPassword, newPassword);
                 
                 // Show success message
                 document.getElementById('password-update-success').style.display = 'block';
@@ -1694,16 +1807,22 @@
                 // Close modal after 2 seconds
                 setTimeout(() => {
                     closePasswordModal();
-                    // Reset password visibility if it was showing
-                    if (isPasswordVisible) {
-                        togglePasswordVisibility();
-                    }
                 }, 2000);
                 
             } catch (error) {
-                // Handle error
-                document.getElementById('current-password-error').textContent = 'Failed to update password. Please try again.';
-                document.getElementById('current-password-error').style.display = 'block';
+                console.error('Password update error:', error);
+                
+                // Show appropriate error message
+                if (error.status === 400) {
+                    document.getElementById('current-password-error').textContent = 'Current password is incorrect';
+                    document.getElementById('current-password-error').style.display = 'block';
+                } else if (error.status === 401) {
+                    showError('Session expired. Please login again.');
+                    setTimeout(() => redirectToLogin(), 2000);
+                } else {
+                    document.getElementById('current-password-error').textContent = 'Failed to update password. Please try again.';
+                    document.getElementById('current-password-error').style.display = 'block';
+                }
             } finally {
                 // Re-enable submit button
                 submitBtn.disabled = false;
@@ -1711,14 +1830,29 @@
             }
         });
 
-        // Simulate password update API call
-        async function simulatePasswordUpdate(currentPassword, newPassword) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    // Simulate success
-                    resolve({ success: true });
-                }, 1500);
+        // Update password API call
+        async function updatePassword(currentPassword, newPassword) {
+            const response = await fetch(`${API_BASE_URL}/api/update-password`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${jwtToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    currentPassword: currentPassword,
+                    newPassword: newPassword
+                })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw { 
+                    status: response.status, 
+                    message: errorData.message || 'Password update failed' 
+                };
+            }
+
+            return await response.json();
         }
 
         // Tab navigation
@@ -1731,7 +1865,7 @@
             });
         });
 
-        // Dummy election/candidate data
+        // Dummy election/candidate data for voting demo
         const elections = {
             general2024: {
                 title: "General Elections 2024",
@@ -1808,17 +1942,37 @@
                 currentElectionKey = 'local2024';
             }
             
-            // Add vote record
+            // Add vote record (simulate voting)
             if (currentElectionKey) {
                 addVoteRecord(currentElectionKey, selectedCandidateIndex);
             }
             
             closeVotingModal();
             // Show success message
-            const msg = document.getElementById('vote-success-message');
-            msg.style.display = 'block';
-            setTimeout(() => { msg.style.display = 'none'; }, 4000);
+            showSuccess('Your vote has been successfully recorded! Thank you for participating in democracy.');
         });
+
+        // Add vote record (called when user casts a vote)
+        function addVoteRecord(electionKey, candidateIndex) {
+            const election = elections[electionKey];
+            const candidate = election.candidates[candidateIndex];
+            const now = new Date();
+            
+            const newRecord = {
+                id: voteRecords.length + 1,
+                electionTitle: election.title,
+                electionType: election.type,
+                constituency: electionKey === 'general2024' ? 'Mumbai North' : 'Ward 42',
+                voteDate: now.toISOString().split('T')[0],
+                voteTime: now.toTimeString().split(' ')[0].substring(0, 5),
+                candidateName: candidate.name,
+                candidateParty: candidate.party,
+                status: 'Verified'
+            };
+            
+            voteRecords.push(newRecord);
+            loadVoteRecords(); // Refresh the display
+        }
 
         // Logout confirmation functions
         window.showLogoutConfirmation = function() {
@@ -1869,13 +2023,15 @@
             
             document.body.appendChild(loadingOverlay);
             
-            // Redirect after a short delay for better UX
+            // Clear stored data and redirect
             setTimeout(() => {
+                localStorage.removeItem('jwtToken');
+                localStorage.removeItem('userData');
                 window.location.href = 'login.html';
             }, 1500);
         };
 
-        // Optional: Close modals on background click
+        // Modal event listeners
         document.getElementById('voting-modal').addEventListener('click', function(e) {
             if (e.target === this) closeVotingModal();
         });
@@ -1888,7 +2044,7 @@
             if (e.target === this) closePasswordModal();
         });
 
-        // Optional: Close modals on Escape key
+        // Keyboard event listeners
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 if (document.getElementById('voting-modal').classList.contains('active')) {
@@ -1900,6 +2056,14 @@
                 if (document.getElementById('password-modal').classList.contains('active')) {
                     closePasswordModal();
                 }
+            }
+        });
+
+        // Handle token expiration globally
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'jwtToken' && !e.newValue) {
+                // Token was removed, redirect to login
+                redirectToLogin();
             }
         });
     </script>
