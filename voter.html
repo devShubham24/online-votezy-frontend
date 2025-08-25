@@ -1605,11 +1605,12 @@
             if (!userData) return;
 
             // Update header
-            document.getElementById('user-name').textContent = userData.name || 'User';
-            
+            document.getElementById('user-name').textContent = userData.fullName || 'User';
+
             // Update profile section
-            document.getElementById('profile-name').textContent = userData.name || 'N/A';
-            document.getElementById('profile-email').textContent = userData.username || userData.email || 'N/A';
+            document.getElementById('profile-name').textContent = userData.fullName || 'N/A';
+            document.getElementById('profile-email').textContent = userData.username || 'N/A';
+            document.getElementById('password-display').textContent = '********'; // Always masked
         }
 
         // Load vote records (placeholder - implement based on your backend)
@@ -1832,8 +1833,8 @@
 
         // Update password API call
         async function updatePassword(currentPassword, newPassword) {
-            const response = await fetch(`${API_BASE_URL}/api/update-password`, {
-                method: 'POST',
+            const response = await fetch(`${API_BASE_URL}/update-password`, {
+                method: 'PUT', // <-- Use PUT
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
                     'Content-Type': 'application/json'
@@ -2056,14 +2057,6 @@
                 if (document.getElementById('password-modal').classList.contains('active')) {
                     closePasswordModal();
                 }
-            }
-        });
-
-        // Handle token expiration globally
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'jwtToken' && !e.newValue) {
-                // Token was removed, redirect to login
-                redirectToLogin();
             }
         });
     </script>
