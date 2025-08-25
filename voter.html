@@ -324,6 +324,11 @@
             color: #721c24;
         }
 
+        .status-inactive {
+            background: #e2e3e5;
+            color: #6c757d;
+        }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
@@ -344,7 +349,7 @@
             box-shadow: 0 4px 12px rgba(52,152,219,0.2);
         }
 
-        .vote-btn:hover {
+        .vote-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(52,152,219,0.3);
         }
@@ -354,6 +359,78 @@
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        /* Timer Display */
+        .timer-container {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.2);
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .timer-display {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .timer-status {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* No Election State */
+        .no-election {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #666;
+        }
+
+        .no-election-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-election-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .no-election-message {
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Election Loading State */
+        .election-loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .election-loading-spinner {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
         }
 
         /* Voting Modal */
@@ -1053,6 +1130,10 @@
             .vote-record-info {
                 grid-template-columns: 1fr;
             }
+
+            .timer-display {
+                font-size: 1.5rem;
+            }
         }
 
         /* Flag Icon */
@@ -1240,112 +1321,93 @@
                 Your vote has been successfully recorded! Thank you for participating in democracy.
             </div>
 
-            <div class="elections-grid">
-                <!-- Live Election 1 -->
-                <div class="election-card">
-                    <div class="election-card-header">
-                        <h3 class="election-title">General Elections 2024</h3>
-                        <p class="election-type">National Level</p>
-                    </div>
-                    <div class="election-card-body">
-                        <div class="election-status status-live">🔴 LIVE</div>
-                        <div class="election-info">
-                            <div class="info-row">
-                                <span class="info-label">Constituency:</span>
-                                <span class="info-value">Mumbai North</span>
+            <!-- Election Content Container -->
+            <div id="election-container">
+                <!-- Loading state -->
+                <div class="card" id="election-loading" style="display: block;">
+                    <div class="card-content">
+                        <div class="election-loading">
+                            <div class="election-loading-spinner">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                                </svg>
                             </div>
-                            <div class="info-row">
-                                <span class="info-label">End Date:</span>
-                                <span class="info-value">Apr 20, 2024</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">End Time:</span>
-                                <span class="info-value">6:00 PM</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Candidates:</span>
-                                <span class="info-value">5 Registered</span>
-                            </div>
+                            <div>Loading election information...</div>
                         </div>
-                        <button class="vote-btn" onclick="openVotingModal('general2024')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <path d="M9 11l3 3L22 4"/>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                            </svg>
-                            Cast Your Vote
-                        </button>
                     </div>
                 </div>
 
-                <!-- Live Election 2 -->
-                <div class="election-card">
-                    <div class="election-card-header">
-                        <h3 class="election-title">Local Council Elections</h3>
-                        <p class="election-type">Municipal Level</p>
-                    </div>
-                    <div class="election-card-body">
-                        <div class="election-status status-live">🔴 LIVE</div>
-                        <div class="election-info">
-                            <div class="info-row">
-                                <span class="info-label">Constituency:</span>
-                                <span class="info-value">Ward 42</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">End Date:</span>
-                                <span class="info-value">Apr 18, 2024</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">End Time:</span>
-                                <span class="info-value">5:00 PM</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Candidates:</span>
-                                <span class="info-value">3 Registered</span>
+                <!-- No Election state -->
+                <div class="card" id="no-election" style="display: none;">
+                    <div class="card-content">
+                        <div class="no-election">
+                            <div class="no-election-icon">🗳️</div>
+                            <div class="no-election-title">No Active Elections</div>
+                            <div class="no-election-message">
+                                There are currently no live elections available for voting. Please check back later or contact your election administrator for more information.
                             </div>
                         </div>
-                        <button class="vote-btn" onclick="openVotingModal('local2024')">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <path d="M9 11l3 3L22 4"/>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                            </svg>
-                            Cast Your Vote
-                        </button>
                     </div>
                 </div>
 
-                <!-- Upcoming Election -->
-                <div class="election-card">
-                    <div class="election-card-header">
-                        <h3 class="election-title">Student Council Elections</h3>
-                        <p class="election-type">University Level</p>
-                    </div>
-                    <div class="election-card-body">
-                        <div class="election-status status-upcoming">📅 UPCOMING</div>
-                        <div class="election-info">
-                            <div class="info-row">
-                                <span class="info-label">Constituency:</span>
-                                <span class="info-value">Engineering Dept</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Start Date:</span>
-                                <span class="info-value">May 1, 2024</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">End Date:</span>
-                                <span class="info-value">May 3, 2024</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Candidates:</span>
-                                <span class="info-value">4 Registered</span>
-                            </div>
-                        </div>
-                        <button class="vote-btn" disabled>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12,6 12,12 16,14"/>
+                <!-- Live Election Card -->
+                <div class="card" id="live-election-card" style="display: none;">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
+                                <path d="M12 12l8 -4.5" />
+                                <path d="M12 12l0 9" />
+                                <path d="M12 12l-8 -4.5" />
                             </svg>
-                            Voting Starts May 1st
-                        </button>
+                            Current Election
+                        </h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="election-card-header">
+                            <h3 class="election-title" id="election-name">Loading...</h3>
+                            <p class="election-type" id="election-type">Loading...</p>
+                        </div>
+                        
+                        <div class="election-card-body">
+                            <!-- Election Status -->
+                            <div class="election-status" id="election-status">Loading...</div>
+                            
+                            <!-- Timer Container -->
+                            <div class="timer-container" id="timer-container">
+                                <div class="timer-label" id="timer-label">Time Remaining</div>
+                                <div class="timer-display" id="timer-display">--:--:--</div>
+                                <div class="timer-status" id="timer-status">Calculating...</div>
+                            </div>
+                            
+                            <!-- Election Information -->
+                            <div class="election-info">
+                                <div class="info-row">
+                                    <span class="info-label">Start Date:</span>
+                                    <span class="info-value" id="election-start-date">Loading...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">End Date:</span>
+                                    <span class="info-value" id="election-end-date">Loading...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Start Time:</span>
+                                    <span class="info-value" id="election-start-time">Loading...</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">End Time:</span>
+                                    <span class="info-value" id="election-end-time">Loading...</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Vote Button -->
+                            <button class="vote-btn" id="vote-btn" onclick="openVotingModal()" disabled>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                    <path d="M9 11H7a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2h-2M9 11V9a3 3 0 116 0v2M9 11h6"/>
+                                </svg>
+                                Cast Your Vote
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1522,7 +1584,8 @@
         // Global variables
         let userData = null;
         let voteRecords = [];
-        let isPasswordVisible = false;
+        let currentElection = null;
+        let electionTimer = null;
         let jwtToken = null;
 
         // API Base URL - update this to match your backend server
@@ -1550,6 +1613,9 @@
 
                 // Fetch user profile data
                 await loadUserProfile();
+
+                // Load live election data
+                await loadLiveElection();
 
                 // Hide loading overlay
                 hideLoading();
@@ -1600,6 +1666,166 @@
             }
         }
 
+        // Load live election data
+        async function loadLiveElection() {
+            try {
+                // Show loading state
+                document.getElementById('election-loading').style.display = 'block';
+                document.getElementById('no-election').style.display = 'none';
+                document.getElementById('live-election-card').style.display = 'none';
+
+                const response = await fetch(`${API_BASE_URL}/election-settings`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const electionData = await response.json();
+                
+                // Hide loading state
+                document.getElementById('election-loading').style.display = 'none';
+
+                if (!electionData || !electionData.name || electionData.status !== 'active') {
+                    // No active election
+                    document.getElementById('no-election').style.display = 'block';
+                    return;
+                }
+
+                // Store election data and update UI
+                currentElection = electionData;
+                updateElectionInterface();
+                startElectionTimer();
+
+            } catch (error) {
+                console.error('Error loading election data:', error);
+                document.getElementById('election-loading').style.display = 'none';
+                document.getElementById('no-election').style.display = 'block';
+            }
+        }
+
+        // Update election interface with loaded data
+        function updateElectionInterface() {
+            if (!currentElection) return;
+
+            // Show election card
+            document.getElementById('live-election-card').style.display = 'block';
+
+            // Update election details
+            document.getElementById('election-name').textContent = currentElection.name;
+            document.getElementById('election-type').textContent = currentElection.type || 'General Election';
+            document.getElementById('election-start-date').textContent = formatDate(currentElection.startDate);
+            document.getElementById('election-end-date').textContent = formatDate(currentElection.endDate);
+            document.getElementById('election-start-time').textContent = currentElection.startTime || 'N/A';
+            document.getElementById('election-end-time').textContent = currentElection.endTime || 'N/A';
+        }
+
+        // Start election timer
+        function startElectionTimer() {
+            if (!currentElection) return;
+
+            // Clear existing timer
+            if (electionTimer) {
+                clearInterval(electionTimer);
+            }
+
+            // Parse election dates and times
+            const startDateTime = new Date(`${currentElection.startDate}T${currentElection.startTime}:00`);
+            const endDateTime = new Date(`${currentElection.endDate}T${currentElection.endTime}:00`);
+
+            function updateTimer() {
+                const now = new Date();
+                const voteBtn = document.getElementById('vote-btn');
+                const statusEl = document.getElementById('election-status');
+                const timerDisplay = document.getElementById('timer-display');
+                const timerStatus = document.getElementById('timer-status');
+                const timerLabel = document.getElementById('timer-label');
+
+                if (now < startDateTime) {
+                    // Election hasn't started yet
+                    const timeUntilStart = startDateTime - now;
+                    const timeString = formatTimeRemaining(timeUntilStart);
+                    
+                    timerDisplay.textContent = timeString;
+                    timerLabel.textContent = 'Starts In';
+                    timerStatus.textContent = 'Election will begin soon';
+                    statusEl.className = 'election-status status-upcoming';
+                    statusEl.textContent = '⏰ Upcoming';
+                    voteBtn.disabled = true;
+                    voteBtn.innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        Election Not Started
+                    `;
+
+                } else if (now >= startDateTime && now <= endDateTime) {
+                    // Election is live
+                    const timeUntilEnd = endDateTime - now;
+                    const timeString = formatTimeRemaining(timeUntilEnd);
+                    
+                    timerDisplay.textContent = timeString;
+                    timerLabel.textContent = 'Time Remaining';
+                    timerStatus.textContent = 'Voting is now active';
+                    statusEl.className = 'election-status status-live';
+                    statusEl.textContent = '🔴 LIVE';
+                    voteBtn.disabled = false;
+                    voteBtn.innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <path d="M9 11H7a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2h-2M9 11V9a3 3 0 116 0v2M9 11h6"/>
+                        </svg>
+                        Cast Your Vote
+                    `;
+
+                } else {
+                    // Election has ended
+                    timerDisplay.textContent = 'ENDED';
+                    timerLabel.textContent = 'Election Status';
+                    timerStatus.textContent = 'Voting has concluded';
+                    statusEl.className = 'election-status status-completed';
+                    statusEl.textContent = '✅ Completed';
+                    voteBtn.disabled = true;
+                    voteBtn.innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                        Election Ended
+                    `;
+                    
+                    // Clear the timer since election is over
+                    clearInterval(electionTimer);
+                }
+            }
+
+            // Update timer immediately and then every second
+            updateTimer();
+            electionTimer = setInterval(updateTimer, 1000);
+        }
+
+        // Format time remaining for display
+        function formatTimeRemaining(milliseconds) {
+            if (milliseconds <= 0) return '00:00:00';
+
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const days = Math.floor(totalSeconds / (24 * 60 * 60));
+            const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+            const seconds = totalSeconds % 60;
+
+            if (days > 0) {
+                return `${days}d ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
         // Update UI with loaded user data
         function updateUserInterface() {
             if (!userData) return;
@@ -1611,6 +1837,13 @@
             document.getElementById('profile-name').textContent = userData.fullName || 'N/A';
             document.getElementById('profile-email').textContent = userData.username || 'N/A';
             document.getElementById('password-display').textContent = '********'; // Always masked
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
         }
 
         // Load vote records (placeholder - implement based on your backend)
@@ -1673,12 +1906,6 @@
             return recordDiv;
         }
 
-        // Format date for display
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        }
-
         // Show loading overlay
         function showLoading() {
             document.getElementById('loading-overlay').style.display = 'flex';
@@ -1722,6 +1949,78 @@
             // Redirect to login
             window.location.href = 'login.html';
         }
+
+        // Open voting modal
+        window.openVotingModal = function() {
+            if (!currentElection) {
+                showError('No active election available for voting.');
+                return;
+            }
+
+            // For demo purposes, we'll use mock candidates
+            // In a real implementation, you'd fetch candidates from your backend
+            const mockCandidates = [
+                { name: "Amit Sharma", party: "People's Party", symbol: "🦁" },
+                { name: "Priya Singh", party: "Unity Front", symbol: "🌳" },
+                { name: "Rahul Mehra", party: "Progressive Alliance", symbol: "🦅" },
+                { name: "Sunita Rao", party: "Justice League", symbol: "⚖️" },
+                { name: "Vikas Patel", party: "Development Party", symbol: "🚀" }
+            ];
+
+            document.getElementById('modal-election-title').textContent = currentElection.name;
+            document.getElementById('modal-election-type').textContent = currentElection.type || 'General Election';
+            
+            const candidatesList = document.getElementById('candidates-list');
+            candidatesList.innerHTML = '';
+            
+            mockCandidates.forEach((candidate, idx) => {
+                const div = document.createElement('div');
+                div.className = 'candidate-option';
+                div.innerHTML = `
+                    <input type="radio" name="candidate" class="candidate-radio" id="candidate${idx}" value="${idx}">
+                    <div class="candidate-info">
+                        <div class="candidate-name">${candidate.name}</div>
+                        <div class="candidate-party">${candidate.party}</div>
+                    </div>
+                    <span class="candidate-symbol">${candidate.symbol}</span>
+                `;
+                
+                div.onclick = () => {
+                    document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
+                    div.classList.add('selected');
+                    div.querySelector('input[type=radio]').checked = true;
+                    document.getElementById('vote-submit-btn').disabled = false;
+                };
+                
+                candidatesList.appendChild(div);
+            });
+            
+            document.getElementById('vote-submit-btn').disabled = true;
+            document.getElementById('voting-modal').classList.add('active');
+        };
+
+        // Close voting modal
+        window.closeVotingModal = function() {
+            document.getElementById('voting-modal').classList.remove('active');
+        };
+
+        // Vote form submission
+        document.getElementById('vote-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedRadio = document.querySelector('input[name="candidate"]:checked');
+            if (!selectedRadio) return;
+            
+            const candidateIndex = parseInt(selectedRadio.value);
+            
+            // In a real implementation, you'd submit the vote to your backend
+            // For demo purposes, we'll just show success
+            closeVotingModal();
+            showSuccess('Your vote has been successfully recorded! Thank you for participating in democracy.');
+            
+            // You could also add the vote to local records for demonstration
+            // addVoteRecord(candidateIndex);
+        });
 
         // Toggle password visibility in profile (disabled since we don't store actual passwords)
         function togglePasswordVisibility() {
@@ -1834,7 +2133,7 @@
         // Update password API call
         async function updatePassword(currentPassword, newPassword) {
             const response = await fetch(`${API_BASE_URL}/update-password`, {
-                method: 'PUT', // <-- Use PUT
+                method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`,
                     'Content-Type': 'application/json'
@@ -1865,115 +2164,6 @@
                 document.getElementById(this.dataset.section).classList.add('active');
             });
         });
-
-        // Dummy election/candidate data for voting demo
-        const elections = {
-            general2024: {
-                title: "General Elections 2024",
-                type: "National Level",
-                candidates: [
-                    { name: "Amit Sharma", party: "People's Party", symbol: "🦁" },
-                    { name: "Priya Singh", party: "Unity Front", symbol: "🌳" },
-                    { name: "Rahul Mehra", party: "Progressive Alliance", symbol: "🦅" },
-                    { name: "Sunita Rao", party: "Justice League", symbol: "⚖️" },
-                    { name: "Vikas Patel", party: "Development Party", symbol: "🚀" }
-                ]
-            },
-            local2024: {
-                title: "Local Council Elections",
-                type: "Municipal Level",
-                candidates: [
-                    { name: "Neha Desai", party: "Citizen's Voice", symbol: "🏡" },
-                    { name: "Rohan Gupta", party: "Green Ward", symbol: "🌱" },
-                    { name: "Suresh Kumar", party: "People's Choice", symbol: "🕊️" }
-                ]
-            }
-        };
-
-        let selectedElection = null;
-        let selectedCandidateIndex = null;
-
-        // Open voting modal
-        window.openVotingModal = function(electionKey) {
-            selectedElection = elections[electionKey];
-            selectedCandidateIndex = null;
-            document.getElementById('modal-election-title').textContent = selectedElection.title;
-            document.getElementById('modal-election-type').textContent = selectedElection.type;
-            const candidatesList = document.getElementById('candidates-list');
-            candidatesList.innerHTML = '';
-            selectedElection.candidates.forEach((c, idx) => {
-                const div = document.createElement('div');
-                div.className = 'candidate-option';
-                div.innerHTML = `
-                    <input type="radio" name="candidate" class="candidate-radio" id="candidate${idx}" value="${idx}">
-                    <div class="candidate-info">
-                        <div class="candidate-name">${c.name}</div>
-                        <div class="candidate-party">${c.party}</div>
-                    </div>
-                    <span class="candidate-symbol">${c.symbol}</span>
-                `;
-                div.onclick = () => {
-                    document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
-                    div.classList.add('selected');
-                    div.querySelector('input[type=radio]').checked = true;
-                    selectedCandidateIndex = idx;
-                    document.getElementById('vote-submit-btn').disabled = false;
-                };
-                candidatesList.appendChild(div);
-            });
-            document.getElementById('vote-submit-btn').disabled = true;
-            document.getElementById('voting-modal').classList.add('active');
-        };
-
-        // Close voting modal
-        window.closeVotingModal = function() {
-            document.getElementById('voting-modal').classList.remove('active');
-        };
-
-        // Vote submission
-        document.getElementById('vote-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (selectedCandidateIndex === null) return;
-            
-            // Get the current election key
-            let currentElectionKey = null;
-            if (selectedElection.title === "General Elections 2024") {
-                currentElectionKey = 'general2024';
-            } else if (selectedElection.title === "Local Council Elections") {
-                currentElectionKey = 'local2024';
-            }
-            
-            // Add vote record (simulate voting)
-            if (currentElectionKey) {
-                addVoteRecord(currentElectionKey, selectedCandidateIndex);
-            }
-            
-            closeVotingModal();
-            // Show success message
-            showSuccess('Your vote has been successfully recorded! Thank you for participating in democracy.');
-        });
-
-        // Add vote record (called when user casts a vote)
-        function addVoteRecord(electionKey, candidateIndex) {
-            const election = elections[electionKey];
-            const candidate = election.candidates[candidateIndex];
-            const now = new Date();
-            
-            const newRecord = {
-                id: voteRecords.length + 1,
-                electionTitle: election.title,
-                electionType: election.type,
-                constituency: electionKey === 'general2024' ? 'Mumbai North' : 'Ward 42',
-                voteDate: now.toISOString().split('T')[0],
-                voteTime: now.toTimeString().split(' ')[0].substring(0, 5),
-                candidateName: candidate.name,
-                candidateParty: candidate.party,
-                status: 'Verified'
-            };
-            
-            voteRecords.push(newRecord);
-            loadVoteRecords(); // Refresh the display
-        }
 
         // Logout confirmation functions
         window.showLogoutConfirmation = function() {
@@ -2057,6 +2247,13 @@
                 if (document.getElementById('password-modal').classList.contains('active')) {
                     closePasswordModal();
                 }
+            }
+        });
+
+        // Cleanup timer when page is unloaded
+        window.addEventListener('beforeunload', function() {
+            if (electionTimer) {
+                clearInterval(electionTimer);
             }
         });
     </script>
