@@ -1611,41 +1611,58 @@
             }
         }
 
-        async function fetchStat(statKey) {
-            const stat = statsElements[statKey];
-            if (!stat) return;
+    
+
+    async function fetchStat(statKey) {
+        const stat = statsElements[statKey];
+        if (!stat) return;
 
             showLoadingState(statKey);
 
             try {
-                const response = await fetch(`${apiBase}${stat.endpoint}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const response = await fetch(`${apiBase}${stat.endpoint}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
+            });
 
-                const data = await response.json();
-                
-                // Handle different response formats
-                let value;
-                if (typeof data === 'number') {
-                    value = data;
-                } else if (data && typeof data.count === 'number') {
-                    value = data.count;
-                } else if (data && typeof data.total === 'number') {
-                    value = data.total;
-                } else if (data && typeof data.value === 'number') {
-                    value = data.value;
-                } else {
-                    throw new Error('Invalid response format');
-                }
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
 
-                updateStatValue(statKey, value);
+            const data = await response.json();
+            console.log(`Response for ${statKey}:`, data); // Debug log
+            
+            // Handle different response formats - FIXED VERSION
+            let value;
+            if (typeof data === 'number') {
+                // Direct number response
+                value = data;
+            } else if (data && typeof data.totalVoters === 'number') {
+                // Response from /total-voters endpoint
+                value = data.totalVoters;
+            } else if (data && typeof data.votedSuccessfully === 'number') {
+                // Response from /voted-successfully endpoint  
+                value = data.votedSuccessfully;
+            } else if (data && typeof data.haventVoted === 'number') {
+                // Response from /havent-voted endpoint
+                value = data.haventVoted;
+            } else if (data && typeof data.count === 'number') {
+                // Generic count property (fallback)
+                value = data.count;
+            } else if (data && typeof data.total === 'number') {
+                // Generic total property (fallback)
+                value = data.total;
+            } else if (data && typeof data.value === 'number') {
+                // Generic value property (fallback)
+                value = data.value;
+            } else {
+                console.error('Unrecognized response format:', data);
+                throw new Error('Invalid response format - expected numeric value');
+            }
+
+        updateStatValue(statKey, value);
                 
             } catch (error) {
                 console.error(`Error fetching ${statKey}:`, error);
@@ -1716,7 +1733,7 @@
                 Deleting...
             `;
 
-            fetch(`${apiBase}/voters/${id}`, { 
+            fetch(`${apiBase}/admin/voters/${id}`, { 
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -1864,7 +1881,7 @@
                     }
 
                     try {
-                        const response = await fetch('http://localhost:8080/api/election-settings', {
+                        const response = await fetch('http://localhost:8080/api/admin/election-settings', {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -1993,7 +2010,7 @@
 
         // Voter Management Functions
         function loadVoters() {
-            fetch(`${apiBase}/voters`)
+            fetch(`${apiBase}/admin/voters`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error(`HTTP error! status: ${res.status}`);
@@ -2053,7 +2070,7 @@
         }
 
         function openEditModal(id) {
-            fetch(`${apiBase}/voters/${id}`)
+            fetch(`${apiBase}/admin/voters/${id}`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error(`HTTP error! status: ${res.status}`);
@@ -2139,7 +2156,7 @@
                 const originalText = confirmEditBtn.textContent;
                 confirmEditBtn.textContent = 'Saving...';
 
-                fetch(`${apiBase}/voters/${id}`, {
+                fetch(`${apiBase}/admin/voters/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updated)

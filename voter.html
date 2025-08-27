@@ -1407,6 +1407,13 @@
                                 </svg>
                                 Cast Your Vote
                             </button>
+                            <!-- Show Results Button -->
+                            <button class="vote-btn" id="results-btn" disabled>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                </svg>
+                                Show Results
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1738,10 +1745,12 @@
             const startDateTime = new Date(`${currentElection.startDate}T${currentElection.startTime}:00`);
             const endDateTime = new Date(`${currentElection.endDate}T${currentElection.endTime}:00`);
 
+
             function updateTimer() {
                 const now = new Date();
                 const voteBtn = document.getElementById('vote-btn');
                 const statusEl = document.getElementById('election-status');
+                const resultsBtn = document.getElementById('results-btn');
                 const timerDisplay = document.getElementById('timer-display');
                 const timerStatus = document.getElementById('timer-status');
                 const timerLabel = document.getElementById('timer-label');
@@ -1798,10 +1807,10 @@
                         </svg>
                         Election Ended
                     `;
-                    
-                    // Clear the timer since election is over
+                    resultsBtn.disabled = false; // Enable Show Results button
                     clearInterval(electionTimer);
                 }
+
             }
 
             // Update timer immediately and then every second
@@ -2251,11 +2260,19 @@
         });
 
         // Cleanup timer when page is unloaded
-        window.addEventListener('beforeunload', function() {
-            if (electionTimer) {
-                clearInterval(electionTimer);
-            }
-        });
+            window.addEventListener('beforeunload', function() {
+                if (electionTimer) {
+                    clearInterval(electionTimer);
+                }
+            });
+
+                document.getElementById('results-btn').addEventListener('click', function() {
+            if (!resultsBtn.disabled) {
+                // Redirect or open modal
+                window.location.href = 'results.html'; // or call an API
+                }
+            });
+
     </script>
 </body>
 </html>
