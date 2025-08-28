@@ -98,6 +98,112 @@
             background: rgba(231, 76, 60, 0.9);
         }
 
+        /* Header Messages Container */
+        .header-messages {
+            background: #fff;
+            border-left: 4px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 0 2rem;
+            border-radius: 0 0 8px 8px;
+            position: relative;
+            z-index: 999;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            transform: translateY(-2px);
+        }
+
+        .header-messages.compact {
+            background: none;
+            box-shadow: none;
+            border-radius: 0;
+            margin: 0;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: 2rem;
+            position: absolute;
+            top: 70px;
+            right: 0;
+            z-index: 1001;
+        }
+
+        .header-message {
+            padding: 0.5rem 1rem;
+            font-size: 0.92rem;
+            margin-bottom: 0.3rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: none;
+            position: relative;
+            min-width: 220px;
+            max-width: 350px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-message.success {
+            background: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .header-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+
+        .header-message.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left-color: #ffc107;
+        }
+
+        .header-message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left-color: #17a2b8;
+        }
+
+        .header-message .close-btn {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.7rem;
+            font-size: 1rem;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.3;
+            background: none;
+            border: none;
+            transition: opacity 0.2s;
+            z-index: 2;
+        }
+
+        .header-message .close-btn:hover {
+            opacity: 0.7;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-8px); }
+            80% { transform: translateX(8px); }
+            100% { transform: translateX(0); }
+        }
+        .header-message.shake {
+            animation: shake 0.6s;
+        }
+
         /* Navigation */
         .nav-tabs {
             background: #fff;
@@ -264,6 +370,13 @@
             margin-bottom: 2rem;
         }
 
+        #election-form .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(3, auto);
+            gap: 2rem;
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
@@ -344,6 +457,29 @@
             box-shadow: 0 4px 20px rgba(52,152,219,0.08);
             border: 1px solid #e3eaf7;
             text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card.loading {
+            opacity: 0.7;
+        }
+
+        .stat-card.loading::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #3498db;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .stat-value {
@@ -351,11 +487,29 @@
             font-weight: 700;
             color: #3498db;
             margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
         }
 
         .stat-label {
             color: #666;
             font-weight: 500;
+        }
+
+        .stat-error {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .last-updated {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7rem;
+            color: #999;
+            background: rgba(255,255,255,0.8);
+            padding: 2px 5px;
+            border-radius: 3px;
         }
 
         /* Election Settings */
@@ -376,28 +530,6 @@
         .status-inactive {
             background: #f8d7da;
             color: #721c24;
-        }
-
-        /* Success Message */
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid #c3e6cb;
-            display: none;
-        }
-
-        /* Error Message */
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid #f5c6cb;
-            display: none;
         }
 
         /* Modal Styles */
@@ -464,6 +596,111 @@
         #editModal button[type="button"] {
             background: #95a5a6;
             color: white;
+        }
+
+        /* Delete Confirmation Modal */
+        .delete-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .delete-modal.active {
+            display: flex;
+        }
+
+        .delete-modal-content {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .delete-modal-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .delete-modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .delete-modal-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .delete-modal-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .delete-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .delete-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .confirm-delete-btn {
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .confirm-delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231,76,60,0.3);
+        }
+
+        .cancel-delete-btn {
+            background: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cancel-delete-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
         }
 
         /* Logout Modal Styles */
@@ -587,6 +824,10 @@
                 justify-content: center;
             }
 
+            .header-messages {
+                margin: 0 1rem;
+            }
+
             .nav-tabs {
                 padding: 0 1rem;
             }
@@ -644,6 +885,19 @@
             .logout-modal-body {
                 padding: 1rem;
             }
+
+            .delete-buttons {
+                flex-direction: column;
+            }
+
+            .delete-modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+
+            .delete-modal-body {
+                padding: 1rem;
+            }
         }
 
         /* Flag Icon */
@@ -680,7 +934,7 @@
                 <span class="admin-badge">Admin Panel</span>
             </div>
             <div class="user-section">
-                <span>Welcome, Admin</span>
+                <span>Welcome, Vikash</span>
                 <a href="index.html" class="header-btn home-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -696,6 +950,25 @@
                     </svg>
                     Logout
                 </button>
+            </div>
+        </div>
+        <!-- Compact header-messages box -->
+        <div class="header-messages compact">
+            <div id="header-success-message" class="header-message success">
+                <button class="close-btn" onclick="hideHeaderMessage('header-success-message')">&times;</button>
+                <span class="message-text"></span>
+            </div>
+            <div id="header-error-message" class="header-message error">
+                <button class="close-btn" onclick="hideHeaderMessage('header-error-message')">&times;</button>
+                <span class="message-text"></span>
+            </div>
+            <div id="header-warning-message" class="header-message warning">
+                <button class="close-btn" onclick="hideHeaderMessage('header-warning-message')">&times;</button>
+                <span class="message-text"></span>
+            </div>
+            <div id="header-info-message" class="header-message info">
+                <button class="close-btn" onclick="hideHeaderMessage('header-info-message')">&times;</button>
+                <span class="message-text"></span>
             </div>
         </div>
     </header>
@@ -732,10 +1005,6 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Success/Error Messages -->
-        <div id="success-message" class="success-message"></div>
-        <div id="error-message" class="error-message"></div>
-
         <!-- Voter Details Section -->
         <section id="voters" class="content-section active">
             <div class="section-header">
@@ -750,17 +1019,23 @@
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">1,247</div>
+                <div class="stat-card" id="total-voters-card">
+                    <div class="last-updated" id="total-voters-updated"></div>
+                    <div class="stat-value" id="total-voters-value">Loading...</div>
                     <div class="stat-label">Total Registered Voters</div>
+                    <div class="stat-error" id="total-voters-error" style="display: none;"></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">892</div>
-                    <div class="stat-label">Active Voters</div>
+                <div class="stat-card" id="voted-successfully-card">
+                    <div class="last-updated" id="voted-successfully-updated"></div>
+                    <div class="stat-value" id="voted-successfully-value">Loading...</div>
+                    <div class="stat-label">Voted successfully</div>
+                    <div class="stat-error" id="voted-successfully-error" style="display: none;"></div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">355</div>
-                    <div class="stat-label">Pending Verification</div>
+                <div class="stat-card" id="havent-voted-card">
+                    <div class="last-updated" id="havent-voted-updated"></div>
+                    <div class="stat-value" id="havent-voted-value">Loading...</div>
+                    <div class="stat-label">Haven't voted</div>
+                    <div class="stat-error" id="havent-voted-error" style="display: none;"></div>
                 </div>
             </div>
 
@@ -837,11 +1112,11 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">38</div>
-                    <div class="stat-label">Approved Candidates</div>
+                    <div class="stat-label">Profile Complteted </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">7</div>
-                    <div class="stat-label">Pending Approval</div>
+                    <div class="stat-label">Profile Incompleted </div>
                 </div>
             </div>
 
@@ -934,120 +1209,54 @@
                     <form id="election-form">
                         <div class="form-grid">
                             <div class="form-group">
-                                <label class="form-label" for="election-name">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                        <polyline points="14,2 14,8 20,8"/>
-                                    </svg>
-                                    Election Name
-                                </label>
-                                <input type="text" id="election-name" name="election-name" class="form-input" 
-                                       placeholder="Enter election name (e.g., General Elections 2024)" 
-                                       value="General Elections 2024">
+                                <label class="form-label" for="election-name">Election Name</label>
+                                <input type="text" id="election-name" name="election-name" class="form-input" placeholder="Enter election name (e.g., General Elections 2024)">
                             </div>
-
                             <div class="form-group">
-                                <label class="form-label" for="election-type">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="11" width="18" height="7" rx="2"/>
-                                        <path d="M8 11V7a4 4 0 1 1 8 0v4"/>
-                                    </svg>
-                                    Election Type
-                                </label>
+                                <label class="form-label" for="election-type">Election Type</label>
                                 <select id="election-type" name="election-type" class="form-input">
                                     <option value="general">General Election</option>
                                     <option value="local">Local Election</option>
                                     <option value="by-election">By-Election</option>
                                 </select>
                             </div>
-
                             <div class="form-group">
-                                <label class="form-label" for="start-date">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                        <line x1="16" y1="2" x2="16" y2="6"/>
-                                        <line x1="8" y1="2" x2="8" y2="6"/>
-                                        <line x1="3" y1="10" x2="21" y2="10"/>
-                                    </svg>
-                                    Start Date
-                                </label>
-                                <input type="date" id="start-date" name="start-date" class="form-input" 
-                                       value="2024-04-15">
+                                <label class="form-label" for="start-date">Start Date</label>
+                                <input type="date" id="start-date" name="start-date" class="form-input">
                             </div>
-
                             <div class="form-group">
-                                <label class="form-label" for="end-date">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                        <line x1="16" y1="2" x2="16" y2="6"/>
-                                        <line x1="8" y1="2" x2="8" y2="6"/>
-                                        <line x1="3" y1="10" x2="21" y2="10"/>
-                                    </svg>
-                                    End Date
-                                </label>
-                                <input type="date" id="end-date" name="end-date" class="form-input" 
-                                       value="2024-04-20">
+                                <label class="form-label" for="end-date">End Date</label>
+                                <input type="date" id="end-date" name="end-date" class="form-input">
                             </div>
-
                             <div class="form-group">
-                                <label class="form-label" for="start-time">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12,6 12,12 16,14"/>
-                                    </svg>
-                                    Start Time
-                                </label>
-                                <input type="time" id="start-time" name="start-time" class="form-input" 
-                                       value="08:00">
+                                <label class="form-label" for="start-time">Start Time</label>
+                                <input type="time" id="start-time" name="start-time" class="form-input">
                             </div>
-
                             <div class="form-group">
-                                <label class="form-label" for="end-time">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12,6 12,12 16,14"/>
-                                    </svg>
-                                    End Time
-                                </label>
-                                <input type="time" id="end-time" name="end-time" class="form-input" 
-                                       value="18:00">
+                                <label class="form-label" for="end-time">End Time</label>
+                                <input type="time" id="end-time" name="end-time" class="form-input">
                             </div>
                         </div>
-
+                        <!-- Hardcoded description/instruction below the grid -->
                         <div class="form-group">
-                            <label class="form-label" for="description">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                    <polyline points="14,2 14,8 20,8"/>
-                                </svg>
-                                Election Description
+                            <label class="form-label">
+                                Election Description & Instructions
                             </label>
-                            <textarea id="description" name="description" class="form-input" rows="4" 
-                                      placeholder="Enter election description and instructions for voters">This is the General Election 2024 for electing representatives across multiple constituencies. Eligible voters can cast their votes online during the specified time period.</textarea>
+                            <div style="background:#f8fafc;padding:1rem;border-radius:8px;border:1px solid #e3eaf7;color:#444;">
+                                Please participate in the election responsibly. Eligible voters can cast their votes online during the specified time period. Make sure to review all candidate details before submitting your vote. For any issues, contact the election administrator.
+                            </div>
                         </div>
-
                         <div class="form-group">
                             <button type="submit" class="btn-primary">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                                    <polyline points="17,21 17,13 7,13 7,21"/>
-                                    <polyline points="7,3 7,8 15,8"/>
-                                </svg>
                                 Save Election Settings
                             </button>
                             <button type="button" class="btn-secondary">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                    <path d="M3 6h18"/>
-                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-                                </svg>
                                 Reset Form
                             </button>
                         </div>
                     </form>
-
-                    <div class="election-status status-active">
-                        Current Election Status: Active
+                    <div class="election-status" id="election-status">
+                        <!-- Status will be set dynamically -->
                     </div>
                 </div>
             </div>
@@ -1056,7 +1265,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
                             <circle cx="12" cy="12" r="10"/>
                             <polyline points="16,12 12,8 8,12"/>
                             <line x1="12" y1="16" x2="12" y2="8"/>
@@ -1088,6 +1297,41 @@
         </section>
     </main>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="delete-modal" id="delete-modal">
+        <div class="delete-modal-content">
+            <div class="delete-modal-header">
+                <h3 class="delete-modal-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3,6 5,6 21,6"/>
+                        <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                        <line x1="10" y1="11" x2="10" y2="17"/>
+                        <line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                    Delete Voter
+                </h3>
+                <p class="delete-modal-subtitle">This action cannot be undone</p>
+            </div>
+            <div class="delete-modal-body">
+                <p class="delete-message" id="delete-confirmation-message">
+                    Are you sure you want to delete this voter? This action is permanent and cannot be reversed.
+                </p>
+                <div class="delete-buttons">
+                    <button class="confirm-delete-btn" id="confirm-delete-btn" onclick="executeDelete()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"/>
+                        </svg>
+                        Yes, Delete
+                    </button>
+                    <button class="cancel-delete-btn" onclick="cancelDelete()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Logout Confirmation Modal -->
     <div class="logout-modal" id="logout-modal">
         <div class="logout-modal-content">
@@ -1110,12 +1354,40 @@
                     <button class="confirm-logout-btn" onclick="confirmLogout()">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                            <polyline points="16,17 21,12 16,7"/>
-                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
                         </svg>
                         Yes, Logout
                     </button>
                     <button class="cancel-logout-btn" onclick="cancelLogout()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Confirmation Modal -->
+    <div class="delete-modal" id="edit-confirm-modal">
+        <div class="delete-modal-content">
+            <div class="delete-modal-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                <h3 class="delete-modal-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20v-6M12 4v2m0 0a8 8 0 1 1 0 16a8 8 0 1 1 0-16z"/>
+                    </svg>
+                    Confirm Edit
+                </h3>
+                <p class="delete-modal-subtitle">Please confirm your changes</p>
+            </div>
+            <div class="delete-modal-body">
+                <p class="delete-message" id="edit-confirmation-message">
+                    Are you sure you want to save these changes to the voter's details?
+                </p>
+                <div class="delete-buttons">
+                    <button class="confirm-delete-btn" id="confirm-edit-btn">
+                        Yes, Save Changes
+                    </button>
+                    <button class="cancel-delete-btn" id="cancel-edit-btn">
                         Cancel
                     </button>
                 </div>
@@ -1135,30 +1407,371 @@
         const editFullName = document.getElementById('editFullName');
         const editUsername = document.getElementById('editUsername');
         
-        // Message elements
-        const successMessage = document.getElementById('success-message');
-        const errorMessage = document.getElementById('error-message');
+        // Header Message elements
+        const headerSuccessMessage = document.getElementById('header-success-message');
+        const headerErrorMessage = document.getElementById('header-error-message');
+        const headerWarningMessage = document.getElementById('header-warning-message');
+        const headerInfoMessage = document.getElementById('header-info-message');
+
+        // Delete modal elements
+        const deleteModal = document.getElementById('delete-modal');
+        const deleteConfirmationMessage = document.getElementById('delete-confirmation-message');
+        let voterToDelete = null;
+
+        // Stats elements
+        const statsElements = {
+            totalVoters: {
+                card: document.getElementById('total-voters-card'),
+                value: document.getElementById('total-voters-value'),
+                updated: document.getElementById('total-voters-updated'),
+                error: document.getElementById('total-voters-error'),
+                endpoint: '/total-voters'
+            },
+            votedSuccessfully: {
+                card: document.getElementById('voted-successfully-card'),
+                value: document.getElementById('voted-successfully-value'),
+                updated: document.getElementById('voted-successfully-updated'),
+                error: document.getElementById('voted-successfully-error'),
+                endpoint: '/voted-successfully'
+            },
+            haventVoted: {
+                card: document.getElementById('havent-voted-card'),
+                value: document.getElementById('havent-voted-value'),
+                updated: document.getElementById('havent-voted-updated'),
+                error: document.getElementById('havent-voted-error'),
+                endpoint: '/havent-voted'
+            }
+        };
+
+        // Auto-refresh interval (30 seconds)
+        let refreshInterval;
+        const REFRESH_INTERVAL = 30000; // 30 seconds
+
+        // Header message functions
+        function hideAllHeaderMessages() {
+            headerSuccessMessage.style.display = 'none';
+            headerErrorMessage.style.display = 'none';
+            headerWarningMessage.style.display = 'none';
+            headerInfoMessage.style.display = 'none';
+        }
+
+        function showHeaderMessage(type, message) {
+            hideAllHeaderMessages();
+            
+            let targetElement;
+            switch(type) {
+                case 'success':
+                    targetElement = headerSuccessMessage;
+                    break;
+                case 'error':
+                    targetElement = headerErrorMessage;
+                    break;
+                case 'warning':
+                    targetElement = headerWarningMessage;
+                    break;
+                case 'info':
+                    targetElement = headerInfoMessage;
+                    break;
+                default:
+                    return;
+            }
+            
+            const messageText = targetElement.querySelector('.message-text');
+            messageText.textContent = message;
+            targetElement.style.display = 'block';
+            
+            // Auto-hide after 8 seconds
+            setTimeout(() => {
+                targetElement.style.display = 'none';
+            }, 8000);
+        }
+
+        function hideHeaderMessage(messageId) {
+            document.getElementById(messageId).style.display = 'none';
+        }
 
         // Utility functions for showing messages
         function showSuccessMessage(message) {
-            successMessage.textContent = message;
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 5000);
+            showHeaderMessage('success', message);
         }
 
         function showErrorMessage(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            successMessage.style.display = 'none';
+            showHeaderMessage('error', message);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            headerErrorMessage.classList.add('shake');
             setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
+                headerErrorMessage.classList.remove('shake');
+            }, 600);
         }
 
-        // Logout functions (same as voter.html)
+        function showWarningMessage(message) {
+            showHeaderMessage('warning', message);
+        }
+
+        function showInfoMessage(message) {
+            showHeaderMessage('info', message);
+        }
+
+        // Common message for voters who have already voted
+        const VOTER_LOCKED_MESSAGE = 'This voter has already cast their vote. For election integrity, their information cannot be edited or deleted.';
+
+        // Enhanced error message handler for delete operations
+        function getDeleteErrorMessage(error, statusCode, voterInfo = null) {
+            // Check for specific error conditions based on status code and response
+            if (statusCode === 500) {
+                if (error.message && error.message.toLowerCase().includes('vote')) {
+                    return voterInfo && voterInfo.hasVoted 
+                        ? `Cannot delete voter "${voterInfo.name}" because they have already cast their vote. Voters who have participated in the election cannot be removed from the system.`
+                        : 'This voter cannot be deleted because they have already participated in the voting process.';
+                }
+                if (error.message && error.message.toLowerCase().includes('constraint')) {
+                    return 'Cannot delete this voter due to data integrity constraints. The voter may be referenced by other system records.';
+                }
+                if (error.message && error.message.toLowerCase().includes('foreign')) {
+                    return 'Cannot delete this voter because they are associated with existing voting records or other system data.';
+                }
+                return 'Cannot delete this voter because they have already voted in the election.';
+            }
+            
+            if (statusCode === 403) {
+                return 'You do not have permission to delete this voter. Please contact your system administrator.';
+            }
+            
+            if (statusCode === 404) {
+                return 'Voter not found. They may have already been deleted or the voter ID is invalid.';
+            }
+            
+            if (statusCode === 409) {
+                return 'Cannot delete voter due to a conflict. The voter may be currently engaged in an active voting session.';
+            }
+
+            if (statusCode >= 500) {
+                return 'Server error occurred while trying to delete the voter. Please try again later or contact support.';
+            }
+
+            if (statusCode >= 400) {
+                return 'Invalid request. Please refresh the page and try again.';
+            }
+
+            // Fallback for network or other errors
+            if (error.message && error.message.toLowerCase().includes('network')) {
+                return 'Network connection error. Please check your internet connection and try again.';
+            }
+
+            return error.message || 'An unexpected error occurred while deleting the voter. Please try again.';
+        }
+
+        // Stats Management Functions
+        function formatTime(date) {
+            return date.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        function formatNumber(num) {
+            if (num === null || num === undefined) return 'N/A';
+            return new Intl.NumberFormat('en-US').format(num);
+        }
+
+        function showLoadingState(statKey) {
+            const stat = statsElements[statKey];
+            if (!stat) return;
+            
+            stat.card.classList.add('loading');
+            stat.value.textContent = 'Loading...';
+            stat.error.style.display = 'none';
+        }
+
+        function hideLoadingState(statKey) {
+            const stat = statsElements[statKey];
+            if (!stat) return;
+            
+            stat.card.classList.remove('loading');
+        }
+
+        function updateStatValue(statKey, value, isError = false) {
+            const stat = statsElements[statKey];
+            if (!stat) return;
+
+            hideLoadingState(statKey);
+
+            if (isError) {
+                stat.value.textContent = 'Error';
+                stat.value.style.color = '#e74c3c';
+                stat.error.textContent = value;
+                stat.error.style.display = 'block';
+                stat.updated.textContent = '';
+            } else {
+                stat.value.textContent = formatNumber(value);
+                stat.value.style.color = '#3498db';
+                stat.error.style.display = 'none';
+                stat.updated.textContent = formatTime(new Date());
+            }
+        }
+
+    
+
+    async function fetchStat(statKey) {
+        const stat = statsElements[statKey];
+        if (!stat) return;
+
+            showLoadingState(statKey);
+
+            try {
+            const response = await fetch(`${apiBase}${stat.endpoint}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log(`Response for ${statKey}:`, data); // Debug log
+            
+            // Handle different response formats - FIXED VERSION
+            let value;
+            if (typeof data === 'number') {
+                // Direct number response
+                value = data;
+            } else if (data && typeof data.totalVoters === 'number') {
+                // Response from /total-voters endpoint
+                value = data.totalVoters;
+            } else if (data && typeof data.votedSuccessfully === 'number') {
+                // Response from /voted-successfully endpoint  
+                value = data.votedSuccessfully;
+            } else if (data && typeof data.haventVoted === 'number') {
+                // Response from /havent-voted endpoint
+                value = data.haventVoted;
+            } else if (data && typeof data.count === 'number') {
+                // Generic count property (fallback)
+                value = data.count;
+            } else if (data && typeof data.total === 'number') {
+                // Generic total property (fallback)
+                value = data.total;
+            } else if (data && typeof data.value === 'number') {
+                // Generic value property (fallback)
+                value = data.value;
+            } else {
+                console.error('Unrecognized response format:', data);
+                throw new Error('Invalid response format - expected numeric value');
+            }
+
+        updateStatValue(statKey, value);
+                
+            } catch (error) {
+                console.error(`Error fetching ${statKey}:`, error);
+                updateStatValue(statKey, error.message, true);
+            }
+        }
+
+        function loadAllStats() {
+            console.log('Loading all stats...');
+            Object.keys(statsElements).forEach(statKey => {
+                fetchStat(statKey);
+            });
+        }
+
+        function startAutoRefresh() {
+            // Clear any existing interval
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            
+            // Set up new interval
+            refreshInterval = setInterval(() => {
+                console.log('Auto-refreshing stats...');
+                loadAllStats();
+            }, REFRESH_INTERVAL);
+            
+            console.log(`Auto-refresh started (${REFRESH_INTERVAL / 1000}s interval)`);
+        }
+
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+                console.log('Auto-refresh stopped');
+            }
+        }
+
+        // Delete Modal Functions
+        function showDeleteConfirmation(voterId, voterName, hasVoted) {
+            voterToDelete = { id: voterId, name: voterName, hasVoted: hasVoted };
+            deleteConfirmationMessage.innerHTML = `
+                Are you sure you want to delete voter <strong>"${voterName}"</strong>?<br><br>
+                This action is permanent and cannot be reversed.
+            `;
+            deleteModal.classList.add('active');
+        }
+
+        function cancelDelete() {
+            deleteModal.classList.remove('active');
+            voterToDelete = null;
+        }
+
+        function executeDelete() {
+            if (!voterToDelete) {
+                cancelDelete();
+                return;
+            }
+
+            const { id, name, hasVoted } = voterToDelete;
+
+            const confirmBtn = document.getElementById('confirm-delete-btn');
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+                Deleting...
+            `;
+
+            fetch(`${apiBase}/admin/voters/${id}`, { 
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(async res => {
+                let responseData = null;
+                try { responseData = await res.json(); } catch {}
+                if (!res.ok) {
+                    const error = {
+                        status: res.status,
+                        statusText: res.statusText,
+                        message: responseData?.message || responseData?.error || `HTTP ${res.status}: ${res.statusText}`,
+                        data: responseData
+                    };
+                    throw error;
+                }
+                return responseData;
+            })
+            .then(data => {
+                cancelDelete();
+                showSuccessMessage(data?.message || `Voter "${name}" has been successfully deleted.`);
+                loadVoters();
+                loadAllStats();
+            })
+            .catch(error => {
+                cancelDelete();
+                console.error('Error deleting voter:', error);
+                showErrorMessage(getDeleteErrorMessage(error, error.status, voterToDelete));
+                loadVoters();
+                loadAllStats();
+            })
+            .finally(() => {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = originalText;
+                voterToDelete = null;
+            });
+        }
+
+        // Logout functions
         function showLogoutConfirmation() {
             document.getElementById('logout-modal').classList.add('active');
         }
@@ -1234,6 +1847,13 @@
                     if (targetSection) {
                         targetSection.classList.add('active');
                     }
+
+                    // Start/stop auto-refresh based on active section
+                    if (sectionId === 'voters') {
+                        startAutoRefresh();
+                    } else {
+                        stopAutoRefresh();
+                    }
                 });
             });
 
@@ -1241,26 +1861,45 @@
             const electionForm = document.getElementById('election-form');
 
             if (electionForm) {
-                electionForm.addEventListener('submit', function(e) {
+                electionForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
-                    // Show success message
-                    showSuccessMessage('Election settings have been saved successfully!');
-                    
-                    // Scroll to top of form
-                    electionForm.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Here you would typically send the form data to your backend
-                    console.log('Election settings saved:', {
+                    const formData = {
                         name: document.getElementById('election-name').value,
                         type: document.getElementById('election-type').value,
                         startDate: document.getElementById('start-date').value,
                         endDate: document.getElementById('end-date').value,
                         startTime: document.getElementById('start-time').value,
                         endTime: document.getElementById('end-time').value,
-                        description: document.getElementById('description').value
-                    });
+                        status: "active"
+                    };
+
+                    // Validate
+                    if (!formData.name || !formData.startDate || !formData.endDate) {
+                        showErrorMessage('Please fill in all required fields.');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('http://localhost:8080/api/admin/election-settings', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to save settings');
+                        }
+
+                        showSuccessMessage('Election settings saved successfully!');
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showErrorMessage('Failed to save election settings. Please try again.');
+                    }
                 });
+
             }
 
             // Reset form functionality
@@ -1270,12 +1909,7 @@
                     if (confirm('Are you sure you want to reset all form fields?')) {
                         electionForm.reset();
                         // Reset to default values
-                        document.getElementById('election-name').value = 'General Elections 2024';
-                        document.getElementById('start-date').value = '2024-04-15';
-                        document.getElementById('end-date').value = '2024-04-20';
-                        document.getElementById('start-time').value = '08:00';
-                        document.getElementById('end-time').value = '18:00';
-                        document.getElementById('description').value = 'This is the General Election 2024 for electing representatives across multiple constituencies. Eligible voters can cast their votes online during the specified time period.';
+                        setDefaultElectionValues();
                     }
                 });
             }
@@ -1287,11 +1921,11 @@
             const endTimeInput = document.getElementById('end-time');
 
             function validateDates() {
-                const startDate = new Date(startDateInput.value + 'T' + startTimeInput.value);
-                const endDate = new Date(endDateInput.value + 'T' + endTimeInput.value);
+                const startDate = new Date(startDateInput.value + 'T' + (startTimeInput.value || '00:00'));
+                const endDate = new Date(endDateInput.value + 'T' + (endTimeInput.value || '23:59'));
                 
                 if (startDate >= endDate) {
-                    alert('End date and time must be after start date and time');
+                    showWarningMessage('End date and time must be after start date and time');
                     return false;
                 }
                 return true;
@@ -1300,71 +1934,16 @@
             if (startDateInput && endDateInput) {
                 startDateInput.addEventListener('change', validateDates);
                 endDateInput.addEventListener('change', validateDates);
-                startTimeInput.addEventListener('change', validateDates);
-                endTimeInput.addEventListener('change', validateDates);
+                if (startTimeInput) startTimeInput.addEventListener('change', validateDates);
+                if (endTimeInput) endTimeInput.addEventListener('change', validateDates);
             }
-
-            // Auto-refresh statistics every 30 seconds (for demo purposes)
-            setInterval(function() {
-                // This would typically fetch real data from your backend
-                updateStatistics();
-            }, 30000);
-
-            function updateStatistics() {
-                // Demo function to simulate real-time updates
-                const statValues = document.querySelectorAll('.stat-value');
-                statValues.forEach(stat => {
-                    if (stat.textContent.includes('%')) {
-                        // Update percentage values
-                        const currentValue = parseInt(stat.textContent);
-                        if (currentValue < 100) {
-                            stat.textContent = (currentValue + Math.floor(Math.random() * 2)) + '%';
-                        }
-                    } else if (stat.textContent.includes('h') || stat.textContent.includes('m')) {
-                        // Update time remaining (demo)
-                        const timeRemaining = stat.textContent;
-                        if (timeRemaining !== '0h 0m') {
-                            // This would be calculated from actual end time
-                            stat.textContent = '6h 23m'; // Demo value
-                        }
-                    }
-                });
-            }
-
-            // Table row click handlers for future functionality
-            const tableRows = document.querySelectorAll('tbody tr');
-            tableRows.forEach(row => {
-                row.addEventListener('click', function() {
-                    // Remove previous selections
-                    tableRows.forEach(r => r.classList.remove('selected'));
-                    // Add selection to current row
-                    this.classList.add('selected');
-                    // Here you could show details panel or edit form
-                });
-            });
-
-            // Responsive navigation for mobile
-            function handleMobileNavigation() {
-                if (window.innerWidth <= 768) {
-                    navTabs.forEach(tab => {
-                        tab.addEventListener('click', function() {
-                            // Close any open mobile menus
-                            document.body.classList.remove('nav-open');
-                        });
-                    });
-                }
-            }
-
-            // Call on load and resize
-            handleMobileNavigation();
-            window.addEventListener('resize', handleMobileNavigation);
 
             // Set current date as minimum for date inputs
             const today = new Date().toISOString().split('T')[0];
             if (startDateInput) startDateInput.setAttribute('min', today);
             if (endDateInput) endDateInput.setAttribute('min', today);
 
-            // Initialize tooltips for form fields
+            // Initialize form inputs styling
             const formInputs = document.querySelectorAll('.form-input');
             formInputs.forEach(input => {
                 input.addEventListener('focus', function() {
@@ -1380,15 +1959,58 @@
 
             console.log('Votezy Admin Panel initialized successfully');
             
-            // Initialize voter management
+            // Initialize voter management and stats
             if (voterTableBody) {
                 loadVoters();
             }
+
+            // Load stats initially and start auto-refresh
+            loadAllStats();
+            startAutoRefresh();
+
+            // Set default election values
+            setDefaultElectionValues();
+
+            // Handle page visibility changes
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    stopAutoRefresh();
+                } else {
+                    // Reload stats when page becomes visible again
+                    loadAllStats();
+                    // Only start auto-refresh if voters section is active
+                    const votersSection = document.getElementById('voters');
+                    if (votersSection && votersSection.classList.contains('active')) {
+                        startAutoRefresh();
+                    }
+                }
+            });
         });
 
-        // Voter Management Functions - FIXED VERSIONS
+        // Set default election values function
+        function setDefaultElectionValues() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextWeek = new Date(today);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+
+            document.getElementById('election-name').value = 'General Elections 2024';
+            document.getElementById('election-type').value = 'general';
+            document.getElementById('start-date').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('end-date').value = nextWeek.toISOString().split('T')[0];
+            document.getElementById('start-time').value = '08:00';
+            document.getElementById('end-time').value = '18:00';
+
+            // Update status display
+            const statusElement = document.getElementById('election-status');
+            statusElement.className = 'election-status status-inactive';
+            statusElement.textContent = 'Not Configured';
+        }
+
+        // Voter Management Functions
         function loadVoters() {
-            fetch(`${apiBase}/voters`)
+            fetch(`${apiBase}/admin/voters`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error(`HTTP error! status: ${res.status}`);
@@ -1406,11 +2028,12 @@
                             <td>${voter.hasVoted ? 'Yes' : 'No'}</td>
                             <td>
                                 <button class="edit-btn" data-id="${voter.id}">Edit</button>
-                                <button class="delete-btn" data-id="${voter.id}">Delete</button>
+                                <button class="delete-btn" data-id="${voter.id}" data-name="${voter.name}" data-voted="${voter.hasVoted}">Delete</button>
                             </td>
                         `;
                         voterTableBody.appendChild(tr);
                     });
+                   
                     attachListeners();
                 })
                 .catch(err => {
@@ -1423,6 +2046,11 @@
             document.querySelectorAll('.edit-btn').forEach(btn =>
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
+                    const hasVoted = btn.closest('tr').querySelector('td:nth-child(4)').textContent.trim() === 'Yes';
+                    if (hasVoted) {
+                        showErrorMessage(VOTER_LOCKED_MESSAGE);
+                        return;
+                    }
                     openEditModal(btn.getAttribute('data-id'));
                 })
             );
@@ -1430,15 +2058,19 @@
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     const id = btn.getAttribute('data-id');
-                    if (confirm(`Are you sure you want to delete voter #${id}?`)) {
-                        deleteVoter(id);
+                    const name = btn.getAttribute('data-name');
+                    const hasVoted = btn.getAttribute('data-voted') === 'true';
+                    if (hasVoted) {
+                        showErrorMessage(VOTER_LOCKED_MESSAGE);
+                        return;
                     }
+                    showDeleteConfirmation(id, name, hasVoted);
                 })
             );
         }
 
         function openEditModal(id) {
-            fetch(`${apiBase}/voters/${id}`)
+            fetch(`${apiBase}/admin/voters/${id}`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error(`HTTP error! status: ${res.status}`);
@@ -1470,18 +2102,61 @@
         if (cancelBtn) cancelBtn.onclick = hideModal;
         if (modalOverlay) modalOverlay.onclick = hideModal;
 
+        const editConfirmModal = document.getElementById('edit-confirm-modal');
+        const editConfirmationMessage = document.getElementById('edit-confirmation-message');
+        const confirmEditBtn = document.getElementById('confirm-edit-btn');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+        let pendingEditData = null;
+
         if (editForm) {
             editForm.addEventListener('submit', e => {
                 e.preventDefault();
-                if (!confirm('Save changes?')) return;
 
+                // Prepare data for confirmation
                 const id = editVoterId.value;
                 const updated = {
-                    name: editFullName.value.trim(),
+                    fullName: editFullName.value.trim(),
                     username: editUsername.value.trim()
                 };
 
-                fetch(`${apiBase}/voters/${id}`, {
+                // Basic validation
+                if (!updated.fullName || !updated.username) {
+                    showErrorMessage('Please fill in all required fields.');
+                    return;
+                }
+
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(updated.username)) {
+                    showErrorMessage('Please enter a valid email address for username.');
+                    return;
+                }
+
+                // Show confirmation modal
+                pendingEditData = { id, updated };
+                editConfirmationMessage.innerHTML = `
+                    Are you sure you want to update voter details?<br>
+                    <strong>Full Name:</strong> ${updated.fullName}<br>
+                    <strong>Username (Email):</strong> ${updated.username}
+                `;
+                editConfirmModal.classList.add('active');
+            });
+        }
+
+        if (confirmEditBtn) {
+            confirmEditBtn.onclick = function() {
+                editConfirmModal.classList.remove('active');
+                if (!pendingEditData) return;
+
+                const { id, updated } = pendingEditData;
+
+                // Show loading state
+                confirmEditBtn.disabled = true;
+                const originalText = confirmEditBtn.textContent;
+                confirmEditBtn.textContent = 'Saving...';
+
+                fetch(`${apiBase}/admin/voters/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updated)
@@ -1496,70 +2171,126 @@
                     showSuccessMessage('Voter updated successfully!');
                     hideModal();
                     loadVoters();
+                    loadAllStats();
                 })
                 .catch(err => {
                     console.error('Error updating voter:', err);
                     showErrorMessage('Failed to update voter: ' + err.message);
+                })
+                .finally(() => {
+                    pendingEditData = null;
+                    confirmEditBtn.disabled = false;
+                    confirmEditBtn.textContent = originalText;
                 });
-            });
+            };
         }
 
-        function deleteVoter(id) {
-            fetch(`${apiBase}/voters/${id}`, { 
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
+        if (cancelEditBtn) {
+            cancelEditBtn.onclick = function() {
+                editConfirmModal.classList.remove('active');
+                pendingEditData = null;
+            };
+        }
+
+        // --- Election Settings Integration (Fixed for 404 errors) ---
+        const apiElectionSettings = `${apiBase}/election-settings`;
+
+        // Helper: Fill form fields from backend data
+        function fillElectionForm(data) {
+            if (!data) return;
+            
+            document.getElementById('election-name').value = data.name || 'General Elections 2024';
+            document.getElementById('election-type').value = data.type || 'general';
+            document.getElementById('start-date').value = data.startDate || '';
+            document.getElementById('end-date').value = data.endDate || '';
+            document.getElementById('start-time').value = data.startTime || '08:00';
+            document.getElementById('end-time').value = data.endTime || '18:00';
+
+            // Update status display
+            const statusElement = document.getElementById('election-status');
+            if (data.status && data.status === 'active') {
+                statusElement.className = 'election-status status-active';
+                statusElement.textContent = 'Active Election';
+            } else {
+                statusElement.className = 'election-status status-inactive';
+                statusElement.textContent = 'Inactive Election';
+            }
+        }
+
+        // Fetch current settings on load - WITH IMPROVED ERROR HANDLING
+        function loadElectionSettings() {
+            fetch(apiElectionSettings)
+                .then(res => {
+                    if (res.status === 404) {
+                        // 404 is expected if endpoint doesn't exist yet
+                        console.log('Election settings endpoint not found - using defaults');
+                        setDefaultElectionValues();
+                        return null;
+                    }
+                    if (!res.ok) {
+                        throw new Error(`Failed to fetch election settings: HTTP ${res.status}`);
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data) {
+                        fillElectionForm(data);
+                    }
+                })
+                .catch(err => {
+                    console.error('Error loading election settings:', err);
+                    // Only show error if it's not a 404
+                    if (!err.message.includes('404')) {
+                        showWarningMessage('Could not load election settings from server. Using default values.');
+                    }
+                    setDefaultElectionValues();
+                });
+        }
+
+        // Save settings on form submit - WITH IMPROVED ERROR HANDLING
+        function saveElectionSettings(formData) {
+            fetch(apiElectionSettings, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(res => {
+                if (res.status === 404) {
+                    // If PUT endpoint doesn't exist, try POST
+                    return fetch(apiElectionSettings, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                }
+                return res;
             })
             .then(res => {
                 if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+                    throw new Error(`Failed to save election settings: HTTP ${res.status}`);
                 }
                 return res.json();
             })
             .then(data => {
-                showSuccessMessage(data.message || 'Voter deleted successfully!');
-                loadVoters();
+                showSuccessMessage('Election settings have been saved successfully!');
+                fillElectionForm(data || formData);
             })
             .catch(err => {
-                console.error('Error deleting voter:', err);
-                showErrorMessage('Failed to delete voter: ' + err.message);
-                // Still reload to check if deletion actually worked
-                loadVoters();
+                console.error('Error saving election settings:', err);
+                if (err.message.includes('404')) {
+                    showWarningMessage('Election settings endpoint not available. Settings saved locally only.');
+                    // Still update the UI with the form data
+                    fillElectionForm(formData);
+                } else {
+                    showErrorMessage('Could not save election settings: ' + err.message);
+                }
             });
         }
 
-        // Close modals on background click
-        document.getElementById('logout-modal').addEventListener('click', function(e) {
-            if (e.target === this) cancelLogout();
-        });
-
-        // Close modals on Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                if (document.getElementById('logout-modal').classList.contains('active')) {
-                    cancelLogout();
-                }
-            }
-        });
-
-        // Additional utility functions
-        function exportVoterData() {
-            // Function to export voter data as CSV
-            alert('Export functionality would be implemented here');
-        }
-
-        function exportCandidateData() {
-            // Function to export candidate data as CSV
-            alert('Export functionality would be implemented here');
-        }
-
-        function sendNotification() {
-            // Function to send notifications to voters
-            alert('Notification functionality would be implemented here');
-        }
-
-        // Error handling for missing elements
-        window.addEventListener('error', function(e) {
-            console.error('Admin Panel Error:', e.error);
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load election settings with graceful 404 handling
+            loadElectionSettings();
         });
     </script>
 </body>
