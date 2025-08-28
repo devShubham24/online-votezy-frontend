@@ -90,6 +90,9 @@
         color: #ffe478;
         border-bottom: 2px solid #ffe478;
       }
+      .auth-tab.hidden {
+        display: none;
+      }
       .auth-form {
         display: none;
         flex-direction: column;
@@ -193,6 +196,18 @@
         font-weight: 500;
       }
 
+      .admin-notice {
+        background: rgba(255, 228, 120, 0.15);
+        border: 1px solid rgba(255, 228, 120, 0.4);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        color: #ffe478;
+        font-size: 0.95rem;
+        text-align: center;
+        font-weight: 500;
+      }
+
       @media (max-width: 480px) {
         .login-card {
           min-width: 93vw;
@@ -213,6 +228,12 @@
           <button class="auth-tab active" id="loginTab">Login</button>
           <button class="auth-tab" id="registerTab">Register</button>
         </div>
+        
+        <!-- Admin Notice (shown only for admin role) -->
+        <div id="adminNotice" class="admin-notice" style="display: none;">
+          Admin accounts are pre-configured. Only login is available for admin access.
+        </div>
+
         <form
           id="loginForm"
           class="auth-form active"
@@ -241,7 +262,7 @@
           </div>
           <div id="loginMessage" class="message" role="alert"></div>
           <button type="submit" class="auth-btn">Login</button>
-          <div style="text-align: center; font-size: 1rem; margin-top: 0.2rem">
+          <div id="loginSwitchText" style="text-align: center; font-size: 1rem; margin-top: 0.2rem">
             <span class="no-account-text">Don't have an account?</span>
             <span class="register-link" onclick="showRegister()">Register</span>
           </div>
@@ -293,13 +314,22 @@
         ? rolesMap[selectedRole] + " Role"
         : "Student Login";
 
-      // Tab switching
+      // Get DOM elements
       const loginTab = document.getElementById("loginTab");
       const registerTab = document.getElementById("registerTab");
       const loginForm = document.getElementById("loginForm");
       const registerForm = document.getElementById("registerForm");
       const loginMessage = document.getElementById("loginMessage");
       const registerMessage = document.getElementById("registerMessage");
+      const adminNotice = document.getElementById("adminNotice");
+      const loginSwitchText = document.getElementById("loginSwitchText");
+
+      // Handle admin role restrictions
+      if (selectedRole === "ADMIN") {
+        registerTab.classList.add("hidden");
+        adminNotice.style.display = "block";
+        loginSwitchText.style.display = "none";
+      }
 
       loginTab.onclick = showLogin;
       registerTab.onclick = showRegister;
@@ -312,7 +342,13 @@
         loginMessage.style.display = "none";
         registerMessage.style.display = "none";
       }
+      
       function showRegister() {
+        // Prevent registration for admin role
+        if (selectedRole === "ADMIN") {
+          showLoginError("Registration is not available for admin accounts.");
+          return;
+        }
         registerTab.classList.add("active");
         loginTab.classList.remove("active");
         registerForm.classList.add("active");
@@ -331,7 +367,7 @@
           setTimeout(() => (loginMessage.style.display = "none"), 3400);
         });
 
-      // Login form submit handler - UPDATED
+      // Login form submit handler
       loginForm.onsubmit = async (e) => {
         e.preventDefault();
         loginMessage.style.display = "none";
@@ -382,10 +418,17 @@
         }
       };
 
-      // Register form submit handler - unchanged
+      // Register form submit handler
       registerForm.onsubmit = async (e) => {
         e.preventDefault();
         registerMessage.style.display = "none";
+        
+        // Additional check to prevent admin registration
+        if (selectedRole === "ADMIN") {
+          showRegisterError("Registration is not available for admin accounts.");
+          return;
+        }
+        
         const payload = {
           fullName: registerForm.fullName.value.trim(),
           email: registerForm.email.value.trim(),
