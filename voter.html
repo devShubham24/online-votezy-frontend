@@ -1408,7 +1408,7 @@
                                 Cast Your Vote
                             </button>
                             <!-- Show Results Button -->
-                            <button class="vote-btn" id="results-btn" disabled>
+                            <button class="vote-btn" id="results-btn" onclick="showResults()" disabled style="margin-top: 1rem;">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
                                     <path d="M5 12h14M12 5l7 7-7 7"/>
                                 </svg>
@@ -1444,8 +1444,18 @@
                     </h3>
                 </div>
                 <div class="card-content" id="vote-records-container">
-                    <!-- This will be populated from backend or show no records message -->
-                    <div class="no-records" id="no-records-message">
+                    <!-- Loading state -->
+                    <div class="election-loading" id="vote-records-loading">
+                        <div class="election-loading-spinner">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2">
+                                <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                            </svg>
+                        </div>
+                        <div>Loading your vote records...</div>
+                    </div>
+                    
+                    <!-- No records message -->
+                    <div class="no-records" id="no-records-message" style="display: none;">
                         <div class="no-records-icon">📋</div>
                         <div class="no-records-title">No Vote Records Found</div>
                         <div class="no-records-message">
@@ -1594,6 +1604,7 @@
         let currentElection = null;
         let electionTimer = null;
         let jwtToken = null;
+        let currentCandidates = [];
 
         // API Base URL - update this to match your backend server
         const API_BASE_URL = 'http://localhost:8080/api';
@@ -1627,8 +1638,8 @@
                 // Hide loading overlay
                 hideLoading();
 
-                // Load vote records (if any)
-                loadVoteRecords();
+                // Load vote records
+                await loadVoteRecords();
 
             } catch (error) {
                 console.error('Error loading user data:', error);
@@ -1745,7 +1756,6 @@
             const startDateTime = new Date(`${currentElection.startDate}T${currentElection.startTime}:00`);
             const endDateTime = new Date(`${currentElection.endDate}T${currentElection.endTime}:00`);
 
-
             function updateTimer() {
                 const now = new Date();
                 const voteBtn = document.getElementById('vote-btn');
@@ -1810,7 +1820,6 @@
                     resultsBtn.disabled = false; // Enable Show Results button
                     clearInterval(electionTimer);
                 }
-
             }
 
             // Update timer immediately and then every second
@@ -1855,28 +1864,56 @@
             return new Date(dateString).toLocaleDateString('en-US', options);
         }
 
-        // Load vote records (placeholder - implement based on your backend)
-        function loadVoteRecords() {
-            // This would typically fetch from your backend API
-            // For now, show no records message
-            const container = document.getElementById('vote-records-container');
-            const noRecordsMessage = document.getElementById('no-records-message');
-            const recordsList = document.getElementById('vote-records-list');
+        // Load vote records from backend
+        async function loadVoteRecords() {
+            try {
+                // Show loading
+                document.getElementById('vote-records-loading').style.display = 'block';
+                document.getElementById('no-records-message').style.display = 'none';
+                document.getElementById('vote-records-list').style.display = 'none';
 
-            if (voteRecords.length === 0) {
-                noRecordsMessage.style.display = 'block';
-                recordsList.style.display = 'none';
-            } else {
-                noRecordsMessage.style.display = 'none';
-                recordsList.style.display = 'block';
-                
-                // Clear and populate records
-                recordsList.innerHTML = '';
-                voteRecords.forEach(record => {
-                    const recordElement = createVoteRecordElement(record);
-                    recordsList.appendChild(recordElement);
+                const response = await fetch(`${API_BASE_URL}/vote-history`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const records = await response.json();
+                
+                // Hide loading
+                document.getElementById('vote-records-loading').style.display = 'none';
+
+                if (!records || records.length === 0) {
+                    document.getElementById('no-records-message').style.display = 'block';
+                } else {
+                    voteRecords = records;
+                    displayVoteRecords();
+                }
+
+            } catch (error) {
+                console.error('Error loading vote records:', error);
+                document.getElementById('vote-records-loading').style.display = 'none';
+                document.getElementById('no-records-message').style.display = 'block';
             }
+        }
+
+        // Display vote records
+        function displayVoteRecords() {
+            const recordsList = document.getElementById('vote-records-list');
+            recordsList.innerHTML = '';
+
+            voteRecords.forEach(record => {
+                const recordElement = createVoteRecordElement(record);
+                recordsList.appendChild(recordElement);
+            });
+
+            recordsList.style.display = 'block';
         }
 
         // Create vote record element
@@ -1886,34 +1923,255 @@
             
             recordDiv.innerHTML = `
                 <div class="vote-record-header">
-                    <h4 class="vote-record-title">${record.electionTitle}</h4>
-                    <span class="vote-record-date">${formatDate(record.voteDate)} at ${record.voteTime}</span>
+                    <h4 class="vote-record-title">${record.electionName || 'Election'}</h4>
+                    <span class="vote-record-date">${formatDateTime(record.voteDate)}</span>
                 </div>
                 <div class="vote-record-body">
                     <div class="vote-record-info">
                         <div class="vote-info-item">
-                            <span class="vote-info-label">Election Type:</span>
-                            <span class="vote-info-value">${record.electionType}</span>
-                        </div>
-                        <div class="vote-info-item">
-                            <span class="vote-info-label">Constituency:</span>
-                            <span class="vote-info-value">${record.constituency}</span>
-                        </div>
-                        <div class="vote-info-item">
                             <span class="vote-info-label">Candidate:</span>
-                            <span class="vote-info-value">${record.candidateName}</span>
+                            <span class="vote-info-value">${record.candidateName || 'N/A'}</span>
                         </div>
                         <div class="vote-info-item">
                             <span class="vote-info-label">Party:</span>
-                            <span class="vote-info-value">${record.candidateParty}</span>
+                            <span class="vote-info-value">${record.candidateParty || 'Independent'}</span>
+                        </div>
+                        <div class="vote-info-item">
+                            <span class="vote-info-label">Vote ID:</span>
+                            <span class="vote-info-value">${record.id || 'N/A'}</span>
+                        </div>
+                        <div class="vote-info-item">
+                            <span class="vote-info-label">Status:</span>
+                            <span class="vote-info-value">Confirmed</span>
                         </div>
                     </div>
-                    <div class="vote-status">✅ ${record.status}</div>
+                    <div class="vote-status">✅ Vote Recorded</div>
                 </div>
             `;
             
             return recordDiv;
         }
+
+        // Format date and time for display
+        function formatDateTime(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Check if user has already voted
+        async function checkIfAlreadyVoted() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/has-voted`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    console.warn('Could not check voting status');
+                    return false;
+                }
+
+                const result = await response.json();
+                return result.hasVoted || false;
+
+            } catch (error) {
+                console.error('Error checking vote status:', error);
+                return false;
+            }
+        }
+
+        // Fetch candidates from backend
+        async function fetchCandidates() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/candidates`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const candidates = await response.json();
+                
+                // Filter only completed candidates
+                return candidates.filter(candidate => candidate.status === 'Completed');
+
+            } catch (error) {
+                console.error('Error fetching candidates:', error);
+                throw error;
+            }
+        }
+
+        // Submit vote to backend
+        async function submitVote(candidateId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/cast-vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        candidateId: candidateId
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw { 
+                        status: response.status, 
+                        message: errorData.message || 'Vote submission failed' 
+                    };
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                console.error('Error submitting vote:', error);
+                throw error;
+            }
+        }
+
+        // Open voting modal
+        window.openVotingModal = async function() {
+            if (!currentElection) {
+                showError('No active election available for voting.');
+                return;
+            }
+
+            try {
+                // Check if user has already voted
+                const hasVoted = await checkIfAlreadyVoted();
+                if (hasVoted) {
+                    showError('You have already cast your vote in this election.');
+                    return;
+                }
+
+                // Show loading in modal
+                document.getElementById('modal-election-title').textContent = currentElection.name;
+                document.getElementById('modal-election-type').textContent = currentElection.type || 'General Election';
+                document.getElementById('voting-modal').classList.add('active');
+                
+                const candidatesList = document.getElementById('candidates-list');
+                candidatesList.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">Loading candidates...</div>';
+                
+                // Fetch candidates from backend
+                const candidates = await fetchCandidates();
+                currentCandidates = candidates;
+                
+                // Clear loading and populate candidates
+                candidatesList.innerHTML = '';
+                
+                if (!candidates || candidates.length === 0) {
+                    candidatesList.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">No candidates found for this election.</div>';
+                    document.getElementById('vote-submit-btn').disabled = true;
+                    return;
+                }
+                
+                candidates.forEach((candidate) => {
+                    const div = document.createElement('div');
+                    div.className = 'candidate-option';
+                    div.innerHTML = `
+                        <input type="radio" name="candidate" class="candidate-radio" id="candidate${candidate.id}" value="${candidate.id}">
+                        <div class="candidate-info">
+                            <div class="candidate-name">${candidate.name}</div>
+                            <div class="candidate-party">${candidate.partyName || 'Independent'}</div>
+                        </div>
+                        <span class="candidate-symbol">${candidate.symbol || '🗳️'}</span>
+                    `;
+                    
+                    div.onclick = () => {
+                        document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
+                        div.classList.add('selected');
+                        div.querySelector('input[type=radio]').checked = true;
+                        document.getElementById('vote-submit-btn').disabled = false;
+                    };
+                    
+                    candidatesList.appendChild(div);
+                });
+                
+                document.getElementById('vote-submit-btn').disabled = true;
+
+            } catch (error) {
+                console.error('Error opening voting modal:', error);
+                showError('Failed to load candidates. Please try again.');
+                closeVotingModal();
+            }
+        };
+
+        // Close voting modal
+        window.closeVotingModal = function() {
+            document.getElementById('voting-modal').classList.remove('active');
+        };
+
+        // Vote form submission
+        document.getElementById('vote-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const selectedRadio = document.querySelector('input[name="candidate"]:checked');
+            if (!selectedRadio) return;
+            
+            const candidateId = parseInt(selectedRadio.value);
+            const submitBtn = document.getElementById('vote-submit-btn');
+            
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting Vote...';
+            
+            try {
+                // Submit vote to backend
+                const result = await submitVote(candidateId);
+                
+                // Close modal and show success
+                closeVotingModal();
+                showSuccess('Your vote has been successfully recorded! Thank you for participating in democracy.');
+                
+                // Reload vote records to show the new vote
+                await loadVoteRecords();
+                
+                // Update vote button state
+                const voteBtn = document.getElementById('vote-btn');
+                voteBtn.disabled = true;
+                voteBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    Vote Submitted
+                `;
+                
+            } catch (error) {
+                console.error('Vote submission error:', error);
+                
+                // Show appropriate error message
+                if (error.status === 400) {
+                    showError(error.message || 'You have already voted in this election.');
+                } else if (error.status === 401) {
+                    showError('Session expired. Please login again.');
+                    setTimeout(() => redirectToLogin(), 2000);
+                } else {
+                    showError('Failed to submit vote. Please try again.');
+                }
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Vote';
+            }
+        });
 
         // Show loading overlay
         function showLoading() {
@@ -1959,77 +2217,11 @@
             window.location.href = 'login.html';
         }
 
-        // Open voting modal
-        window.openVotingModal = function() {
-            if (!currentElection) {
-                showError('No active election available for voting.');
-                return;
-            }
-
-            // For demo purposes, we'll use mock candidates
-            // In a real implementation, you'd fetch candidates from your backend
-            const mockCandidates = [
-                { name: "Amit Sharma", party: "People's Party", symbol: "🦁" },
-                { name: "Priya Singh", party: "Unity Front", symbol: "🌳" },
-                { name: "Rahul Mehra", party: "Progressive Alliance", symbol: "🦅" },
-                { name: "Sunita Rao", party: "Justice League", symbol: "⚖️" },
-                { name: "Vikas Patel", party: "Development Party", symbol: "🚀" }
-            ];
-
-            document.getElementById('modal-election-title').textContent = currentElection.name;
-            document.getElementById('modal-election-type').textContent = currentElection.type || 'General Election';
-            
-            const candidatesList = document.getElementById('candidates-list');
-            candidatesList.innerHTML = '';
-            
-            mockCandidates.forEach((candidate, idx) => {
-                const div = document.createElement('div');
-                div.className = 'candidate-option';
-                div.innerHTML = `
-                    <input type="radio" name="candidate" class="candidate-radio" id="candidate${idx}" value="${idx}">
-                    <div class="candidate-info">
-                        <div class="candidate-name">${candidate.name}</div>
-                        <div class="candidate-party">${candidate.party}</div>
-                    </div>
-                    <span class="candidate-symbol">${candidate.symbol}</span>
-                `;
-                
-                div.onclick = () => {
-                    document.querySelectorAll('.candidate-option').forEach(opt => opt.classList.remove('selected'));
-                    div.classList.add('selected');
-                    div.querySelector('input[type=radio]').checked = true;
-                    document.getElementById('vote-submit-btn').disabled = false;
-                };
-                
-                candidatesList.appendChild(div);
-            });
-            
-            document.getElementById('vote-submit-btn').disabled = true;
-            document.getElementById('voting-modal').classList.add('active');
+        // Show results function
+        window.showResults = function() {
+            // Redirect to results page
+            window.location.href = 'results.html';
         };
-
-        // Close voting modal
-        window.closeVotingModal = function() {
-            document.getElementById('voting-modal').classList.remove('active');
-        };
-
-        // Vote form submission
-        document.getElementById('vote-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const selectedRadio = document.querySelector('input[name="candidate"]:checked');
-            if (!selectedRadio) return;
-            
-            const candidateIndex = parseInt(selectedRadio.value);
-            
-            // In a real implementation, you'd submit the vote to your backend
-            // For demo purposes, we'll just show success
-            closeVotingModal();
-            showSuccess('Your vote has been successfully recorded! Thank you for participating in democracy.');
-            
-            // You could also add the vote to local records for demonstration
-            // addVoteRecord(candidateIndex);
-        });
 
         // Toggle password visibility in profile (disabled since we don't store actual passwords)
         function togglePasswordVisibility() {
@@ -2260,19 +2452,11 @@
         });
 
         // Cleanup timer when page is unloaded
-            window.addEventListener('beforeunload', function() {
-                if (electionTimer) {
-                    clearInterval(electionTimer);
-                }
-            });
-
-                document.getElementById('results-btn').addEventListener('click', function() {
-            if (!resultsBtn.disabled) {
-                // Redirect or open modal
-                window.location.href = 'results.html'; // or call an API
-                }
-            });
-
+        window.addEventListener('beforeunload', function() {
+            if (electionTimer) {
+                clearInterval(electionTimer);
+            }
+        });
     </script>
 </body>
 </html>
