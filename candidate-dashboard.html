@@ -1606,13 +1606,14 @@
                     document.getElementById('partyName').value = candidateData.partyName || '';
                     document.getElementById('symbol').value = candidateData.symbol || '';
                     
-                    // Handle status and profile lock
-                    profileStatus = candidateData.status || 'Profile Incomplete';
+                    // Handle status from backend response - this is the key fix!
+                    profileStatus = candidateData.status || 'Not Completed';
                     document.getElementById('status').value = profileStatus;
                     
-                    // Check if profile should be locked
-                    if (profileStatus === 'COMPLETED' || profileStatus === 'Completed' || 
-                        (candidateData.partyName && candidateData.symbol && profileStatus !== 'Profile Incomplete')) {
+                    console.log('Profile status from backend:', profileStatus);
+                    
+                    // Check if profile should be locked based on actual database status
+                    if (profileStatus === 'COMPLETED' || profileStatus === 'Completed') {
                         lockProfile();
                         showAlert('profileAlert', 'Profile is completed and locked for editing to ensure election integrity.', 'success');
                     } else {
@@ -1621,9 +1622,10 @@
                     
                 } else {
                     console.log('Candidate profile not found, using defaults');
-                    document.getElementById('status').value = 'Profile Not Created';
+                    document.getElementById('status').value = 'Not Completed';
                     document.getElementById('partyName').value = '';
                     document.getElementById('symbol').value = '';
+                    profileStatus = 'Not Completed';
                     unlockProfile(); // New profiles should be editable
                 }
                 
@@ -2019,7 +2021,7 @@
 
         // Updated candidate profile update function with lock check
         async function updateCandidateProfile() {
-            // Check if profile is locked
+    // Check if profile is locked
             if (isProfileLocked) {
                 showAlert('profileAlert', 'Profile is locked and cannot be modified. Contact administrator if changes are needed.', 'error');
                 return;
@@ -2069,9 +2071,11 @@
                     
                     showAlert('profileAlert', 'Profile updated successfully! Your information has been locked for election integrity.', 'success');
                     
-                    // Update status field and lock profile
-                    profileStatus = updatedProfile.status || 'COMPLETED';
+                    // Update status field with the actual status from response - KEY FIX!
+                    profileStatus = updatedProfile.status;
                     document.getElementById('status').value = profileStatus;
+                    
+                    console.log('Updated profile status to:', profileStatus);
                     
                     // Lock the profile after successful update
                     setTimeout(() => {
@@ -2095,7 +2099,7 @@
                     try {
                         const errorData = await response.json();
                         const errorMessage = errorData.message || errorData.error || 'Update failed';
-                        showAlert('profileAlert', 'Party Name or symbol can not be same: ' + errorMessage, 'error');
+                        showAlert('profileAlert', 'Error updating profile: ' + errorMessage, 'error');
                     } catch (e) {
                         showAlert('profileAlert', `Error updating profile (Status: ${response.status})`, 'error');
                     }
