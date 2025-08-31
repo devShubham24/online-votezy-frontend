@@ -392,6 +392,179 @@
             opacity: 0.9;
         }
 
+        /* Winner Section */
+        .winner-section {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(243,156,18,0.3);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .winner-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(180deg); }
+        }
+
+        .winner-crown {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .winner-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .winner-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .winner-detail {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .winner-detail-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.3rem;
+        }
+
+        .winner-detail-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .winner-message {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Results Table */
+        .results-table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(52,152,219,0.08);
+        }
+
+        .results-table thead {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: #fff;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e3eaf7;
+        }
+
+        .results-table th {
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .results-table tbody tr {
+            transition: background-color 0.3s;
+        }
+
+        .results-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .results-table tbody tr:nth-child(even) {
+            background-color: #fafbfc;
+        }
+
+        .rank-cell {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .rank-1 {
+            color: #f39c12;
+        }
+
+        .rank-2 {
+            color: #95a5a6;
+        }
+
+        .rank-3 {
+            color: #e67e22;
+        }
+
+        .candidate-name-cell {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .party-name-cell {
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .symbol-cell {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .votes-cell {
+            font-weight: 700;
+            color: #27ae60;
+        }
+
+        /* Results Section */
+        .results-section {
+            margin-top: 2rem;
+        }
+
         /* No Election State */
         .no-election {
             text-align: center;
@@ -1067,6 +1240,20 @@
             margin-top: 0.5rem;
         }
 
+        /* Results Loading State */
+        .results-loading {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #666;
+        }
+
+        .results-loading-spinner {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            animation: spin 1s linear infinite;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .voter-header {
@@ -1133,6 +1320,19 @@
 
             .timer-display {
                 font-size: 1.5rem;
+            }
+
+            .winner-info {
+                grid-template-columns: 1fr;
+            }
+
+            .results-table {
+                font-size: 0.9rem;
+            }
+
+            .results-table th,
+            .results-table td {
+                padding: 0.5rem;
             }
         }
 
@@ -1236,7 +1436,7 @@
         <!-- Error Message -->
         <div class="error-message" id="error-message"></div>
         
-        <!-- Profile Section (Now First) -->
+        <!-- Profile Section -->
         <section id="profile" class="content-section active">
             <div class="section-header">
                 <h2 class="section-title">
@@ -1302,7 +1502,7 @@
             </div>
         </section>
 
-        <!-- Live Elections Section (Now Second) -->
+        <!-- Live Elections Section -->
         <section id="elections" class="content-section">
             <div class="section-header">
                 <h2 class="section-title">
@@ -1408,19 +1608,66 @@
                                 Cast Your Vote
                             </button>
                             <!-- Show Results Button -->
-                            <button class="vote-btn" id="results-btn" onclick="showResults()" disabled style="margin-top: 1rem;">
+                            <button class="vote-btn" id="results-btn" onclick="showResults()" disabled style="margin-top: 1rem; background: linear-gradient(90deg, #f39c12 80%, #e67e22 100%);">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    <path d="M9 12l2 2 4-4"/>
+                                    <circle cx="12" cy="12" r="10"/>
                                 </svg>
                                 Show Results
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Results Section -->
+                <div class="results-section" id="results-section" style="display: none;">
+                    <!-- Winner Section -->
+                    <div class="winner-section" id="winner-section">
+                        <div class="winner-crown">👑</div>
+                        <h2 class="winner-title">Election Winner</h2>
+                        <div class="winner-info" id="winner-info">
+                            <!-- Winner details will be populated here -->
+                        </div>
+                        <div class="winner-message" id="winner-message">
+                            <!-- Winner message will be displayed here -->
+                        </div>
+                    </div>
+
+                    <!-- Results Table -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 12l2 2 4-4"/>
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Complete Election Results
+                            </h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="results-table-container">
+                                <table class="results-table" id="results-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Candidate Name</th>
+                                            <th>Party Name</th>
+                                            <th>Symbol</th>
+                                            <th>Total Votes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="results-table-body">
+                                        <!-- Results will be populated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Vote Record Section (Now Third) -->
+        <!-- Vote Record Section -->
         <section id="vote-record" class="content-section">
             <div class="section-header">
                 <h2 class="section-title">
@@ -1605,6 +1852,8 @@
         let electionTimer = null;
         let jwtToken = null;
         let currentCandidates = [];
+        let winnerData = null;
+        let resultsData = [];
 
         // API Base URL - update this to match your backend server
         const API_BASE_URL = 'http://localhost:8080/api';
@@ -1776,6 +2025,7 @@
                     statusEl.className = 'election-status status-upcoming';
                     statusEl.textContent = '⏰ Upcoming';
                     voteBtn.disabled = true;
+                    resultsBtn.disabled = true;
                     voteBtn.innerHTML = `
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
                             <circle cx="12" cy="12" r="10"/>
@@ -1795,6 +2045,7 @@
                     statusEl.className = 'election-status status-live';
                     statusEl.textContent = '🔴 LIVE';
                     voteBtn.disabled = false;
+                    resultsBtn.disabled = true;
                     voteBtn.innerHTML = `
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
                             <path d="M9 11H7a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2h-2M9 11V9a3 3 0 116 0v2M9 11h6"/>
@@ -2046,6 +2297,174 @@
             }
         }
 
+        // Fetch election winner
+        async function fetchElectionWinner() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/election-winner`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                console.error('Error fetching election winner:', error);
+                throw error;
+            }
+        }
+
+        // Fetch election results
+        async function fetchElectionResults() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/election-results`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${jwtToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                console.error('Error fetching election results:', error);
+                throw error;
+            }
+        }
+
+        // Display winner information
+        function displayWinner(winner) {
+            const winnerInfo = document.getElementById('winner-info');
+            winnerInfo.innerHTML = `
+                <div class="winner-detail">
+                    <div class="winner-detail-label">Candidate ID</div>
+                    <div class="winner-detail-value">${winner.candidateId}</div>
+                </div>
+                <div class="winner-detail">
+                    <div class="winner-detail-label">Name</div>
+                    <div class="winner-detail-value">${winner.candidateName}</div>
+                </div>
+                <div class="winner-detail">
+                    <div class="winner-detail-label">Party</div>
+                    <div class="winner-detail-value">${winner.partyName}</div>
+                </div>
+                <div class="winner-detail">
+                    <div class="winner-detail-label">Symbol</div>
+                    <div class="winner-detail-value">${winner.symbol}</div>
+                </div>
+                <div class="winner-detail">
+                    <div class="winner-detail-label">Total Votes</div>
+                    <div class="winner-detail-value">${winner.totalVotes.toLocaleString()}</div>
+                </div>
+            `;
+
+            const winnerMessage = document.getElementById('winner-message');
+            if (winner.message) {
+                winnerMessage.textContent = `"${winner.message}"`;
+            } else {
+                winnerMessage.textContent = 'Congratulations to the winner!';
+            }
+        }
+
+        // Display results table
+        function displayResultsTable(results) {
+            const tableBody = document.getElementById('results-table-body');
+            tableBody.innerHTML = '';
+
+            results.forEach(candidate => {
+                const row = document.createElement('tr');
+                
+                // Determine rank styling
+                let rankClass = '';
+                if (candidate.rank === 1) rankClass = 'rank-1';
+                else if (candidate.rank === 2) rankClass = 'rank-2';
+                else if (candidate.rank === 3) rankClass = 'rank-3';
+
+                row.innerHTML = `
+                    <td class="rank-cell ${rankClass}">#${candidate.rank}</td>
+                    <td class="candidate-name-cell">${candidate.candidateName}</td>
+                    <td class="party-name-cell">${candidate.partyName}</td>
+                    <td class="symbol-cell">${candidate.symbol}</td>
+                    <td class="votes-cell">${candidate.totalVotes.toLocaleString()}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Show results function - Updated with API integration
+        window.showResults = async function() {
+            const resultsBtn = document.getElementById('results-btn');
+            
+            // Disable button and show loading
+            resultsBtn.disabled = true;
+            resultsBtn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; animation: spin 1s linear infinite;">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+                Loading Results...
+            `;
+
+            try {
+                // Fetch both winner and results data
+                const [winner, results] = await Promise.all([
+                    fetchElectionWinner(),
+                    fetchElectionResults()
+                ]);
+
+                // Store data
+                winnerData = winner;
+                resultsData = results;
+
+                // Display winner and results
+                displayWinner(winner);
+                displayResultsTable(results);
+
+                // Show results section
+                document.getElementById('results-section').style.display = 'block';
+
+                // Scroll to results section
+                document.getElementById('results-section').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+
+                // Update button text
+                resultsBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M9 12l2 2 4-4"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Results Displayed
+                `;
+
+            } catch (error) {
+                console.error('Error loading results:', error);
+                showError('Failed to load election results. Please try again.');
+                
+                // Re-enable button
+                resultsBtn.disabled = false;
+                resultsBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                        <path d="M9 12l2 2 4-4"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Show Results
+                `;
+            }
+        };
+
         // Open voting modal
         window.openVotingModal = async function() {
             if (!currentElection) {
@@ -2216,12 +2635,6 @@
             // Redirect to login
             window.location.href = 'login.html';
         }
-
-        // Show results function
-        window.showResults = function() {
-            // Redirect to results page
-            window.location.href = 'results.html';
-        };
 
         // Toggle password visibility in profile (disabled since we don't store actual passwords)
         function togglePasswordVisibility() {
