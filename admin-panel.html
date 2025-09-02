@@ -305,6 +305,79 @@
             padding: 2rem;
         }
 
+        /* Countdown Timer Styles */
+        .countdown-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .countdown-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .countdown-unit {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem 0.8rem;
+            min-width: 80px;
+            backdrop-filter: blur(10px);
+        }
+
+        .countdown-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            display: block;
+            line-height: 1;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        .countdown-status {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-top: 0.5rem;
+        }
+
+        .countdown-ended {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .countdown-active {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%) !important;
+        }
+
+        .countdown-active .countdown-title {
+            color: #fff;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Tables */
         .table-container {
             overflow-x: auto;
@@ -464,6 +537,7 @@
             background: #f8fafc;
             border-radius: 8px;
             border: 1px solid #e3eaf7;
+            flex-wrap: wrap;
         }
 
         .btn-status {
@@ -522,6 +596,60 @@
         .btn-declare-result:disabled:hover {
             transform: none;
             box-shadow: none;
+        }
+
+        .btn-declare-result.permanently-disabled {
+            background: #27ae60 !important;
+            cursor: default !important;
+            opacity: 1 !important;
+        }
+
+        .btn-declare-result.permanently-disabled:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* View Results Button */
+        .btn-view-results {
+            background: linear-gradient(90deg, #8e44ad 0%, #9b59b6 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-view-results:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(142,68,173,0.3);
+        }
+
+        .btn-view-results:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-view-results:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-view-results.permanently-enabled {
+            background: linear-gradient(90deg, #8e44ad 0%, #9b59b6 100%) !important;
+            cursor: pointer !important;
+            opacity: 1 !important;
+        }
+
+        .btn-view-results.permanently-enabled:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(142,68,173,0.3) !important;
         }
 
         /* Reset button specific styling */
@@ -1015,6 +1143,19 @@
                 flex-direction: column;
                 align-items: stretch;
             }
+
+            .countdown-display {
+                gap: 0.8rem;
+            }
+
+            .countdown-unit {
+                min-width: 60px;
+                padding: 0.8rem 0.5rem;
+            }
+
+            .countdown-number {
+                font-size: 1.8rem;
+            }
         }
 
         /* Flag Icon */
@@ -1377,7 +1518,37 @@
                         </div>
                     </form>
                     
-                    <!-- Status Control Container with Status Indicator and Declare Result Button -->
+                    <!-- Countdown Timer - Moved below the Reset Settings button -->
+                    <div class="countdown-container" id="countdown-container" style="display: none;">
+                        <div class="countdown-title" id="countdown-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            Election Countdown
+                        </div>
+                        <div class="countdown-display" id="countdown-display">
+                            <div class="countdown-unit">
+                                <span class="countdown-number" id="days">00</span>
+                                <div class="countdown-label">Days</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <span class="countdown-number" id="hours">00</span>
+                                <div class="countdown-label">Hours</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <span class="countdown-number" id="minutes">00</span>
+                                <div class="countdown-label">Minutes</div>
+                            </div>
+                            <div class="countdown-unit">
+                                <span class="countdown-number" id="seconds">00</span>
+                                <div class="countdown-label">Seconds</div>
+                            </div>
+                        </div>
+                        <div class="countdown-status" id="countdown-status">Time remaining until election ends</div>
+                    </div>
+                    
+                    <!-- Status Control Container with Status Indicator and Control Buttons -->
                     <div class="status-control-container">
                         <div class="btn-status inactive" id="status-indicator">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1393,6 +1564,13 @@
                                 <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02"/>
                             </svg>
                             Declare Results
+                        </button>
+                        <button type="button" class="btn-view-results" id="view-results-btn" disabled>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            View Results
                         </button>
                     </div>
                 </div>
@@ -1644,14 +1822,29 @@
         const cancelResetBtn = document.getElementById('cancel-reset-btn');
         const resetFormBtn = document.getElementById('reset-form-btn');
 
-        // Election control elements - UPDATED
+        // Election control elements
         const statusIndicator = document.getElementById('status-indicator');
         const declareResultBtn = document.getElementById('declare-result-btn');
+        const viewResultsBtn = document.getElementById('view-results-btn');
 
-        // Election status state - UPDATED
+        // Countdown elements
+        const countdownContainer = document.getElementById('countdown-container');
+        const countdownTitle = document.getElementById('countdown-title');
+        const countdownDisplay = document.getElementById('countdown-display');
+        const countdownStatus = document.getElementById('countdown-status');
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+
+        // Election status state
         let currentElectionStatus = 'inactive'; // inactive, active, completed
         let isElectionTimeEnded = false;
         let hasElectionSettings = false;
+        let electionEndTime = null;
+        let countdownInterval = null;
+        let resultsAreDeclared = false;
+        let electionStartTime = null; // ADD THIS LINE
 
         // Stats elements - Voter Stats
         const voterStatsElements = {
@@ -1707,7 +1900,345 @@
         let refreshInterval;
         const REFRESH_INTERVAL = 30000; // 30 seconds
 
+        // Countdown Timer Functions
+        // Enhanced Countdown Timer Functions (REPLACE EXISTING COUNTDOWN FUNCTIONS)
+        function startCountdown() {
+            if (!electionStartTime && !electionEndTime) return;
+
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown(); // Initial call
+            countdownContainer.style.display = 'block';
+        }
+
+        function stopCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            countdownContainer.style.display = 'none';
+        }
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            
+            // Before election starts
+            if (electionStartTime && now < electionStartTime) {
+                const timeLeft = electionStartTime - now;
+                updateCountdownDisplay(timeLeft, 'starts');
+                return;
+            }
+            
+            // During election (between start and end)
+            if (electionEndTime && now < electionEndTime) {
+                const timeLeft = electionEndTime - now;
+                updateCountdownDisplay(timeLeft, 'active');
+                return;
+            }
+            
+            // After election ends
+            isElectionTimeEnded = true;
+            showElectionEnded();
+            updateElectionStatusDisplay();
+            checkResultsStatus(); // Check if results can be declared
+        }
+
+        function updateCountdownDisplay(timeLeft, phase) {
+            if (timeLeft <= 0) {
+                if (phase === 'starts') {
+                    // Election just started, switch to active phase
+                    electionStartTime = null; // Clear start time
+                    updateCountdown(); // Recursively call to handle active phase
+                }
+                return;
+            }
+
+            // Calculate time units
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            // Update display
+            daysElement.textContent = String(days).padStart(2, '0');
+            hoursElement.textContent = String(hours).padStart(2, '0');
+            minutesElement.textContent = String(minutes).padStart(2, '0');
+            secondsElement.textContent = String(seconds).padStart(2, '0');
+
+            // Update title and status based on phase
+            if (phase === 'starts') {
+                countdownContainer.classList.remove('countdown-ended', 'countdown-active');
+                countdownTitle.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    Election Starts In
+                `;
+                if (days > 0) {
+                    countdownStatus.textContent = `Election starts in ${days} days, ${hours} hours`;
+                } else if (hours > 0) {
+                    countdownStatus.textContent = `Election starts in ${hours} hours, ${minutes} minutes`;
+                } else if (minutes > 0) {
+                    countdownStatus.textContent = `Election starts in ${minutes} minutes`;
+                } else {
+                    countdownStatus.textContent = `Election starts in ${seconds} seconds`;
+                }
+            } else if (phase === 'active') {
+                countdownContainer.classList.remove('countdown-ended');
+                countdownContainer.classList.add('countdown-active');
+                countdownTitle.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12,6 12,12 16,14"/>
+                    </svg>
+                    Election Time Remaining
+                    <span style="background: #e74c3c; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; margin-left: 1rem;">LIVE</span>
+                `;
+                if (days > 0) {
+                    countdownStatus.textContent = `Election ends in ${days} days, ${hours} hours`;
+                } else if (hours > 0) {
+                    countdownStatus.textContent = `Election ends in ${hours} hours, ${minutes} minutes`;
+                } else if (minutes > 0) {
+                    countdownStatus.textContent = `Election ends in ${minutes} minutes`;
+                } else {
+                    countdownStatus.textContent = `Election ends in ${seconds} seconds`;
+                }
+            }
+        }
+
+        function showElectionEnded() {
+            countdownContainer.classList.add('countdown-ended');
+            countdownContainer.classList.remove('countdown-active');
+            countdownTitle.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11l3 3L22 4"/>
+                    <circle cx="12" cy="12" r="10"/>
+                </svg>
+                Election Ended
+                <span style="background: #95a5a6; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; margin-left: 1rem;">ENDED</span>
+            `;
+            countdownStatus.textContent = 'Election period has ended. Results can now be declared.';
+            
+            // Set all countdown numbers to 00
+            daysElement.textContent = '00';
+            hoursElement.textContent = '00';
+            minutesElement.textContent = '00';
+            secondsElement.textContent = '00';
+            
+            // Stop the countdown
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+
+        function initializeCountdown() {
+            const startDate = document.getElementById('start-date').value;
+            const startTime = document.getElementById('start-time').value;
+            const endDate = document.getElementById('end-date').value;
+            const endTime = document.getElementById('end-time').value;
+            
+            if (startDate && startTime && endDate && endTime && currentElectionStatus === 'active') {
+                electionStartTime = new Date(`${startDate}T${startTime}`).getTime();
+                electionEndTime = new Date(`${endDate}T${endTime}`).getTime();
+                
+                const now = new Date().getTime();
+                isElectionTimeEnded = now > electionEndTime;
+                
+                if (isElectionTimeEnded) {
+                    showElectionEnded();
+                    checkResultsStatus(); // Check if results can be declared
+                } else {
+                    // Reset countdown appearance
+                    countdownContainer.classList.remove('countdown-ended');
+                    startCountdown();
+                }
+            } else {
+                stopCountdown();
+            }
+        }
+
         // Header message functions
+
+        // Result Management Functions
+        async function checkResultsStatus() {
+            try {
+                const response = await fetch(`${apiBase}/isResult/declared`);
+                if (!response.ok) {
+                    throw new Error('Failed to check results status');
+                }
+                
+                const data = await response.json();
+                const resultsDeclared = data.resultsDeclared || false;
+                
+                updateResultButtons(resultsDeclared);
+                
+                if (resultsDeclared) {
+                    currentElectionStatus = 'completed';
+                    resultsAreDeclared = true;
+                    updateElectionStatusDisplay();
+                }
+                
+                return resultsDeclared;
+                
+            } catch (error) {
+                console.error('Error checking results status:', error);
+                // On error, assume results not declared and disable buttons
+                updateResultButtons(false);
+                return false;
+            }
+        }
+
+        function updateResultButtons(resultsDeclared) {
+            if (resultsDeclared) {
+                // Results are declared - permanently disable declare button, enable view results
+                declareResultBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/>
+                    </svg>
+                    Results Declared
+                `;
+                declareResultBtn.disabled = true;
+                declareResultBtn.classList.add('permanently-disabled');
+                declareResultBtn.style.background = '#27ae60';
+                declareResultBtn.style.cursor = 'default';
+
+                // Enable View Results button permanently
+                viewResultsBtn.disabled = false;
+                viewResultsBtn.classList.add('permanently-enabled');
+                viewResultsBtn.style.background = 'linear-gradient(90deg, #8e44ad 0%, #9b59b6 100%)';
+                viewResultsBtn.style.cursor = 'pointer';
+                
+            } else if (isElectionTimeEnded) {
+                // Election ended but results not declared - enable declare button
+                declareResultBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02"/>
+                    </svg>
+                    Declare Results
+                `;
+                declareResultBtn.disabled = false;
+                declareResultBtn.classList.remove('permanently-disabled');
+                declareResultBtn.style.background = 'linear-gradient(90deg, #f39c12 0%, #e67e22 100%)';
+                declareResultBtn.style.cursor = 'pointer';
+
+                // Keep View Results disabled until results are declared
+                viewResultsBtn.disabled = true;
+                viewResultsBtn.classList.remove('permanently-enabled');
+                viewResultsBtn.style.background = '#bdc3c7';
+                viewResultsBtn.style.cursor = 'not-allowed';
+                
+            } else {
+                // Election still active or not started - disable both buttons
+                declareResultBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.91.37 4.15 1.02"/>
+                    </svg>
+                    Declare Results
+                `;
+                declareResultBtn.disabled = true;
+                declareResultBtn.classList.remove('permanently-disabled');
+                declareResultBtn.style.background = '#bdc3c7';
+                declareResultBtn.style.cursor = 'not-allowed';
+
+                viewResultsBtn.disabled = true;
+                viewResultsBtn.classList.remove('permanently-enabled');
+                viewResultsBtn.style.background = '#bdc3c7';
+                viewResultsBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Enhanced Declare Result Function
+        async function declareResults() {
+            if (!isElectionTimeEnded) {
+                showErrorMessage('Results can only be declared after the election period has ended.');
+                return;
+            }
+
+            if (currentElectionStatus !== 'active') {
+                showErrorMessage('Results can only be declared for an active election.');
+                return;
+            }
+
+            // Check current status first
+            const currentStatus = await checkResultsStatus();
+            if (currentStatus) {
+                showWarningMessage('Results have already been declared.');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to declare the election results? This action will make the results public and cannot be undone.')) {
+                return;
+            }
+
+            const originalText = declareResultBtn.innerHTML;
+            declareResultBtn.disabled = true;
+            declareResultBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+                Declaring Results...
+            `;
+
+            try {
+                const response = await fetch(`${apiBase}/admin/declare-results`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to declare results');
+                }
+
+                const data = await response.json();
+                
+                // Verify results were declared by checking API again
+                const finalStatus = await checkResultsStatus();
+                
+                if (finalStatus) {
+                    currentElectionStatus = 'completed';
+                    resultsAreDeclared = true;
+                    updateElectionStatusDisplay();
+                    showSuccessMessage(data?.message || 'Election results have been declared successfully!');
+                } else {
+                    throw new Error('Results declaration may not have completed properly');
+                }
+                
+            } catch (error) {
+                console.error('Error declaring results:', error);
+                showErrorMessage('Failed to declare results. Please try again.');
+                
+                // Restore button state on error
+                declareResultBtn.disabled = false;
+                declareResultBtn.innerHTML = originalText;
+                
+                // Double-check status in case it partially succeeded
+                checkResultsStatus();
+            }
+        }
+
+        // Enhanced View Results Function
+        async function viewResults() {
+            // Check current results status
+            const resultsDeclared = await checkResultsStatus();
+            
+            if (!resultsDeclared && !viewResultsBtn.classList.contains('permanently-enabled')) {
+                showErrorMessage('Results have not been declared yet.');
+                return;
+            }
+            
+            // Redirect to results page
+            window.location.href = 'result.html';
+        }
+
         function hideAllHeaderMessages() {
             headerSuccessMessage.style.display = 'none';
             headerErrorMessage.style.display = 'none';
@@ -1772,19 +2303,9 @@
             showHeaderMessage('info', message);
         }
 
-        // UPDATED Election status functions
+        // Updated Election status functions
+        // Updated Election status functions
         function updateElectionStatusDisplay() {
-            // Check if election time has ended
-            const now = new Date();
-            const endDate = document.getElementById('end-date').value;
-            const endTime = document.getElementById('end-time').value;
-            
-            if (endDate && endTime) {
-                const electionEndTime = new Date(`${endDate}T${endTime}`).getTime();
-                isElectionTimeEnded = now.getTime() > electionEndTime;
-            }
-
-            // Update status indicator based on current state
             if (currentElectionStatus === 'completed') {
                 // Results have been declared
                 statusIndicator.className = 'btn-status completed';
@@ -1796,15 +2317,7 @@
                     Results Declared
                 `;
                 
-                declareResultBtn.innerHTML = `
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 11l3 3L22 4"/>
-                    </svg>
-                    Results Declared
-                `;
-                declareResultBtn.disabled = true;
-                declareResultBtn.style.background = '#27ae60';
-                declareResultBtn.style.cursor = 'default';
+                updateResultButtons(true);
                 
             } else if (currentElectionStatus === 'active') {
                 // Election is active
@@ -1817,15 +2330,11 @@
                     Election Active
                 `;
                 
-                // Declare button enabled only if election time has ended
-                declareResultBtn.disabled = !isElectionTimeEnded;
-                if (isElectionTimeEnded) {
-                    declareResultBtn.style.background = 'linear-gradient(90deg, #f39c12 0%, #e67e22 100%)';
-                    declareResultBtn.style.cursor = 'pointer';
-                } else {
-                    declareResultBtn.style.background = '#bdc3c7';
-                    declareResultBtn.style.cursor = 'not-allowed';
-                }
+                // Initialize countdown
+                initializeCountdown();
+                
+                // Check results status to update buttons appropriately
+                checkResultsStatus();
                 
             } else {
                 // Election is inactive
@@ -1839,9 +2348,11 @@
                     Election Inactive
                 `;
                 
-                declareResultBtn.disabled = true;
-                declareResultBtn.style.background = '#bdc3c7';
-                declareResultBtn.style.cursor = 'not-allowed';
+                // Stop countdown
+                stopCountdown();
+                
+                // Disable both buttons
+                updateResultButtons(false);
             }
         }
 
@@ -2244,6 +2755,13 @@
                 setDefaultElectionValues();
                 currentElectionStatus = 'inactive';
                 hasElectionSettings = false;
+                resultsAreDeclared = false;
+                
+                // Reset button states - remove permanent classes
+                declareResultBtn.classList.remove('permanently-disabled');
+                viewResultsBtn.classList.remove('permanently-enabled');
+                
+                stopCountdown();
                 updateElectionStatusDisplay();
             })
             .catch(error => {
@@ -2256,6 +2774,13 @@
                     setDefaultElectionValues();
                     currentElectionStatus = 'inactive';
                     hasElectionSettings = false;
+                    resultsAreDeclared = false;
+                    
+                    // Reset button states - remove permanent classes
+                    declareResultBtn.classList.remove('permanently-disabled');
+                    viewResultsBtn.classList.remove('permanently-enabled');
+                    
+                    stopCountdown();
                     updateElectionStatusDisplay();
                     showWarningMessage(errorMessage);
                     return;
@@ -2273,7 +2798,7 @@
             });
         }
 
-        // UPDATED Declare Result Function
+        // Declare(Enhanced) Result Function
         async function declareResults() {
             if (!isElectionTimeEnded) {
                 showErrorMessage('Results can only be declared after the election period has ended.');
@@ -2282,6 +2807,13 @@
 
             if (currentElectionStatus !== 'active') {
                 showErrorMessage('Results can only be declared for an active election.');
+                return;
+            }
+
+            // Check current status first
+            const currentStatus = await checkResultsStatus();
+            if (currentStatus) {
+                showWarningMessage('Results have already been declared.');
                 return;
             }
 
@@ -2312,18 +2844,43 @@
 
                 const data = await response.json();
                 
-                // Update status to completed
-                currentElectionStatus = 'completed';
-                updateElectionStatusDisplay();
+                // Verify results were declared by checking API again
+                const finalStatus = await checkResultsStatus();
                 
-                showSuccessMessage(data?.message || 'Election results have been declared successfully!');
+                if (finalStatus) {
+                    currentElectionStatus = 'completed';
+                    resultsAreDeclared = true;
+                    updateElectionStatusDisplay();
+                    showSuccessMessage(data?.message || 'Election results have been declared successfully!');
+                } else {
+                    throw new Error('Results declaration may not have completed properly');
+                }
                 
             } catch (error) {
                 console.error('Error declaring results:', error);
                 showErrorMessage('Failed to declare results. Please try again.');
+                
+                // Restore button state on error
                 declareResultBtn.disabled = false;
                 declareResultBtn.innerHTML = originalText;
+                
+                // Double-check status in case it partially succeeded
+                checkResultsStatus();
             }
+        }
+
+        // View Results Function
+        async function viewResults() {
+            // Check current results status
+            const resultsDeclared = await checkResultsStatus();
+            
+            if (!resultsDeclared && !viewResultsBtn.classList.contains('permanently-enabled')) {
+                showErrorMessage('Results have not been declared yet.');
+                return;
+            }
+            
+            // Redirect to results page
+            window.location.href = 'result.html';
         }
 
         // Logout functions
@@ -2415,7 +2972,7 @@
                 });
             });
 
-            // UPDATED Election form handling
+            // Election form handling
             const electionForm = document.getElementById('election-form');
 
             if (electionForm) {
@@ -2465,6 +3022,13 @@
                         // Update local status
                         currentElectionStatus = 'active';
                         hasElectionSettings = true;
+                        resultsAreDeclared = false;
+                        
+                        // Initialize countdown
+                        electionEndTime = new Date(`${formData.endDate}T${formData.endTime}`).getTime();
+                        const now = new Date().getTime();
+                        isElectionTimeEnded = now > electionEndTime;
+                        
                         updateElectionStatusDisplay();
                         
                         showSuccessMessage('Election settings saved successfully! Election is now active.');
@@ -2479,6 +3043,11 @@
             // Declare result button event listener
             if (declareResultBtn) {
                 declareResultBtn.addEventListener('click', declareResults);
+            }
+
+            // View results button event listener
+            if (viewResultsBtn) {
+                viewResultsBtn.addEventListener('click', viewResults);
             }
 
             // Reset form button functionality
@@ -2514,7 +3083,14 @@
                 
                 // Update election completion status when dates change
                 const now = new Date();
-                isElectionTimeEnded = now.getTime() > endDate.getTime();
+                electionEndTime = endDate.getTime();
+                isElectionTimeEnded = now.getTime() > electionEndTime;
+                
+                // Reinitialize countdown if election is active
+                if (currentElectionStatus === 'active') {
+                    initializeCountdown();
+                }
+                
                 updateElectionStatusDisplay();
                 
                 return true;
@@ -2564,6 +3140,9 @@
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
                     stopAutoRefresh();
+                    if (countdownInterval) {
+                        clearInterval(countdownInterval);
+                    }
                 } else {
                     // Reload stats when page becomes visible again
                     const activeSection = document.querySelector('.content-section.active');
@@ -2577,8 +3156,11 @@
                             startAutoRefresh('candidates');
                         }
                     }
-                    // Refresh election status
+                    // Refresh election status and restart countdown if needed
                     checkElectionStatus();
+                    if (currentElectionStatus === 'active' && !isElectionTimeEnded) {
+                        initializeCountdown();
+                    }
                 }
             });
         });
@@ -2601,10 +3183,15 @@
             // Reset status
             currentElectionStatus = 'inactive';
             hasElectionSettings = false;
+            resultsAreDeclared = false;
+            electionEndTime = null;
+            isElectionTimeEnded = false;
+            stopCountdown();
             updateElectionStatusDisplay();
         }
 
-        // UPDATED Election status check function
+        // Election status check function
+        // Election status check function
         async function checkElectionStatus() {
             try {
                 const response = await fetch(`${apiBase}/election-settings`);
@@ -2615,27 +3202,34 @@
                     if (data && data.name) {
                         hasElectionSettings = true;
                         
-                        // Determine status based on current time and settings
-                        const now = new Date();
-                        const endDate = data.endDate;
-                        const endTime = data.endTime;
-                        
-                        if (endDate && endTime) {
-                            const electionEndTime = new Date(`${endDate}T${endTime}`).getTime();
-                            isElectionTimeEnded = now.getTime() > electionEndTime;
+                        // Set election start and end times
+                        if (data.startDate && data.startTime) {
+                            electionStartTime = new Date(`${data.startDate}T${data.startTime}`).getTime();
+                        }
+                        if (data.endDate && data.endTime) {
+                            electionEndTime = new Date(`${data.endDate}T${data.endTime}`).getTime();
+                            const now = new Date().getTime();
+                            isElectionTimeEnded = now > electionEndTime;
                         }
                         
-                        // Update status - check if results have been declared
-                        if (data.status === 'completed' || data.resultsPublished) {
+                        // Check results status first
+                        const resultsStatus = await checkResultsStatus();
+                        
+                        // Update status based on results and time
+                        if (resultsStatus) {
                             currentElectionStatus = 'completed';
+                            resultsAreDeclared = true;
                         } else if (data.status === 'active' && hasElectionSettings) {
                             currentElectionStatus = 'active';
+                            resultsAreDeclared = false;
                         } else {
                             currentElectionStatus = 'inactive';
+                            resultsAreDeclared = false;
                         }
                     } else {
                         hasElectionSettings = false;
                         currentElectionStatus = 'inactive';
+                        resultsAreDeclared = false;
                     }
                     
                     updateElectionStatusDisplay();
@@ -2645,6 +3239,7 @@
                 console.error('Error checking election status:', error);
                 hasElectionSettings = false;
                 currentElectionStatus = 'inactive';
+                resultsAreDeclared = false;
                 updateElectionStatusDisplay();
             }
             return 'inactive';
@@ -3062,23 +3657,27 @@
                 // Check if results have been declared
                 if (data.status === 'completed' || data.resultsPublished) {
                     currentElectionStatus = 'completed';
+                    resultsAreDeclared = true;
                 } else if (data.status === 'active') {
                     currentElectionStatus = 'active';
+                    resultsAreDeclared = false;
                 } else {
                     currentElectionStatus = 'active'; // Default to active if election is configured
+                    resultsAreDeclared = false;
                 }
             } else {
                 hasElectionSettings = false;
                 currentElectionStatus = 'inactive';
+                resultsAreDeclared = false;
             }
             
-            // Check if election time has ended
+            // Check if election time has ended and set election end time
             const now = new Date();
             const endDate = data.endDate;
             const endTime = data.endTime;
             
             if (endDate && endTime) {
-                const electionEndTime = new Date(`${endDate}T${endTime}`).getTime();
+                electionEndTime = new Date(`${endDate}T${endTime}`).getTime();
                 isElectionTimeEnded = now.getTime() > electionEndTime;
             }
             
@@ -3116,6 +3715,12 @@
             loadCandidates();
             loadCandidateStats();
         }
+
+        // Cleanup when page unloads
+        window.addEventListener('beforeunload', function() {
+            stopAutoRefresh();
+            stopCountdown();
+        });
     </script>
 </body>
 </html>

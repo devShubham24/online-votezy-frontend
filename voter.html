@@ -1341,6 +1341,113 @@
             display: inline-block;
             vertical-align: middle;
         }
+        /* Flash Message Styles - Add this after existing styles */
+        .flash-message {
+            position: fixed;
+            top: 80px; /* Adjust based on your header height */
+            right: 20px;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            font-weight: 600;
+            font-size: 1rem;
+            display: none;
+            animation: flashSlideIn 0.5s ease-out;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .flash-message.success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            box-shadow: 0 8px 32px rgba(39, 174, 96, 0.3);
+        }
+
+        .flash-message.error {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 8px 32px rgba(231, 76, 60, 0.3);
+        }
+
+        .flash-message.warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            box-shadow: 0 8px 32px rgba(243, 156, 18, 0.3);
+        }
+
+        .flash-message.info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            box-shadow: 0 8px 32px rgba(52, 152, 219, 0.3);
+        }
+
+        .flash-message.show {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .flash-message-icon {
+            font-size: 1.2rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .flash-message-text {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .flash-message-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            padding: 0;
+            margin-left: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .flash-message-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes flashSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes flashSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .flash-message.hiding {
+            animation: flashSlideOut 0.3s ease-in;
+        }
+
+        /* Responsive adjustments for flash message */
+        @media (max-width: 768px) {
+            .flash-message {
+                top: 70px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                max-width: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1433,9 +1540,6 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Error Message -->
-        <div class="error-message" id="error-message"></div>
-        
         <!-- Profile Section -->
         <section id="profile" class="content-section active">
             <div class="section-header">
@@ -1517,9 +1621,20 @@
                 <p class="section-subtitle">Cast your vote in active elections</p>
             </div>
 
-            <div class="success-message" id="vote-success-message">
+           <!-- Flash Message Container -->
+            <div class="flash-message" id="flash-message">
+                <div class="flash-message-icon" id="flash-message-icon">✓</div>
+                <div class="flash-message-text" id="flash-message-text">Message</div>
+                <button class="flash-message-close" onclick="hideFlashMessage()">&times;</button>
+            </div>
+
+            <!-- Keep the original messages but hide them -->
+            <div class="success-message" id="vote-success-message" style="display: none;">
                 Your vote has been successfully recorded! Thank you for participating in democracy.
             </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="error-message" style="display: none;"></div>
 
             <!-- Election Content Container -->
             <div id="election-container">
@@ -2404,65 +2519,10 @@
         }
 
         // Show results function - Updated with API integration
-        window.showResults = async function() {
-            const resultsBtn = document.getElementById('results-btn');
-            
-            // Disable button and show loading
-            resultsBtn.disabled = true;
-            resultsBtn.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; animation: spin 1s linear infinite;">
-                    <path d="M21 12a9 9 0 11-6.219-8.56"/>
-                </svg>
-                Loading Results...
-            `;
-
-            try {
-                // Fetch both winner and results data
-                const [winner, results] = await Promise.all([
-                    fetchElectionWinner(),
-                    fetchElectionResults()
-                ]);
-
-                // Store data
-                winnerData = winner;
-                resultsData = results;
-
-                // Display winner and results
-                displayWinner(winner);
-                displayResultsTable(results);
-
-                // Show results section
-                document.getElementById('results-section').style.display = 'block';
-
-                // Scroll to results section
-                document.getElementById('results-section').scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-
-                // Update button text
-                resultsBtn.innerHTML = `
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    Results Displayed
-                `;
-
-            } catch (error) {
-                console.error('Error loading results:', error);
-                showError('Failed to load election results. Please try again.');
-                
-                // Re-enable button
-                resultsBtn.disabled = false;
-                resultsBtn.innerHTML = `
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
-                        <path d="M9 12l2 2 4-4"/>
-                        <circle cx="12" cy="12" r="10"/>
-                    </svg>
-                    Show Results
-                `;
-            }
+        // Show results function - Updated to redirect to results.html
+        window.showResults = function() {
+            // Redirect to results page
+            window.location.href = 'result.html';
         };
 
         // Open voting modal
@@ -2603,27 +2663,70 @@
         }
 
         // Show error message
-        function showError(message) {
-            const errorEl = document.getElementById('error-message');
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
+        // Universal flash message system
+        function showFlashMessage(message, type = 'info') {
+            const flashMessage = document.getElementById('flash-message');
+            const flashIcon = document.getElementById('flash-message-icon');
+            const flashText = document.getElementById('flash-message-text');
             
-            // Hide after 5 seconds
+            // Set message content
+            flashText.textContent = message;
+            
+            // Set icon based on type
+            let icon = '';
+            switch(type) {
+                case 'success':
+                    icon = '✓';
+                    break;
+                case 'error':
+                    icon = '✕';
+                    break;
+                case 'warning':
+                    icon = '⚠';
+                    break;
+                case 'info':
+                default:
+                    icon = 'ℹ';
+                    break;
+            }
+            flashIcon.textContent = icon;
+            
+            // Remove existing type classes
+            flashMessage.classList.remove('success', 'error', 'warning', 'info', 'hiding');
+            
+            // Add new type class
+            flashMessage.classList.add(type);
+            
+            // Show the message
+            flashMessage.classList.add('show');
+            
+            // Auto-hide after 5 seconds (7 seconds for errors)
+            const hideDelay = type === 'error' ? 7000 : 5000;
             setTimeout(() => {
-                errorEl.style.display = 'none';
-            }, 5000);
+                hideFlashMessage();
+            }, hideDelay);
         }
 
-        // Show success message
-        function showSuccess(message) {
-            const successEl = document.getElementById('vote-success-message');
-            successEl.textContent = message;
-            successEl.style.display = 'block';
+        function hideFlashMessage() {
+            const flashMessage = document.getElementById('flash-message');
             
-            // Hide after 4 seconds
+            // Add hiding animation
+            flashMessage.classList.add('hiding');
+            
+            // Remove the message after animation completes
             setTimeout(() => {
-                successEl.style.display = 'none';
-            }, 4000);
+                flashMessage.classList.remove('show', 'hiding', 'success', 'error', 'warning', 'info');
+            }, 300);
+        }
+
+        // Show warning message
+        function showWarning(message) {
+            showFlashMessage(message, 'warning');
+        }
+
+        // Show info message
+        function showInfo(message) {
+            showFlashMessage(message, 'info');
         }
 
         // Redirect to login page
