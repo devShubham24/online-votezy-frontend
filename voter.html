@@ -1344,7 +1344,7 @@
         /* Flash Message Styles - Add this after existing styles */
         .flash-message {
             position: fixed;
-            top: 80px; /* Adjust based on your header height */
+            top: 20px; /* Adjust based on your header height */
             right: 20px;
             color: white;
             padding: 1rem 1.5rem;
@@ -1353,7 +1353,9 @@
             z-index: 3000;
             font-weight: 600;
             font-size: 1rem;
-            display: none;
+            display: none;  
+            transform: translateX(100%); /* Add this to hide initially */
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Add transition */
             animation: flashSlideIn 0.5s ease-out;
             min-width: 300px;
             max-width: 500px;
@@ -1380,9 +1382,9 @@
         }
 
         .flash-message.show {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
+            display: flex; /* Change to flex when showing */
+            transform: translateX(0); /* Slide in */
+            opacity: 1;
         }
 
         .flash-message-icon {
@@ -1448,6 +1450,272 @@
                 max-width: none;
             }
         }
+        /* Enhanced Vote Record Styling - ADD these styles to your existing CSS */
+
+        .vote-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .vote-info-item {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e3eaf7 100%);
+            border-radius: 12px;
+            border: 1px solid #e3eaf7;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-info-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+        }
+
+        .vote-info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(52, 152, 219, 0.1);
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+        }
+
+        .vote-info-label {
+            color: #666;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .vote-info-label svg {
+            opacity: 0.7;
+        }
+
+        .vote-info-value {
+            color: #333;
+            font-weight: 700;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .vote-confirmation-section {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 2px solid #b8dacc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-confirmation-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        .vote-status {
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            color: #fff;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .vote-confirmation-message {
+            color: #155724;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .vote-confirmation-message strong {
+            color: #0c4128;
+            font-weight: 700;
+        }
+
+        .vote-record-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: #fff;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-record-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            animation: slide 3s ease-in-out infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .vote-record-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .vote-record-date {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .vote-record-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(40, 167, 69, 0.12);
+            border: 2px solid #e8f5e8;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .vote-record-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 50%, #17a2b8 100%);
+        }
+
+        .vote-record-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(40, 167, 69, 0.2);
+        }
+
+        /* Responsive adjustments for vote record */
+        @media (max-width: 768px) {
+            .vote-info-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .vote-record-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .vote-record-title {
+                font-size: 1.1rem;
+            }
+            
+            .vote-record-date {
+                font-size: 0.9rem;
+            }
+            
+            .vote-confirmation-section {
+                padding: 1rem;
+            }
+            
+            .vote-status {
+                font-size: 0.9rem;
+                padding: 0.6rem 1rem;
+            }
+            
+            .vote-confirmation-message {
+                font-size: 0.95rem;
+                padding: 0.8rem;
+            }
+        }
+
+        /* Enhanced no records styling */
+        .no-records {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+            background: linear-gradient(135deg, #f8fafc 0%, #e3eaf7 100%);
+            border-radius: 16px;
+            border: 2px dashed #d1d9e6;
+        }
+
+        .no-records-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+            filter: grayscale(20%);
+        }
+
+        .no-records-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .no-records-message {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 500px;
+            margin: 0 auto;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -1508,6 +1776,12 @@
             </div>
         </div>
     </header>
+     <!-- Flash Message Container -->
+    <div class="flash-message" id="flash-message">
+        <div class="flash-message-icon" id="flash-message-icon">✓</div>
+        <div class="flash-message-text" id="flash-message-text">Message</div>
+        <button class="flash-message-close" onclick="hideFlashMessage()">&times;</button>
+    </div>
 
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
@@ -1621,12 +1895,7 @@
                 <p class="section-subtitle">Cast your vote in active elections</p>
             </div>
 
-           <!-- Flash Message Container -->
-            <div class="flash-message" id="flash-message">
-                <div class="flash-message-icon" id="flash-message-icon">✓</div>
-                <div class="flash-message-text" id="flash-message-text">Message</div>
-                <button class="flash-message-close" onclick="hideFlashMessage()">&times;</button>
-            </div>
+          
 
             <!-- Keep the original messages but hide them -->
             <div class="success-message" id="vote-success-message" style="display: none;">
@@ -2011,10 +2280,10 @@
                 
                 // If unauthorized, redirect to login
                 if (error.status === 401 || error.status === 403) {
-                    showError('Session expired. Please login again.');
+                    showFlashMessage('Session expired. Please login again.', 'error');
                     setTimeout(() => redirectToLogin(), 2000);
                 } else {
-                    showError('Failed to load user data. Please refresh the page.');
+                    showFlashMessage('Failed to load user data. Please refresh the page.', 'error');
                 }
             }
         }
@@ -2231,14 +2500,59 @@
         }
 
         // Load vote records from backend
-        async function loadVoteRecords() {
-            try {
-                // Show loading
-                document.getElementById('vote-records-loading').style.display = 'block';
-                document.getElementById('no-records-message').style.display = 'none';
-                document.getElementById('vote-records-list').style.display = 'none';
+       
+// Replace the existing loadVoteRecords function with this one
 
-                const response = await fetch(`${API_BASE_URL}/vote-history`, {
+        async function loadVoteRecords() {
+            console.log('🔍 DEBUG: loadVoteRecords called');
+            console.log('🔍 Current userData:', userData);
+            console.log('🔍 JWT Token exists:', !!jwtToken);
+            
+            try {
+                // Get DOM elements
+                const loadingEl = document.getElementById('vote-records-loading');
+                const noRecordsEl = document.getElementById('no-records-message');
+                const recordsListEl = document.getElementById('vote-records-list');
+                
+                console.log('🔍 DOM Elements found:', {
+                    loading: !!loadingEl,
+                    noRecords: !!noRecordsEl,
+                    recordsList: !!recordsListEl
+                });
+                
+                // Show loading state
+                if (loadingEl) {
+                    loadingEl.style.display = 'block';
+                }
+                if (noRecordsEl) {
+                    noRecordsEl.style.display = 'none';
+                }
+                if (recordsListEl) {
+                    recordsListEl.style.display = 'none';
+                }
+
+                // Validate required data
+                if (!userData) {
+                    throw new Error('User data not loaded yet');
+                }
+                if (!jwtToken) {
+                    throw new Error('Authentication token missing');
+                }
+
+                // Use email/username as the identifier (since your API expects abc@gmail.com)
+                const userIdentifier = userData.username || userData.email;
+                
+                if (!userIdentifier) {
+                    throw new Error('User email/username not available. Available fields: ' + Object.keys(userData).join(', '));
+                }
+
+                console.log('🔍 Using userIdentifier:', userIdentifier);
+
+                // Build API URL with email as identifier
+                const apiUrl = `${API_BASE_URL}/vote-record/${encodeURIComponent(userIdentifier)}`;
+                console.log('🔍 Making request to:', apiUrl);
+
+                const response = await fetch(apiUrl, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${jwtToken}`,
@@ -2246,77 +2560,319 @@
                     }
                 });
 
+                console.log('🔍 Response status:', response.status);
+                console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()));
+
+                // Hide loading state
+                if (loadingEl) {
+                    loadingEl.style.display = 'none';
+                }
+
+                // Handle 404 - no records found
+                if (response.status === 404) {
+                    console.log('ℹ️ No vote records found (404)');
+                    if (noRecordsEl) {
+                        noRecordsEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                // Handle other error responses
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorText = await response.text();
+                    console.error('❌ API Error:', response.status, errorText);
+                    throw new Error(`API request failed: ${response.status} - ${errorText}`);
                 }
 
-                const records = await response.json();
+                // Parse response
+                const responseText = await response.text();
+                console.log('🔍 Raw response text:', responseText);
+
+                if (!responseText.trim()) {
+                    console.log('ℹ️ Empty response received');
+                    if (noRecordsEl) {
+                        noRecordsEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                let voteRecord;
+                try {
+                    voteRecord = JSON.parse(responseText);
+                    console.log('🔍 Parsed vote record:', voteRecord);
+                    console.log('🔍 Type of voteRecord:', typeof voteRecord);
+                    console.log('🔍 Is array:', Array.isArray(voteRecord));
+                } catch (parseError) {
+                    console.error('❌ JSON parsing failed:', parseError);
+                    console.error('❌ Response text was:', responseText);
+                    throw new Error('Invalid JSON response from server');
+                }
+
+                // Handle array response
+                if (Array.isArray(voteRecord)) {
+                    console.log('🔍 Response is array with length:', voteRecord.length);
+                    if (voteRecord.length === 0) {
+                        console.log('ℹ️ Empty array received');
+                        if (noRecordsEl) {
+                            noRecordsEl.style.display = 'block';
+                        }
+                        return;
+                    }
+                    // Use the first record if it's an array
+                    voteRecord = voteRecord[0];
+                    console.log('🔍 Using first record:', voteRecord);
+                }
+
+                // Handle wrapped responses
+                if (voteRecord && typeof voteRecord === 'object' && voteRecord.data) {
+                    console.log('🔍 Extracting data from wrapped response');
+                    voteRecord = voteRecord.data;
+                }
+
+                // Final validation
+                if (!voteRecord || typeof voteRecord !== 'object') {
+                    console.log('ℹ️ No valid vote record found');
+                    if (noRecordsEl) {
+                        noRecordsEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                console.log('🔍 Final vote record to display:', voteRecord);
+                console.log('🔍 Available properties:', Object.keys(voteRecord));
+
+                // Store and display the record
+                voteRecords = [voteRecord];
                 
-                // Hide loading
-                document.getElementById('vote-records-loading').style.display = 'none';
-
-                if (!records || records.length === 0) {
-                    document.getElementById('no-records-message').style.display = 'block';
-                } else {
-                    voteRecords = records;
-                    displayVoteRecords();
-                }
+                // Display the record
+                console.log('🔍 Calling displayVoteRecord...');
+                displayVoteRecord(voteRecord, recordsListEl);
+                console.log('✅ Vote record display completed');
 
             } catch (error) {
-                console.error('Error loading vote records:', error);
-                document.getElementById('vote-records-loading').style.display = 'none';
-                document.getElementById('no-records-message').style.display = 'block';
+                console.error('❌ Error in loadVoteRecords:', error);
+                console.error('❌ Error stack:', error.stack);
+                
+                // Hide loading state
+                const loadingEl = document.getElementById('vote-records-loading');
+                if (loadingEl) {
+                    loadingEl.style.display = 'none';
+                }
+                
+                // Show error in no-records section
+                const noRecordsEl = document.getElementById('no-records-message');
+                if (noRecordsEl) {
+                    noRecordsEl.style.display = 'block';
+                    const titleEl = noRecordsEl.querySelector('.no-records-title');
+                    const messageEl = noRecordsEl.querySelector('.no-records-message');
+                    if (titleEl) titleEl.textContent = 'Error Loading Records';
+                    if (messageEl) messageEl.textContent = `Failed to load vote records: ${error.message}`;
+                }
+                
+                // Show flash message
+                if (typeof showFlashMessage === 'function') {
+                    showFlashMessage('Failed to load vote records: ' + error.message, 'error');
+                }
             }
         }
 
-        // Display vote records
-        function displayVoteRecords() {
-            const recordsList = document.getElementById('vote-records-list');
-            recordsList.innerHTML = '';
 
-            voteRecords.forEach(record => {
-                const recordElement = createVoteRecordElement(record);
-                recordsList.appendChild(recordElement);
-            });
-
-            recordsList.style.display = 'block';
+        // Also add debugging to the displayVoteRecord function
+        function displayVoteRecord(record, recordsListEl) {
+            console.log('🔍 displayVoteRecord called with:', record);
+            
+            // Ensure we have the records list element
+            if (!recordsListEl) {
+                recordsListEl = document.getElementById('vote-records-list');
+            }
+            
+            if (!recordsListEl) {
+                console.error('❌ vote-records-list element not found');
+                return;
+            }
+            
+            // Clear existing content
+            recordsListEl.innerHTML = '';
+            console.log('🔍 Cleared existing content');
+            
+            // Create the record element
+            console.log('🔍 Creating vote record element...');
+            const recordElement = createVoteRecordElement(record);
+            console.log('🔍 Created element:', recordElement);
+            
+            // Append to list
+            recordsListEl.appendChild(recordElement);
+            console.log('🔍 Appended element to list');
+            
+            // Make sure the records list is visible
+            recordsListEl.style.display = 'block';
+            console.log('🔍 Made records list visible');
+            
+            // Hide no-records message if it's showing
+            const noRecordsEl = document.getElementById('no-records-message');
+            if (noRecordsEl) {
+                noRecordsEl.style.display = 'none';
+                console.log('🔍 Hid no-records message');
+            }
+            
+            console.log('✅ Vote record displayed successfully');
         }
 
-        // Create vote record element
+// Enhanced createVoteRecordElement with fallbacks
         function createVoteRecordElement(record) {
+            console.log('🔍 createVoteRecordElement called with:', record);
+            
             const recordDiv = document.createElement('div');
             recordDiv.className = 'vote-record-card';
             
+            // Extract data with fallbacks for different property names
+            const candidateName = record.candidateName || record.candidate_name || record.name || 'Unknown Candidate';
+            const partyName = record.partyName || record.party_name || record.party || 'Independent';
+            const partySymbol = record.partySymbol || record.party_symbol || record.symbol || '🗳️';
+            const voterId = record.voterId || record.voter_id || (userData ? userData.id : 'N/A');
+            const candidateId = record.candidateId || record.candidate_id || record.id || 'N/A';
+            
+            console.log('🔍 Extracted values:');
+            console.log('  - candidateName:', candidateName);
+            console.log('  - partyName:', partyName);
+            console.log('  - partySymbol:', partySymbol);
+            console.log('  - voterId:', voterId);
+            console.log('  - candidateId:', candidateId);
+            
+            // Create the HTML content
             recordDiv.innerHTML = `
                 <div class="vote-record-header">
-                    <h4 class="vote-record-title">${record.electionName || 'Election'}</h4>
-                    <span class="vote-record-date">${formatDateTime(record.voteDate)}</span>
+                    <h4 class="vote-record-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+                            <path d="M9 11H7a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2h-2M9 11V9a3 3 0 116 0v2M9 11h6"/>
+                        </svg>
+                        ${currentElection ? currentElection.name : 'Election'}
+                    </h4>
+                    <span class="vote-record-date">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.3rem;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                        Vote Recorded
+                    </span>
                 </div>
                 <div class="vote-record-body">
                     <div class="vote-record-info">
-                        <div class="vote-info-item">
-                            <span class="vote-info-label">Candidate:</span>
-                            <span class="vote-info-value">${record.candidateName || 'N/A'}</span>
-                        </div>
-                        <div class="vote-info-item">
-                            <span class="vote-info-label">Party:</span>
-                            <span class="vote-info-value">${record.candidateParty || 'Independent'}</span>
-                        </div>
-                        <div class="vote-info-item">
-                            <span class="vote-info-label">Vote ID:</span>
-                            <span class="vote-info-value">${record.id || 'N/A'}</span>
-                        </div>
-                        <div class="vote-info-item">
-                            <span class="vote-info-label">Status:</span>
-                            <span class="vote-info-value">Confirmed</span>
+                        <div class="vote-info-grid">
+                            <div class="vote-info-item">
+                                <span class="vote-info-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    Candidate:
+                                </span>
+                                <span class="vote-info-value">${candidateName}</span>
+                            </div>
+                            <div class="vote-info-item">
+                                <span class="vote-info-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M3 3h18v18H3V3z"/>
+                                        <path d="M9 9h6v6H9V9z"/>
+                                    </svg>
+                                    Party:
+                                </span>
+                                <span class="vote-info-value">${partyName}</span>
+                            </div>
+                            <div class="vote-info-item">
+                                <span class="vote-info-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="2" y1="12" x2="22" y2="12"/>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10 15.3 15.3 0 0 1 4 10z"/>
+                                    </svg>
+                                    Symbol:
+                                </span>
+                                <span class="vote-info-value">${partySymbol}</span>
+                            </div>
+                            <div class="vote-info-item">
+                                <span class="vote-info-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                    </svg>
+                                    Voter ID:
+                                </span>
+                                <span class="vote-info-value">#${voterId}</span>
+                            </div>
+                            <div class="vote-info-item">
+                                <span class="vote-info-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="8.5" cy="7" r="4"/>
+                                        <polyline points="17,11 19,13 23,9"/>
+                                    </svg>
+                                    Candidate ID:
+                                </span>
+                                <span class="vote-info-value">#${candidateId}</span>
+                            </div>
+                            <div class="vote-info-item">
+                                <span class="vote-info-label">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22,4 12,14.01 9,11.01"/>
+                                    </svg>
+                                    Status:
+                                </span>
+                                <span class="vote-info-value">Confirmed</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="vote-status">✅ Vote Recorded</div>
+                    <div class="vote-confirmation-section">
+                        <div class="vote-status">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22,4 12,14.01 9,11.01"/>
+                            </svg>
+                            Vote Successfully Recorded
+                        </div>
+                        <div class="vote-confirmation-message">
+                            Your vote for <strong>${candidateName}</strong> from <strong>${partyName}</strong> has been securely recorded and confirmed.
+                        </div>
+                    </div>
                 </div>
             `;
             
+            console.log('🔍 Generated HTML for vote record element');
             return recordDiv;
         }
+
+        // Add this function to manually test the vote record loading
+        window.testVoteRecord = function() {
+            console.log('🧪 Manual test: Loading vote records...');
+            loadVoteRecords();
+        };
+
+        // Add this to ensure the function is called when the tab is clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced tab click handler
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const sectionName = this.dataset.section;
+                    console.log('🔍 Tab clicked:', sectionName);
+                    
+                    // Update active states
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                    document.getElementById(sectionName).classList.add('active');
+                    
+                    // If vote record tab is clicked and user data is loaded
+                    if (sectionName === 'vote-record' && userData && userData.id) {
+                        console.log('🔍 Vote record tab clicked - loading records...');
+                        // Add a small delay to ensure DOM is ready
+                        setTimeout(() => {
+                            loadVoteRecords();
+                        }, 100);
+                    }
+                });
+            });
+        });
 
         // Format date and time for display
         function formatDateTime(dateString) {
@@ -2334,7 +2890,14 @@
         // Check if user has already voted
         async function checkIfAlreadyVoted() {
             try {
-                const response = await fetch(`${API_BASE_URL}/has-voted`, {
+                // Use email as identifier for this API call too
+                const userIdentifier = userData.username || userData.email;
+                if (!userIdentifier) {
+                    console.warn('Could not determine user identifier for vote check');
+                    return false;
+                }
+
+                const response = await fetch(`${API_BASE_URL}/has-voted?email=${encodeURIComponent(userIdentifier)}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${jwtToken}`,
@@ -2355,7 +2918,6 @@
                 return false;
             }
         }
-
         // Fetch candidates from backend
         async function fetchCandidates() {
             try {
@@ -2528,7 +3090,7 @@
         // Open voting modal
         window.openVotingModal = async function() {
             if (!currentElection) {
-                showError('No active election available for voting.');
+                showFlashMessage('No active election available for voting.', 'error');
                 return;
             }
 
@@ -2536,7 +3098,7 @@
                 // Check if user has already voted
                 const hasVoted = await checkIfAlreadyVoted();
                 if (hasVoted) {
-                    showError('You have already cast your vote in this election.');
+                    showFlashMessage('You have already cast your vote in this election.', 'error');
                     return;
                 }
 
@@ -2587,7 +3149,7 @@
 
             } catch (error) {
                 console.error('Error opening voting modal:', error);
-                showError('Failed to load candidates. Please try again.');
+                showFlashMessage('Failed to load candidates. Please try again.', 'error');
                 closeVotingModal();
             }
         };
@@ -2617,7 +3179,7 @@
                 
                 // Close modal and show success
                 closeVotingModal();
-                showSuccess('Your vote has been successfully recorded! Thank you for participating in democracy.');
+                showFlashMessage('Your vote has been successfully recorded! Thank you for participating in democracy.', 'success');
                 
                 // Reload vote records to show the new vote
                 await loadVoteRecords();
@@ -2638,12 +3200,12 @@
                 
                 // Show appropriate error message
                 if (error.status === 400) {
-                    showError(error.message || 'You have already voted in this election.');
+                    showFlashMessage(error.message,'error' || 'You have already voted in this election.', 'error');
                 } else if (error.status === 401) {
-                    showError('Session expired. Please login again.');
+                    showFlashMessage('Session expired. Please login again.', 'error');
                     setTimeout(() => redirectToLogin(), 2000);
                 } else {
-                    showError('Failed to submit vote. Please try again.');
+                    showFlashMessage('Failed to submit vote. Please try again.', 'error');
                 }
             } finally {
                 // Re-enable submit button
@@ -2672,49 +3234,42 @@
             // Set message content
             flashText.textContent = message;
             
+            // Set icon and remove old classes
+            flashMessage.classList.remove('success', 'error', 'warning', 'info', 'hiding');
+            
             // Set icon based on type
             let icon = '';
             switch(type) {
-                case 'success':
-                    icon = '✓';
-                    break;
-                case 'error':
-                    icon = '✕';
-                    break;
-                case 'warning':
-                    icon = '⚠';
-                    break;
+                case 'success': icon = '✓'; break;
+                case 'error': icon = '✕'; break;
+                case 'warning': icon = '⚠'; break;
                 case 'info':
-                default:
-                    icon = 'ℹ';
-                    break;
+                default: icon = 'ℹ'; break;
             }
             flashIcon.textContent = icon;
             
-            // Remove existing type classes
-            flashMessage.classList.remove('success', 'error', 'warning', 'info', 'hiding');
-            
-            // Add new type class
+            // Add new type class and show
             flashMessage.classList.add(type);
+            flashMessage.style.display = 'flex'; // Make visible first
             
-            // Show the message
-            flashMessage.classList.add('show');
+            // Use setTimeout to ensure display change takes effect before animation
+            setTimeout(() => {
+                flashMessage.classList.add('show');
+            }, 10);
             
-            // Auto-hide after 5 seconds (7 seconds for errors)
-            const hideDelay = type === 'error' ? 7000 : 5000;
+            // Auto-hide
             setTimeout(() => {
                 hideFlashMessage();
-            }, hideDelay);
+            }, type === 'error' ? 7000 : 5000);
         }
 
         function hideFlashMessage() {
             const flashMessage = document.getElementById('flash-message');
             
-            // Add hiding animation
             flashMessage.classList.add('hiding');
             
-            // Remove the message after animation completes
             setTimeout(() => {
+                flashMessage.style.display = 'none';  // Add this line
                 flashMessage.classList.remove('show', 'hiding', 'success', 'error', 'warning', 'info');
             }, 300);
         }
@@ -2727,6 +3282,14 @@
         // Show info message
         function showInfo(message) {
             showFlashMessage(message, 'info');
+        }
+        // Add these helper functions for backward compatibility
+        function showError(message) {
+            showFlashMessage(message, 'error');
+        }
+
+        function showSuccess(message) {
+            showFlashMessage(message, 'success');
         }
 
         // Redirect to login page
@@ -2743,7 +3306,7 @@
         function togglePasswordVisibility() {
             // This is disabled for security - we don't show actual passwords
             // Keep the dots display only
-            showError('Password visibility is disabled for security reasons.');
+            showFlashMessage('Password visibility is disabled for security reasons.', 'error');
         }
 
         // Toggle password field visibility in modal
@@ -2834,7 +3397,7 @@
                     document.getElementById('current-password-error').textContent = 'Current password is incorrect';
                     document.getElementById('current-password-error').style.display = 'block';
                 } else if (error.status === 401) {
-                    showError('Session expired. Please login again.');
+                    showFlashMessage('Session expired. Please login again.', 'error');
                     setTimeout(() => redirectToLogin(), 2000);
                 } else {
                     document.getElementById('current-password-error').textContent = 'Failed to update password. Please try again.';

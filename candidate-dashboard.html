@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #4A90E2 0%, #2E86C1 100%);
+            background: linear-gradient(90deg, #4A90E2 80%, #2E86C1 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -378,8 +378,8 @@
         .profile-locked::after {
             content: '🔒 Profile Completed - Cannot Edit';
             position: absolute;
-            top: -0.5rem;
-            right: -0.5rem;
+            top: 0rem;
+            right: 0.4rem;
             background: linear-gradient(135deg, #48bb78, #38a169);
             color: white;
             padding: 0.3rem 0.8rem;
@@ -1130,6 +1130,25 @@
                 padding: 0.15rem 0.4rem;
             }
         }
+
+        /* Emoji symbol styling */
+        .symbol-display {
+            font-size: 1.5rem;
+            display: inline-block;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .form-input.symbol-field {
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .dropdown-option-symbol {
+            font-size: 1.1rem;
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -1206,13 +1225,25 @@
                         <h3>Candidate Information</h3>
                         
                         <div class="form-group">
-                            <label class="form-label">Party Name *</label>
-                            <input type="text" class="form-input" id="partyName" placeholder="Enter your party name">
+                            <label class="form-label">Select Political Party *</label>
+                            <select class="form-input" id="partyDropdown" onchange="onPartyChange()">
+                            <option value="">-- Select Political Party --</option>
+                            </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label">Party Symbol *</label>
-                            <input type="text" class="form-input" id="symbol" placeholder="Enter your party symbol">
+                            <input type="text" class="form-input" id="symbol" placeholder="Symbol will be auto-filled" readonly>
+                        </div>
+
+                        <div class="form-group" id="customPartyGroup" style="display: none;">
+                            <label class="form-label">Custom Party Name *</label>
+                            <input type="text" class="form-input" id="customPartyName" placeholder="Enter your custom party name">
+                        </div>
+
+                        <div class="form-group" id="customSymbolGroup" style="display: none;">
+                            <label class="form-label">Custom Party Symbol *</label>
+                            <input type="text" class="form-input" id="customSymbol" placeholder="Enter your custom party symbol">
                         </div>
                         
                         <div class="form-group">
@@ -1240,46 +1271,6 @@
                 <h2 class="section-title">
                     Election Results
                 </h2>
-
-                <!-- Winner Block -->
-                <div id="winnerSection" class="winner-section">
-                    <div class="winner-header">
-                        <span class="winner-crown">👑</span>
-                        <h3 class="winner-title">Election Winner</h3>
-                        <p class="winner-subtitle">Congratulations to our elected representative!</p>
-                    </div>
-                    
-                    <div class="winner-card">
-                        <div class="winner-info">
-                            <div class="winner-detail">
-                                <div class="winner-detail-label">Candidate Name</div>
-                                <div class="winner-detail-value" id="winnerName">-</div>
-                            </div>
-                            <div class="winner-detail">
-                                <div class="winner-detail-label">Party Name</div>
-                                <div class="winner-detail-value" id="winnerParty">-</div>
-                            </div>
-                            <div class="winner-detail">
-                                <div class="winner-detail-label">Symbol</div>
-                                <div class="winner-detail-value" id="winnerSymbol">-</div>
-                            </div>
-                            <div class="winner-detail">
-                                <div class="winner-detail-label">Total Votes</div>
-                                <div class="winner-detail-value winner-votes" id="winnerVotes">0</div>
-                            </div>
-                        </div>
-                        
-                        <div class="winner-message" id="winnerMessage">
-                            Loading winner information...
-                        </div>
-                    </div>
-                </div>
-
-                <!-- No Winner Message -->
-                <div id="noWinnerMessage" class="no-winner-message" style="display: none;">
-                    <p><strong>Results Not Yet Declared</strong><br>
-                    The election winner will be announced here once the results are officially declared by the election authority.</p>
-                </div>
                 
                 <div id="electionStatus" class="status-banner pending">
                     Loading election status...
@@ -1304,24 +1295,14 @@
                 
                 <div id="resultsAlert"></div>
                 
-                <!-- Election Results Table -->
-                <div class="results-table-section">
-                    <h3 class="results-table-title">
-                        All Candidates Results
-                    </h3>
-                    
-                    <div class="table-container">
-                        <div id="resultsTableContainer">
-                            <div class="table-loading">
-                                <div class="spinner"></div>
-                                <p style="margin-top: 1rem;">Loading election results...</p>
-                            </div>
-                        </div>
-                    </div>
+                <!-- View Complete Results Button -->
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="result.html" class="btn" style="text-decoration: none;">
+                        View Complete Results
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- Password Update Modal -->
     <div id="passwordModal" class="modal" style="display: none;">
@@ -1479,18 +1460,25 @@
         function lockProfile() {
             isProfileLocked = true;
             const candidateCard = document.getElementById('candidateInfoCard');
-            const partyNameInput = document.getElementById('partyName');
+            const partyDropdown = document.getElementById('partyDropdown');
             const symbolInput = document.getElementById('symbol');
+            const customPartyInput = document.getElementById('customPartyName');
+            const customSymbolInput = document.getElementById('customSymbol');
             const saveButton = document.getElementById('saveProfileBtn');
 
             // Add locked styling to card
             candidateCard.classList.add('profile-locked');
             
             // Disable inputs
-            partyNameInput.disabled = true;
+           // Disable inputs
+            partyDropdown.disabled = true;
             symbolInput.disabled = true;
-            partyNameInput.classList.add('locked');
+            customPartyInput.disabled = true;
+            customSymbolInput.disabled = true;
+            partyDropdown.classList.add('unlocked');
             symbolInput.classList.add('locked');
+            customPartyInput.classList.add('unlocked');
+            customSymbolInput.classList.add('unlocked');
             
             // Hide save button
             saveButton.style.display = 'none';
@@ -1501,18 +1489,25 @@
         function unlockProfile() {
             isProfileLocked = false;
             const candidateCard = document.getElementById('candidateInfoCard');
-            const partyNameInput = document.getElementById('partyName');
+            const partyDropdown = document.getElementById('partyDropdown');
             const symbolInput = document.getElementById('symbol');
+            const customPartyInput = document.getElementById('customPartyName');
+            const customSymbolInput = document.getElementById('customSymbol');
             const saveButton = document.getElementById('saveProfileBtn');
 
             // Remove locked styling
             candidateCard.classList.remove('profile-locked');
             
             // Enable inputs
-            partyNameInput.disabled = false;
-            symbolInput.disabled = false;
-            partyNameInput.classList.remove('locked');
-            symbolInput.classList.remove('locked');
+            // Disable inputs
+            partyDropdown.disabled = false;
+            symbolInput.disabled = true;
+            customPartyInput.disabled = false;
+            customSymbolInput.disabled = false;
+            partyDropdown.classList.add('unlocked');
+            symbolInput.classList.add('locked');
+            customPartyInput.classList.add('unlocked');
+            customSymbolInput.classList.add('unlocked');
             
             // Show save button
             saveButton.style.display = 'inline-flex';
@@ -1520,9 +1515,123 @@
             console.log('Profile unlocked - candidate can edit information');
         }
 
+        // Political parties data
+        // Political parties data with emoji symbols
+        const INDIAN_POLITICAL_PARTIES = [
+            { name: 'Bharatiya Janata Party', symbol: '🪷', code: 'BJP' },
+            { name: 'Indian National Congress', symbol: '✋', code: 'INC' },
+            { name: 'Aam Aadmi Party', symbol: '🧹', code: 'AAP' },
+            { name: 'All India Trinamool Congress', symbol: '🌸', code: 'AITC' },
+            { name: 'Dravida Munnetra Kazhagam', symbol: '🌅', code: 'DMK' },
+            { name: 'Shiv Sena', symbol: '🏹', code: 'SS' },
+            { name: 'Janata Dal (United)', symbol: '➡️', code: 'JD(U)' },
+            { name: 'Telugu Desam Party', symbol: '🚲', code: 'TDP' },
+            { name: 'Biju Janata Dal', symbol: '🐚', code: 'BJD' },
+            { name: 'Communist Party of India (Marxist)', symbol: '⚒️', code: 'CPI(M)' },
+            { name: 'Bahujan Samaj Party', symbol: '🐘', code: 'BSP' },
+            { name: 'Samajwadi Party', symbol: '🚲', code: 'SP' },
+            { name: 'Nationalist Congress Party', symbol: '🕐', code: 'NCP' },
+            { name: 'Janata Dal (Secular)', symbol: '👩‍🌾', code: 'JDS' },
+            { name: 'Rashtriya Janata Dal', symbol: '🏮', code: 'RJD' },
+            { name: 'Communist Party of India', symbol: '🌾', code: 'CPI' },
+            { name: 'All India Anna Dravida Munnetra Kazhagam', symbol: '🍃', code: 'AIADMK' },
+            { name: 'Shiromani Akali Dal', symbol: '⚖️', code: 'SAD' },
+            { name: 'National Conference', symbol: '🚜', code: 'NC' },
+            { name: 'Indian Union Muslim League', symbol: '🪜', code: 'IUML' }
+        ];
+
+        // Initialize party dropdown
+        // Initialize party dropdown with emoji symbols
+       // Initialize party dropdown with emoji symbols
+        function initializePartyDropdown() {
+            const dropdown = document.getElementById('partyDropdown');
+            
+            // Check if dropdown is already initialized (has options beyond the default one)
+            if (dropdown.children.length > 1) {
+                console.log('Dropdown already initialized, skipping...');
+                return;
+            }
+            
+            // Add all political parties to dropdown with emoji symbols
+            INDIAN_POLITICAL_PARTIES.forEach(party => {
+                const option = document.createElement('option');
+                option.value = JSON.stringify({ name: party.name, symbol: party.symbol });
+                option.innerHTML = `${party.symbol} ${party.name} (${party.code})`;
+                dropdown.appendChild(option);
+            });
+            
+            // Add "Other" option for custom party
+            const otherOption = document.createElement('option');
+            otherOption.value = 'OTHER';
+            otherOption.innerHTML = '🔧 Other (Custom Party)';
+            dropdown.appendChild(otherOption);
+            
+            console.log('Party dropdown initialized with', INDIAN_POLITICAL_PARTIES.length + 1, 'options');
+        }
+
+        // Handle party selection change
+        function onPartyChange() {
+            const dropdown = document.getElementById('partyDropdown');
+            const symbolField = document.getElementById('symbol');
+            const customPartyGroup = document.getElementById('customPartyGroup');
+            const customSymbolGroup = document.getElementById('customSymbolGroup');
+            
+            if (dropdown.value === 'OTHER') {
+                // Show custom party fields
+                customPartyGroup.style.display = 'block';
+                customSymbolGroup.style.display = 'block';
+                symbolField.value = '';
+                symbolField.placeholder = 'Will be filled from custom symbol field';
+                symbolField.readonly = true;
+            } else if (dropdown.value === '') {
+                // No selection
+                customPartyGroup.style.display = 'none';
+                customSymbolGroup.style.display = 'none';
+                symbolField.value = '';
+                symbolField.placeholder = 'Symbol will be auto-filled';
+                symbolField.readonly = true;
+            } else {
+                // Predefined party selected
+                customPartyGroup.style.display = 'none';
+                customSymbolGroup.style.display = 'none';
+                
+                try {
+                    const partyData = JSON.parse(dropdown.value);
+                    symbolField.value = partyData.symbol;
+                    symbolField.readonly = true;
+                } catch (error) {
+                    console.error('Error parsing party data:', error);
+                }
+            }
+        }
+
+        // Get current party and symbol values for submission
+        function getCurrentPartyData() {
+            const dropdown = document.getElementById('partyDropdown');
+            const customPartyName = document.getElementById('customPartyName').value.trim();
+            const customSymbol = document.getElementById('customSymbol').value.trim();
+            
+            if (dropdown.value === 'OTHER') {
+                return {
+                    partyName: customPartyName,
+                    symbol: customSymbol
+                };
+            } else if (dropdown.value !== '') {
+                const partyData = JSON.parse(dropdown.value);
+                return {
+                    partyName: partyData.name,
+                    symbol: partyData.symbol
+                };
+            }
+            
+            return { partyName: '', symbol: '' };
+        }
         // Initialize dashboard - called immediately when DOM loads
         function initializeDashboard() {
             console.log('Initializing candidate dashboard...');
+            
+            // Initialize party dropdown FIRST before anything else
+            initializePartyDropdown();
             
             // Load stored user data first
             loadStoredUserData();
@@ -1603,8 +1712,38 @@
                     console.log('Candidate profile data received:', candidateData);
                     
                     // Update candidate-specific fields with proper null/empty checks
-                    document.getElementById('partyName').value = candidateData.partyName || '';
-                    document.getElementById('symbol').value = candidateData.symbol || '';
+                    // Update candidate-specific fields with proper null/empty checks
+                const partyName = candidateData.partyName || '';
+                const symbol = candidateData.symbol || '';
+
+                // Try to match with predefined parties
+                let matchedParty = null;
+                if (partyName) {
+                    matchedParty = INDIAN_POLITICAL_PARTIES.find(party => 
+                        party.name.toLowerCase() === partyName.toLowerCase()
+                    );
+                }
+
+                if (matchedParty) {
+                    // Set dropdown to matched party
+                    document.getElementById('partyDropdown').value = JSON.stringify({
+                        name: matchedParty.name,
+                        symbol: matchedParty.symbol
+                    });
+                    document.getElementById('symbol').value = matchedParty.symbol;
+                } else if (partyName) {
+                    // Custom party - set to "Other"
+                    document.getElementById('partyDropdown').value = 'OTHER';
+                    document.getElementById('customPartyName').value = partyName;
+                    document.getElementById('customSymbol').value = symbol;
+                    document.getElementById('symbol').value = symbol;
+                    document.getElementById('customPartyGroup').style.display = 'block';
+                    document.getElementById('customSymbolGroup').style.display = 'block';
+                } else {
+                    // No party data
+                    document.getElementById('partyDropdown').value = '';
+                    document.getElementById('symbol').value = '';
+}
                     
                     // Handle status from backend response - this is the key fix!
                     profileStatus = candidateData.status || 'Not Completed';
@@ -1698,12 +1837,10 @@
         }
 
         // Load election results with full dynamic functionality
+        // Load election results with simplified functionality
         async function loadElectionResults() {
             try {
                 console.log('Loading election results...');
-                
-                // Load winner info first
-                await loadWinnerInfo();
                 
                 // Load candidate's personal results
                 const response = await fetch(`${API_BASE_URL}/candidate/results`, {
@@ -1753,9 +1890,6 @@
                     console.log('Unable to load election results, using defaults');
                     showAlert('resultsAlert', 'Unable to load latest results. Please try refreshing.', 'error');
                 }
-                
-                // Load and display results table
-                await loadResultsTable();
                 
             } catch (error) {
                 console.error('Error loading election results:', error);
@@ -1869,7 +2003,9 @@
                             <span class="party-name">${candidate.partyName || 'Unknown'}</span>
                         </td>
                         <td>
-                            <span class="symbol-badge">${candidate.symbol || 'N/A'}</span>
+                            <span class="symbol-badge">
+                                <span class="symbol-display">${candidate.symbol || '❓'}</span>
+                            </span>
                         </td>
                         <td>
                             <span class="vote-count">${(candidate.totalVotes || 0).toLocaleString()}</span>
@@ -2027,8 +2163,9 @@
                 return;
             }
 
-            const partyName = document.getElementById('partyName').value.trim();
-            const symbol = document.getElementById('symbol').value.trim();
+            const partyData = getCurrentPartyData();
+            const partyName = partyData.partyName;
+            const symbol = partyData.symbol;
 
             // Basic validation
             if (!partyName || !symbol) {
